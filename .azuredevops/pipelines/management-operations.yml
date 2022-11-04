@@ -1,0 +1,82 @@
+# The following variables should be set in the pipeline:
+# AZURE_DEVOPS_AGENT_POOL
+# AZURE_DEVOPS_PERSONAL_ACCESS_TOKEN
+# AZURE_DEVOPS_ORG_NAME
+# AZURE_SERVICE_CONNECTION
+# VM_ADMIN_USERNAME
+# VM_ADMIN_PASSWORD
+
+trigger: none
+
+name: 'Scenario Management Operations'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  - template: variables/management-operations.yml
+
+stages:
+  - stage: Deploy
+    displayName: Deploy
+    jobs:
+     - job: DeployOperationsResources
+       displayName: Deploy Central Management Operations Resources
+       steps:
+        - template: ./templates/bicep-deploy.yml
+          parameters:
+            bicepPath: ./src/operations/main.bicep
+            bicepParameters: virtualNetworkName=$(virtualNetworkName) subnetVmName=$(subnetVmName) subnetAzDoAgentName=$(subnetAzDOAgentName) vnetAddressPrefix=$(vnetAddressPrefix) subnetVmAddressPrefix=$(subnetVmAddressPrefix) subnetAzDoAgentPrefix=$(subnetAzDOAddressPrefix) terraformStateStorageAccountName=$(terraformStateStorageAccountName) vmAdminUsername=$(VM_ADMIN_USERNAME) vmAdminPassword=$(VM_ADMIN_PASSWORD)
+            serviceConnection: $(AZURE_SERVICE_CONNECTION)
+        - task: DownloadPipelineArtifact@2
+          displayName: "Download Bicep Artifact"
+          inputs:
+            buildType: "current"
+            artifact: "bicep"
+            targetPath: "$(Pipeline.Workspace)/bicep"
+        - bash:  |
+               azureContainerRegistryName=$(jq -r '.properties.outputs.azureContainerRegistryName.value' outputs.json)
+               echo "Azure Container Registry name: $azureContainerRegistryName"
+               echo "##vso[task.setvariable variable=acrName;isOutput=true]$azureContainerRegistryName"
+          name: retrieveAcrName
+          displayName: "Retrieve ACR name"
+          workingDirectory: "$(Pipeline.Workspace)/bicep"
+     - job: PushDockerImage
+       displayName: Push Docker Image to ACR
+       dependsOn: DeployOperationsResources
+       variables:
+        acrName: $[ dependencies.DeployOperationsResources.outputs['retrieveAcrName.acrName'] ]
+       steps:
+         - task: AzureCLI@2
+           displayName: ACR Login
+           inputs:
+             azureSubscription: $(AZURE_SERVICE_CONNECTION)
+             scriptType: bash
+             scriptLocation: inlineScript
+             inlineScript: |
+               az acr login -n $(acrName)
+         - task: DockerInstaller@0
+           displayName: Docker Installer
+           inputs:
+             dockerVersion: 20.10.14
+             releaseType: stable
+         - bash:  |
+               docker build -t $(acrName).azurecr.io/$(imageName):$(imageTag) ./src/self-hosted-agent/deploy/dockeragent
+               docker push $(acrName).azurecr.io/$(imageName):$(imageTag) 
+           displayName: "Build and Push Docker Image"
+           name: pushDockerImage
+           workingDirectory: "$(System.DefaultWorkingDirectory)"
+     - job: DeploySelfHostedAgents
+       displayName: Deploy Self-Hosted Agent
+       dependsOn: 
+        - PushDockerImage
+        - DeployOperationsResources
+       variables:
+        acrName: $[ dependencies.DeployOperationsResources.outputs['retrieveAcrName.acrName'] ]
+       steps:
+         - template: ./templates/bicep-deploy.yml
+           parameters:
+            serviceConnection: $(AZURE_SERVICE_CONNECTION)
+            bicepArtifact: selfHostedAgentArtifact
+            bicepPath: ./src/common/infrastructure/bicep/self-hosted-agent.bicep
+            bicepParameters: location=$(location) existingVirtualNetworkName=$(virtualNetworkName) existingAciSubnetName=$(subnetAzDOAgentName) azureDevOpsPersonalAccessToken=$(AZURE_DEVOPS_PERSONAL_ACCESS_TOKEN) azureDevOpsOrgName=$(AZURE_DEVOPS_ORG_NAME) azureDevOpsPoolName=$(AZURE_DEVOPS_AGENT_POOL) agentCount=$(agentCount) imageName=$(imageName) imageTag=$(imageTag) existingAcrName=$(acrName)

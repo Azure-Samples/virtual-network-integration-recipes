@@ -1,0 +1,105 @@
+# The following variables should be set in the pipeline:
+# - AZURE_DEVOPS_AGENT_POOL
+# - AZURE_SERVICE_CONNECTION
+# - OPERATIONS_AZURE_SUBSCRIPTION_ID
+# - pviewShirVmssUsername
+# - pviewShirVmssPassword
+
+# The following variables are picked from the variable file "variables/purview-recipe-bicep.yml":
+# - resourceGroupName
+# - resourceBaseName
+# - location
+# - vnetAddressPrefix
+# - privateEndpointSubnetAddressPrefix
+# - bastionSubnetAddressPrefix
+# - operationsResourceGroupName
+# - operationsVnetName
+# - newOrExistingDnsZones
+
+# The following variables are dynamically set based on bicep deployment output:
+# - azdoAppVnetName
+# - azdoDatabricksWorkspaceName
+# - azdoStorageAccountName
+# - azdoKeyVaultName
+
+# The following variables are set automatically by the deployment:
+# - PVIEW_SHIR_KEY - Azure Purview SHIR Key (set by script: retrieve-shir-keys-azdo.sh)
+
+name: 'Azure Purview Recipe CD - Bicep'
+
+trigger: none
+
+pr: none
+
+resources:
+  pipelines:
+    - pipeline: purviewCIPipeline
+      source: 'Azure Purview Recipe CI'
+      trigger:
+        branches:
+          include:
+          - main
+
+pool: $(AZURE_DEVOPS_AGENT_POOL)
+
+stages:
+  - stage: Deploy
+    displayName: Deploy
+
+    jobs:
+      - job: DeployBicep
+        displayName: Deploy Bicep Files
+        variables:
+        - template: variables/purview-recipe-bicep.yml
+        steps:
+          - template: ./templates/bicep-deploy.yml
+            parameters:
+              bicepPath: ./src/az-purview/deploy/bicep/main.bicep
+              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) vnetAddressPrefix=$(vnetAddressPrefix) privateEndpointSubnetAddressPrefix=$(privateEndpointSubnetAddressPrefix) bastionSubnetAddressPrefix=$(bastionSubnetAddressPrefix) shirSubnetAddressPrefix=$(shirSubnetAddressPrefix) dnsZoneResourceGroupName=$(operationsResourceGroupName) dnsZoneSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID) newOrExistingDnsZones=$(newOrExistingDnsZones)'
+              bicepArtifact: 'bicep-main'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Bicep Artifact"
+            inputs:
+              buildType: current
+              artifact: 'bicep-main'
+              targetPath: "$(Pipeline.Workspace)/bicep"
+          - bash: |
+                appVnetName=$(jq -r '.properties.outputs.outVirtualNetworkName.value' outputs.json)
+                purviewAccountName=$(jq -r '.properties.outputs.outPurviewAccountName.value' outputs.json)
+                echo "Application VNet Name: ${appVnetName}"
+                echo "Purview Account Name: ${purviewAccountName}"
+                echo "##vso[task.setvariable variable=azdoAppVnetName]${appVnetName}"
+                echo "##vso[task.setvariable variable=azdoPurviewAccountName;isoutput=true]${purviewAccountName}"
+            name: retrieveBicepOutputVariables
+            displayName: "Retrieve bicep output variables"
+            workingDirectory: "$(Pipeline.Workspace)/bicep"
+          - template: ./templates/bicep-deploy.yml
+            parameters:
+              bicepPath: ./src/common/infrastructure/bicep/setup-networking-with-hub.bicep
+              bicepArtifact: 'bicep-vnet-peering'
+              bicepParameters: 'applicationVnetName=$(azdoAppVnetName) operationsVnetName=$(operationsVnetName) operationsResourceGroupName=$(operationsResourceGroupName) operationsSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID)'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+      - job: RunPostDeployScript
+        displayName: Run Post Deploy Script
+        dependsOn: DeployBicep
+        variables:
+        - template: variables/purview-recipe-bicep.yml
+        - name: azdoPurviewAccountName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoPurviewAccountName'] ]
+        steps:
+          - task: AzureCLI@2
+            displayName: Run Post Deploy Script Task
+            inputs:
+              azureSubscription: $(AZURE_SERVICE_CONNECTION)
+              scriptType: bash
+              scriptLocation: scriptPath
+              scriptPath: '$(System.DefaultWorkingDirectory)/src/az-purview/deploy/scripts/retrieve-shir-keys-azdo.sh'
+              arguments: '$(azdoPurviewAccountName) pviewshir-$(resourceBaseName)'
+              failOnStandardError: true
+          - template: ./templates/bicep-deploy.yml
+            parameters:
+              bicepPath: ./src/az-purview/deploy/bicep/shir.bicep
+              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) administratorUsername=$(pviewShirVmssUsername) administratorPassword=$(pviewShirVmssPassword) purviewIntegrationRuntimeAuthKey=$(PVIEW_SHIR_KEY)'
+              bicepArtifact: 'bicep-shir'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)

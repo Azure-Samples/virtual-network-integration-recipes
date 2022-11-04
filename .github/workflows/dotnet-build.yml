@@ -1,0 +1,30 @@
+name: Build .NET workflow
+
+on:
+  workflow_call:
+    inputs:
+      dotnet_version:
+        required: true
+        type: string
+      working_directory:
+        required: true
+        type: string
+
+jobs:
+  build-dotnet:
+    runs-on: ubuntu-latest
+    # env:
+    #   DOTNET_VERSION: "3.1.x"
+
+    steps:
+      # Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Setup .NET and perform build
+      - name: Setup DotNet ${{ inputs.dotnet_version }} Environment
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ inputs.dotnet_version }}
+      - run: dotnet build *.csproj --configuration Release
+        working-directory: ${{ inputs.working_directory }}

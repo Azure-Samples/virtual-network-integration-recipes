@@ -1,0 +1,12 @@
+variables:
+  resourceGroupName: 'rg-adbrcpi-bicep'
+  resourceBaseName: 'adbrcpbi'
+  location: 'australiaeast'
+  vnetAddressPrefix: '10.11.0.0/16'
+  privateEndpointSubnetAddressPrefix: '10.11.0.0/24'
+  bastionSubnetAddressPrefix: '10.11.1.0/24'
+  containerSubnetAddressPrefix: '10.11.2.0/24'
+  hostSubnetAddressPrefix: '10.11.3.0/24'
+  operationsResourceGroupName: 'rg-scenario-operations'
+  operationsVnetName: 'vnet-operations'
+  newOrExistingDnsZones: 'existing'

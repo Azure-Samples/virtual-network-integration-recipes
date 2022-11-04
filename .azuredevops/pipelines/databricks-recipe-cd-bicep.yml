@@ -1,0 +1,106 @@
+# The following variables should be set in the pipeline:
+# - AZURE_DEVOPS_AGENT_POOL
+# - AZURE_SERVICE_CONNECTION
+# - OPERATIONS_AZURE_SUBSCRIPTION_ID
+
+# The following variable(s) are picked from the variable file "variables/databricks-recipe-bicep.yml":
+# - resourceGroupName
+# - resourceBaseName
+# - location
+# - vnetAddressPrefix
+# - privateEndpointSubnetAddressPrefix
+# - bastionSubnetAddressPrefix
+# - containerSubnetAddressPrefix
+# - hostSubnetAddressPrefix
+# - operationsResourceGroupName
+# - operationsVnetName
+# - newOrExistingDnsZones
+
+# The following variables(s) are dynamically set based on bicep deployment output
+# - azdoAppVnetName
+# - azdoDatabricksWorkspaceName
+# - azdoStorageAccountName
+# - azdoKeyVaultName
+
+name: 'Azure Databricks Recipe CD - Bicep'
+
+trigger: none
+
+pr: none
+
+resources:
+  pipelines:
+    - pipeline: databricksCIPipeline
+      source: 'Azure Databricks Recipe CI'
+      trigger:
+        branches:
+          include:
+          - main
+
+pool: $(AZURE_DEVOPS_AGENT_POOL)
+
+stages:
+  - stage: Deploy
+    displayName: Deploy
+
+    jobs:
+      - job: DeployBicep
+        displayName: Deploy Bicep Files
+        variables:
+        - template: variables/databricks-recipe-bicep.yml
+        steps:
+          - template: ./templates/bicep-deploy.yml
+            parameters:
+              bicepPath: ./src/az-databricks/deploy/bicep/main.bicep
+              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) vnetAddressPrefix=$(vnetAddressPrefix) privateEndpointSubnetAddressPrefix=$(privateEndpointSubnetAddressPrefix) bastionSubnetAddressPrefix=$(bastionSubnetAddressPrefix) containerSubnetAddressPrefix=$(containerSubnetAddressPrefix) hostSubnetAddressPrefix=$(hostSubnetAddressPrefix) dnsZoneResourceGroupName=$(operationsResourceGroupName) dnsZoneSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID) newOrExistingDnsZones=$(newOrExistingDnsZones)'
+              bicepArtifact: 'bicep-main'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Bicep Artifact"
+            inputs:
+              buildType: current
+              artifact: 'bicep-main'
+              targetPath: "$(Pipeline.Workspace)/bicep"
+          - bash: |
+                appVnetName=$(jq -r '.properties.outputs.outVirtualNetworkName.value' outputs.json)
+                databricksWorkspaceName=$(jq -r '.properties.outputs.outDatabricksWorkspaceName.value' outputs.json)
+                storageAccountName=$(jq -r '.properties.outputs.outStorageAccountName.value' outputs.json)
+                keyVaultName=$(jq -r '.properties.outputs.outKeyVaultName.value' outputs.json)
+                echo "Application VNet Name: ${appVnetName}"
+                echo "Databricks Workspace Name: ${databricksWorkspaceName}"
+                echo "Storage Account Name: ${storageAccountName}"
+                echo "Key Vault Name: ${keyVaultName}"
+                echo "##vso[task.setvariable variable=azdoAppVnetName]${appVnetName}"
+                echo "##vso[task.setvariable variable=azdoDatabricksWorkspaceName;isoutput=true]${databricksWorkspaceName}"
+                echo "##vso[task.setvariable variable=azdoStorageAccountName;isoutput=true]${storageAccountName}"
+                echo "##vso[task.setvariable variable=azdoKeyVaultName;isoutput=true]${keyVaultName}"
+            name: retrieveBicepOutputVariables
+            displayName: "Retrieve bicep output variables"
+            workingDirectory: "$(Pipeline.Workspace)/bicep"
+          - template: ./templates/bicep-deploy.yml
+            parameters:
+              bicepPath: ./src/common/infrastructure/bicep/setup-networking-with-hub.bicep
+              bicepArtifact: 'bicep-vnet-peering'
+              bicepParameters: 'applicationVnetName=$(azdoAppVnetName) operationsVnetName=$(operationsVnetName) operationsResourceGroupName=$(operationsResourceGroupName) operationsSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID)'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+      - job: RunPostDeployScript
+        displayName: Run Post Deploy Script
+        dependsOn: DeployBicep
+        variables:
+        - template: variables/databricks-recipe-bicep.yml
+        - name: azdoDatabricksWorkspaceName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoDatabricksWorkspaceName'] ]
+        - name: azdoStorageAccountName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoStorageAccountName'] ]
+        - name: azdoKeyVaultName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoKeyVaultName'] ]
+        steps:
+          - task: AzureCLI@2
+            displayName: Run Post Deploy Script Task
+            inputs:
+              azureSubscription: $(AZURE_SERVICE_CONNECTION)
+              scriptType: bash
+              scriptLocation: scriptPath
+              scriptPath: '$(System.DefaultWorkingDirectory)/src/az-databricks/deploy/scripts/manage-databricks-secret-scope.sh'
+              arguments: '$(resourceGroupName) $(azdoDatabricksWorkspaceName) $(azdoStorageAccountName) $(azdoKeyVaultName)'
+              failOnStandardError: true

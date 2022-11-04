@@ -1,0 +1,14 @@
+variables:
+  operationsResourceGroupName: 'rg-scenario-operations'
+  operationsVirtualNetworkName: 'vnet-operations'
+  newOrExistingDnsZones: 'existing'
+  resourceGroupName: 'rg-apimappgwrcpi-bicep'
+  resourceBaseName: 'apimapgwrcpbi'
+  vnetAddressPrefix: '10.7.0.0/16'
+  vnetSubnetAppServiceIntegrationAddressPrefix: '10.7.1.0/24'
+  vnetSubnetPrivateEndpointAddressPrefix: '10.7.2.0/24'
+  vnetSubnetApplicationGatewaySubnetAdddressPrefix: '10.7.3.0/24'
+  vnetSubnetApiManagementSubnetAddressPrefix: '10.7.4.0/24'
+  location: 'eastus'
+  apimPublisherName: 'Microsoft'
+  

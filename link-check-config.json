@@ -1,0 +1,16 @@
+{
+    "ignorePatterns": [
+        {
+            "pattern": "https://contoso.scm.azurewebsites.net"
+        },
+        {
+            "pattern": "https://contoso.azurewebsites.net"
+        }
+    ],
+    "timeout": "20s",
+    "aliveStatusCodes": [
+        200,
+        203
+    ],
+    "retryOn429": true
+}

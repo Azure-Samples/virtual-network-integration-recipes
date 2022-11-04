@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sqlAdminUsername": {
+            "value": "[SQL SERVER ADMIN USERNAME]"
+        },
+        "sqlAdminPassword": {
+            "value": "[SQL SERVER ADMIN PASSWORD]"
+        },
+        "vnetAddressPrefix": {
+            "value": "10.15.0.0/16"
+        },
+        "privateEndpointSubnetAddressPrefix": {
+            "value": "10.15.0.0/24"
+        },
+        "bastionSubnetAddressPrefix": {
+            "value": "10.15.1.0/24"
+        },
+        "dnsZoneResourceGroupName": {
+            "value": "[NAME OF RESOURCE GROUP CONTAINING EXISTING AZURE PRIVATE DNS ZONES]"
+        },
+        "dnsZoneSubscriptionId": {
+            "value": "[SUBSCRIPTION ID IN WHICH THE RESOURCE GROUP CONTAINING EXISTING AZURE PRIVATE DNS ZONES HAS BEEN CREATED]"
+        },
+        "newOrExistingDnsZones": {
+            "value": "new"
+        }
+    }
+}

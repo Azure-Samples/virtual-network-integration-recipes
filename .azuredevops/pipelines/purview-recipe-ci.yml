@@ -1,0 +1,43 @@
+# The following variables should be set in the pipeline:
+# - AZURE_SERVICE_CONNECTION
+# - OPERATIONS_AZURE_SUBSCRIPTION_ID
+
+# The following variables are picked from the variable file "variables/purview-recipe-bicep.yml":
+# - resourceGroupName
+# - resourceBaseName
+# - location
+# - vnetAddressPrefix
+# - privateEndpointSubnetAddressPrefix
+# - bastionSubnetAddressPrefix
+# - operationsResourceGroupName
+# - newOrExistingDnsZones
+
+
+name: 'Azure Purview Recipe CI'
+
+trigger:
+  branches:
+    include:
+    - '*' 
+  paths:
+    include: 
+    - src/az-purview
+
+pool: 
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Build
+    displayName: Build
+
+    jobs:
+      - job: BuildBicep
+        displayName: Validate Bicep Files
+        variables:
+        - template: variables/purview-recipe-bicep.yml
+        steps:
+          - template: ./templates/bicep-build.yml
+            parameters:
+              bicepPath: ./src/az-purview/deploy/bicep/main.bicep
+              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) vnetAddressPrefix=$(vnetAddressPrefix) privateEndpointSubnetAddressPrefix=$(privateEndpointSubnetAddressPrefix) bastionSubnetAddressPrefix=$(bastionSubnetAddressPrefix) shirSubnetAddressPrefix=$(shirSubnetAddressPrefix) dnsZoneResourceGroupName=$(operationsResourceGroupName) dnsZoneSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID) newOrExistingDnsZones=$(newOrExistingDnsZones)'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "eastus"
+    },
+    "resourceBaseName": {
+      "value": "webapim"
+    },
+    "apiManagementSku": {
+      "value": "Developer"
+    },
+    "apiManagementPublisherName": {
+      "value": "Contoso"
+    },
+    "apiManagementCustomDnsName": {
+      "value": "contoso.net"
+    },
+    "apiManagementPublisherEmailAddress": {
+      "value": "user@email.com"
+    },
+    "apiManagementPortalCustomHostname": {
+      "value": "portal.contoso.net"
+    },
+    "apiManagementProxyCustomHostname": {
+      "value": "api.contoso.net"
+    },
+    "apiManagementManagementCustomHostname": {
+      "value": "management.contoso.net"
+    },
+    "apiManagementPortalCustomHostnameBase64EncodedPfxCertificate": {
+      "value": "GEN-SELFSIGNED-CERT-PFXDATA"
+    },
+    "apiManagementProxyCustomHostnameBase64EncodedPfxCertificate": {
+      "value": "GEN-SELFSIGNED-CERT-PFXDATA"
+    },
+    "apiManagementManagementCustomHostnameBase64EncodedPfxCertificate": {
+      "value": "GEN-SELFSIGNED-CERT-PFXDATA"
+    },
+    "applicationGatewayTrustedRootBase64EncodedPfxCertificate": {
+      "value": "GEN-SELFSIGNED-CERT-CERDATA"
+    },
+    "dnsZoneResourceGroupName": {
+      "value": "[NAME OF RESOURCE GROUP CONTAINING EXISTING AZURE PRIVATE DNS ZONES]"
+    },
+    "newOrExistingDnsZones": {
+      "value": "new"
+    },
+    "virtualNetworkAddressPrefix": {
+      "value": "10.7.0.0/16"
+    },
+    "virtualNetworkAppServiceIntegrationSubnetAddressPrefix": {
+      "value": "10.7.1.0/24"
+    },
+    "virtualNetworkPrivateEndpointSubnetAddressPrefix": {
+      "value": "10.7.2.0/24"
+    },
+    "virtualNetworkApplicationGatewaySubnetAdddressPrefix": {
+      "value": "10.7.3.0/24"
+    },
+    "virtualNetworkApiManagementSubnetAddressPrefix": {
+      "value": "10.7.4.0/24"
+    }
+  }
+}

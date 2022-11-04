@@ -1,0 +1,10 @@
+{
+    "scripts": {
+        "lint": "markdownlint \"**/*.md\" --ignore node_modules",
+        "markdown-link-check": "find . -name \\*.md ! -path './node_modules/*' -print0 | xargs -n 1 -0 markdown-link-check -v -c ./link-check-config.json"
+    },
+    "dependencies": {
+        "markdownlint-cli": "0.32.2",
+        "markdown-link-check": "^3.8.7"
+    }
+}

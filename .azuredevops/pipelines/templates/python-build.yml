@@ -1,0 +1,28 @@
+parameters:
+    # Relative path to the Python project.
+  - name: sourceCodePath
+    type: string
+    
+steps:
+  - task: UsePythonVersion@0
+    displayName: 'Use Python 3.8'
+    inputs:
+      versionSpec: 3.8
+
+  - bash: |
+      pip install --target="./.python_packages/lib/site-packages" -r ./requirements.txt
+    workingDirectory: '${{ parameters.sourceCodePath }}'
+    displayName: 'Install application dependencies'
+
+  - task: ArchiveFiles@2
+    displayName: 'Archive files'
+    inputs:
+      rootFolderOrFile: '${{ parameters.sourceCodePath }}'
+      includeRootFolder: false
+      archiveType: zip
+      archiveFile: $(Build.ArtifactStagingDirectory)/http-trigger.zip
+      replaceExistingArchive: true
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)
+      artifact: 'pythonArtifact'

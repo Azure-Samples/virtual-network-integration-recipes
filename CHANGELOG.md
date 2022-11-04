@@ -1,13 +1,15 @@
-## [project-title] Changelog
+# Virtual Network Integration Recipes Changelog
 
-<a name="x.y.z"></a>
-# x.y.z (yyyy-mm-dd)
+## 1.0 (2022-11-04)
 
-*Features*
-* ...
+### Features
 
-*Bug Fixes*
-* ...
+* Initial public release
 
-*Breaking Changes*
-* ...
+### Bug Fixes
+
+* Not applicable
+
+### Breaking Changes
+
+* Not applicable

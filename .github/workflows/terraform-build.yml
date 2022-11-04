@@ -1,0 +1,63 @@
+name: Validate Terraform Configuration
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        required: true
+        type: string
+      terraform_version:
+        required: true
+        type: string
+      terraform_variables:
+        required: true
+        type: string
+
+env:
+  ARM_USE_OIDC: true
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+jobs:
+  lint-terraform:
+    uses: ./.github/workflows/terraform-lint.yml
+    with:
+      working_directory: ${{ inputs.working_directory }}
+
+  validate-terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.working_directory }}
+
+    steps:
+      # Log into Azure
+      - name: "Az CLI login"
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Validate Terraform changes.
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ inputs.terraform_version }}
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: Plan
+        run: terraform plan ${{ inputs.terraform_variables }}
