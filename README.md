@@ -25,13 +25,17 @@ description: This repository contains multiple sample recipes to help developers
 
 # Virtual Network Integration Recipes
 
-[![Event Hub Recipe CI](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/event-hub-recipe-ci.yml/badge.svg?branch=main)](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/event-hub-recipe-ci.yml)
+[![Event Hub Recipe CI](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/event-hub-recipe-ci.yml/badge.svg?branch=main)](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/event-hub-recipe-ci.yml)
 
-[![Private Function HTTP Recipe CI](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/private-http-recipe-ci.yml/badge.svg?branch=main)](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/private-http-recipe-ci.yml)
+[![Private Function HTTP Recipe CI](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/private-http-recipe-ci.yml/badge.svg?branch=main)](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/private-http-recipe-ci.yml)
 
-[![Web App Private HTTP Recipe CI](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/webapp-private-http-recipe-ci.yml/badge.svg?branch=main)](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/webapp-private-http-recipe-ci.yml)
+[![Web App Private HTTP Recipe CI](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/webapp-private-http-recipe-ci.yml/badge.svg?branch=main)](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/webapp-private-http-recipe-ci.yml)
 
-[![API Management and App Gateway Recipe CI](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/apim-appgw-recipe-ci.yml/badge.svg?branch=main)](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/apim-appgw-recipe-ci.yml)
+[![API Management and App Gateway Recipe CI](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/apim-appgw-recipe-ci.yml/badge.svg?branch=main)](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/apim-appgw-recipe-ci.yml)
+
+[![Azure Data Factory Recipe CI](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/adf-recipe-ci.yml/badge.svg?branch=main)](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/adf-recipe-ci.yml)
+
+[![Azure Databricks Recipe CI](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/databricks-recipe-ci.yml/badge.svg?branch=main)](https://github.com/Azure-Samples/virtual-network-integration-recipes/actions/workflows/databricks-recipe-ci.yml)
 
 This repository contains multiple sample recipes to help developers create Azure solutions which integrate with, or are isolated within, a virtual network.
 
