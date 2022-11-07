@@ -1,0 +1,65 @@
+# The following variables should be set in the pipeline:
+# - AZURE_SERVICE_CONNECTION
+# - APIM_PUBLISHER_EMAIL
+# - customDomain
+# - gatewayCustomDomainHostname
+# - portalCustomDomainHostname
+# - managementCustomDomainHostname
+# - gatewayCustomDomainCertificate
+# - portalCustomDomainCertificate
+# - managementCustomDomainCertificate
+# - trustedRootCertificate
+
+name: 'APIM + App Gateway Recipe CI'
+
+trigger:
+  branches:
+    include:
+    - '*' 
+  paths:
+    include: 
+    - src/az-webapp-apim-appgw
+
+pool: 
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Build
+    displayName: Build
+
+    jobs:
+      - job: BuildDotNet
+        displayName: Validate .NET Project
+        variables:
+        - template: variables/apim-appgw-recipe-bicep.yml
+        steps:
+          - template: ./templates/dotnet-build.yml
+            parameters: 
+              sourceCodePath: '**/src/common/app_code/WeatherForecastAPI/*.csproj'
+              testCodePath: ''
+              buildConfiguration: 'Release'
+              codeCoverageThreshold: '$(codeCoverageThreshold)'
+      - job: BuildBicep
+        displayName: Validate Bicep Files
+        variables:
+        - template: variables/apim-appgw-recipe-bicep.yml
+        steps:
+          - template: ./templates/bicep-build.yml
+            parameters:
+              bicepPath: ./src/az-webapp-apim-appgw/deploy/bicep/main.bicep
+              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) apiManagementPublisherName=$(apimPublisherName) apiManagementPublisherEmailAddress=$(APIM_PUBLISHER_EMAIL) apiManagementCustomDnsName=$(CUSTOMDOMAIN) apiManagementPortalCustomHostname=$(PORTALCUSTOMDOMAINHOSTNAME) apiManagementProxyCustomHostname=$(GATEWAYCUSTOMDOMAINHOSTNAME) apiManagementManagementCustomHostname=$(MANAGEMENTCUSTOMDOMAINHOSTNAME) apiManagementPortalCustomHostnameBase64EncodedPfxCertificate=$(PORTALCUSTOMDOMAINCERTIFICATE) apiManagementProxyCustomHostnameBase64EncodedPfxCertificate=$(GATEWAYCUSTOMDOMAINCERTIFICATE) apiManagementManagementCustomHostnameBase64EncodedPfxCertificate=$(MANAGEMENTCUSTOMDOMAINCERTIFICATE) applicationGatewayTrustedRootBase64EncodedPfxCertificate=$(TRUSTEDROOTCERTIFICATE) dnsZoneResourceGroupName=$(operationsResourceGroupName) newOrExistingDnsZones=$(newOrExistingDnsZones) virtualNetworkAddressPrefix=$(vnetAddressPrefix) virtualNetworkAppServiceIntegrationSubnetAddressPrefix=$(vnetSubnetAppServiceIntegrationAddressPrefix) virtualNetworkPrivateEndpointSubnetAddressPrefix=$(vnetSubnetPrivateEndpointAddressPrefix) virtualNetworkApplicationGatewaySubnetAdddressPrefix=$(vnetSubnetApplicationGatewaySubnetAdddressPrefix) virtualNetworkApiManagementSubnetAddressPrefix=$(vnetSubnetApiManagementSubnetAddressPrefix)'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+      - job: BuildTerraform
+        displayName: Validate Terraform Files
+        variables:
+        - template: variables/apim-appgw-recipe-terraform.yml
+        steps:
+          - template: ./templates/terraform-build.yml
+            parameters:
+              terraformPath: ./src/az-webapp-apim-appgw/deploy/terraform
+              terraformVariables: '-var "resource_group_name=$(resourceGroupName)" -var "dns_zone_resource_group_name=$(operationsResourceGroupName)" -var "newOrExistingDnsZones=$(newOrExistingDnsZones)" -var "resourceBaseName=$(resourceBaseName)" -var "vnet_address_prefix=$(vnetAddressPrefix)" -var "vnet_subnet_app_service_integration_address_prefixes=$(vnetSubnetAppServiceIntegrationAddressPrefix)" -var "vnet_subnet_private_endpoints_address_prefixes=$(vnetSubnetPrivateEndpointAddressPrefix)" -var "vnet_subnet_apim_adddress_prefixes=$(vnetSubnetApimAdddressPrefixes)" -var "vnet_subnet_appgw_adddress_prefixes=$(vnetSubnetAppGwAdddressPrefixes)" -var "azurerm_api_management_publisher_name=$(apimPublisherName)" -var "azurerm_api_management_publisher_email=$(APIM_PUBLISHER_EMAIL)" -var "custom_domain=$(CUSTOMDOMAIN)" -var "gateway_custom_domain_hostname=$(GATEWAYCUSTOMDOMAINHOSTNAME)" -var "portal_custom_domain_hostname=$(PORTALCUSTOMDOMAINHOSTNAME)" -var "management_custom_domain_hostname=$(MANAGEMENTCUSTOMDOMAINHOSTNAME)" -var "gateway_custom_domain_certificate=$(GATEWAYCUSTOMDOMAINCERTIFICATE)" -var "portal_custom_domain_certificate=$(PORTALCUSTOMDOMAINCERTIFICATE)" -var "management_custom_domain_certificate=$(MANAGEMENTCUSTOMDOMAINCERTIFICATE)" -var "trusted_root_certificate=$(TRUSTEDROOTCERTIFICATE)" -var "location=$(location)" -var "tags=$(tags)"'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+              tfStateResourceGroupName: $(tfStateResourceGroupName)
+              tfStateStorageAccountName: $(tfStateStorageAccountName)
+              tfStateContainerName: $(tfStateContainerName)
+              tfStateFileName: '$(tfStateFileName)'

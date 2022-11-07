@@ -1,0 +1,82 @@
+# The following variables should be set in the pipeline:
+# AZURE_SERVICE_CONNECTION
+# AZURE_DEVOPS_AGENT_POOL
+
+trigger: none
+pr: none
+resources:
+  pipelines:
+    - pipeline: funcHttpCIPipeline
+      source: 'Private HTTP Recipe CI'
+      trigger: 
+        branches:
+          include:
+          - main
+
+name: 'Private HTTP Recipe CD - Bicep'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Deploy
+    displayName: Deploy
+
+    jobs:
+      - job: DeployBicep
+        displayName: Deploy Bicep Files
+        variables:
+        - template: variables/private-http-recipe-bicep.yml
+        steps:
+          - template: ./templates/bicep-deploy.yml
+            parameters:
+              bicepPath: ./src/az-func-http/deploy/bicep/main.bicep
+              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) dnsZoneResourceGroupName=$(operationsResourceGroupName) newOrExistingDnsZones=$(newOrExistingDnsZones) virtualNetworkAddressPrefix=$(vnetAddressPrefix) virtualNetworkAppServiceIntegrationSubnetAddressPrefix=$(vnetSubnetAppServiceIntegrationAddressPrefix) virtualNetworkPrivateEndpointSubnetAddressPrefix=$(vnetSubnetPrivateEndpointAddressPrefix)'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+          - template: ./templates/vnet-peering.yml
+            parameters:
+              azureSubscription: $(AZURE_SERVICE_CONNECTION)
+              sourceResourceGroupName: $(resourceGroupName)
+              targetResourceGroupName: $(operationsResourceGroupName)
+              targetVirtualNetworkName: $(operationsVirtualNetworkName)
+              infraSourceType: bicep
+      - job: DeployAzureFunction
+        dependsOn: DeployBicep
+        displayName: Deploy Azure Function App
+        pool:
+          name: $(AZURE_DEVOPS_AGENT_POOL)
+        variables:
+        - template: variables/private-http-recipe-bicep.yml
+        steps:
+          - template: ./templates/python-build.yml
+            parameters: 
+              sourceCodePath: 'src/common/app_code/http-trigger'
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Function Artifact"
+            inputs:
+              buildType: "current"
+              artifact: "pythonArtifact"
+              targetPath: "$(Pipeline.Workspace)/pythonArtifact"
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Bicep Artifact"
+            inputs:
+              buildType: "current"
+              artifact: "bicep"
+              targetPath: "$(Pipeline.Workspace)/bicep"
+          - task: Bash@3
+            displayName: "Pull Azure Function App Name From Outputs"
+            inputs:
+              targetType: 'inline'
+              workingDirectory: "$(Pipeline.Workspace)/bicep"
+              script: |
+                functionName=$(jq -r '.properties.outputs.functionAppName.value' outputs.json)
+                echo "##vso[task.setvariable variable=azureFunctionName;]$functionName"
+          - task: AzureFunctionApp@1
+            displayName: Deploy Azure Function App
+            inputs:
+              appType: 'functionApp'
+              appName: '$(azureFunctionName)'
+              resourceGroupName: '$(resourceGroupName)'
+              azureSubscription: $(AZURE_SERVICE_CONNECTION)
+              package: '$(Pipeline.Workspace)/pythonArtifact/http-trigger.zip'
+              deploymentMethod: 'runFromPackage'

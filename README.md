@@ -1,57 +1,105 @@
-# Project Name
+---
+page_type: sample
+languages:
+- csharp
+- javascript
+- python
+- bicep
+- terraform
+- bash
+products:
+- azure-functions
+- azure-app-service-web
+- azure-event-hubs
+- azure-application-gateway
+- azure-api-management
+- azure-synapse-analytics
+- azure-storage
+- azure-purview
+- azure-data-factory
+- azure-virtual-network
+name: Virtual Network Integration Recipes
+urlFragment: virtual-network-integration-recipes
+description: This repository contains multiple sample recipes to help developers create Azure solutions which integrate with, or are isolated within, a virtual network.
+---
 
-(short, 1-3 sentenced, description of the project)
+# Virtual Network Integration Recipes
 
-## Features
+[![Event Hub Recipe CI](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/event-hub-recipe-ci.yml/badge.svg?branch=main)](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/event-hub-recipe-ci.yml)
 
-This project framework provides the following features:
+[![Private Function HTTP Recipe CI](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/private-http-recipe-ci.yml/badge.svg?branch=main)](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/private-http-recipe-ci.yml)
 
-* Feature 1
-* Feature 2
-* ...
+[![Web App Private HTTP Recipe CI](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/webapp-private-http-recipe-ci.yml/badge.svg?branch=main)](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/webapp-private-http-recipe-ci.yml)
+
+[![API Management and App Gateway Recipe CI](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/apim-appgw-recipe-ci.yml/badge.svg?branch=main)](https://github.com/mcollier/vnet-int-recipes-temp/actions/workflows/apim-appgw-recipe-ci.yml)
+
+This repository contains multiple sample recipes to help developers create Azure solutions which integrate with, or are isolated within, a virtual network.
+
+The recipes consist of reusable reference Azure Bicep templates and/or Terraform configuration files, along with sample application code to demonstrate platfrom capabilities. The recipes demonstrate an approach for setting up virtual network integration and isolation, including private/service endpoints for Azure Web Apps, Functions, Synapse, Purview, Databricks, Data Factory, along with Event Hubs, Azure Storage and Key Vault.
 
 ## Getting Started
 
+Please view the [Contributing](./CONTRIBUTING.md) guidance for more information on how to contriubte to this repository.
+
 ### Prerequisites
 
-(ideally very short, if any)
+- Install [Visual Studio Code](https://code.visualstudio.com/).
+- [Docker](https://www.docker.com/products/docker-desktop) (optional - for use with Visual Studio Code dev container)
+- .NET Core 3.1
+- Python 3.8
+- Node 14
+- [Azure Functions Core Tools v3](https://learn.microsoft.com/azure/azure-functions/functions-run-local)
+- [Azure CLI 2.40](https://learn.microsoft.com/cli/azure/install-azure-cli)
+- [Azure Bicep 0.11.1](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/install)
+- Terraform 1.3.2
 
-- OS
-- Library version
-- ...
+### Recipies
 
-### Installation
+Instructions on how to use [each recipe](./docs/Recipes.md) are provided in each recipe's README file.
 
-(ideally very short)
+### Developer Environment
 
-- npm install [package name]
-- mvn install
-- ...
+Developers are free to use the environment of their choosing, so long as they're able to install the prerequisites.
 
-### Quickstart
-(Add steps to get up and running quickly)
+When using Visual Studio Code, the developer is able to view a recommended set of extensions to aid in development. The recommended set of extensions is the same set of extensions that are configured for use in the Visual Studio Code dev container configuration.
 
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
+#### Visual Studio Code Dev Container
 
+A development container definition is provided to make it easier for developers to get started quickly contributing to the project, as well as using the assets of the project.
 
-## Demo
+The dev container included with this project includes the following configuration:
 
-A demo app is included to show how to use the project.
+- Docker image
+  - Azure Functions Python 3.8 Core Tools base image ([Dockerfile](https://github.com/Azure/azure-functions-docker/blob/dev/host/3.0/buster/amd64/python/python38/python38-core-tools.Dockerfile))
+  - [Bash git prompt](https://github.com/magicmonty/bash-git-prompt)
+  - Terraform v1.3.2
+  - TFLint v0.41.0
+  - Azure CLI
+  - Azure Bicep
+  - Azure Functions Core Tools 3
+- Software development languages
+  - .NET Core 3.1 SDK
+  - Python 3.8
+  - Node 14
+- Visual Studio code extensions:
+  - [Azure Tools](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-node-azure-pack)
+  - [Azure Account](https://marketplace.visualstudio.com/items?itemName=ms-vscode.azure-account)
+  - [Azure Terraform](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azureterraform)
+  - [Azure Bicep](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep)
+  - [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+  - [HashiCorp Terraform](https://marketplace.visualstudio.com/items?itemName=hashicorp.terraform)
+  - [Draw.io Integration](https://marketplace.visualstudio.com/items?itemName=hediet.vscode-drawio)
+  - [ShellCheck](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck)
+  - [YAML](https://marketplace.visualstudio.com/items?itemName=redhat.vscode-yaml)
+  - [markdownlint](https://marketplace.visualstudio.com/items?itemName=davidanson.vscode-markdownlint)
+  - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
+  - [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance)
+  - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
-To run the demo, follow these steps:
+The dev container is configured to run as a non-root user, `vscode`.
 
-(Add steps to start up the demo)
+Learn more about Visual Studio Code dev containers [here](https://code.visualstudio.com/docs/containers/overview).
 
-1.
-2.
-3.
+## Trademarks
 
-## Resources
-
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow Microsoft’s Trademark & Brand Guidelines. Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party’s policies.

@@ -1,0 +1,44 @@
+# The following variables should be set in the pipeline:
+# - AZURE_SERVICE_CONNECTION
+# - OPERATIONS_AZURE_SUBSCRIPTION_ID
+# - synSqlAdminUsername
+# - synSqlAdminPassword
+
+# The following variables are picked from the variable file "variables/synapse-recipe-bicep.yml":
+# - resourceGroupName
+# - resourceBaseName
+# - location
+# - vnetAddressPrefix
+# - privateEndpointSubnetAddressPrefix
+# - bastionSubnetAddressPrefix
+# - operationsResourceGroupName
+# - newOrExistingDnsZones
+
+name: 'Azure Synapse Recipe CI'
+
+trigger:
+  branches:
+    include:
+    - '*' 
+  paths:
+    include: 
+    - src/az-synapse
+
+pool: 
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Build
+    displayName: Build
+
+    jobs:
+      - job: BuildBicep
+        displayName: Validate Bicep Files
+        variables:
+        - template: variables/synapse-recipe-bicep.yml
+        steps:
+          - template: ./templates/bicep-build.yml
+            parameters:
+              bicepPath: ./src/az-synapse/deploy/bicep/main.bicep
+              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) synSqlAdminUsername=$(SYNSQLADMINUSERNAME) synSqlAdminPassword=$(SYNSQLADMINPASSWORD) vnetAddressPrefix=$(vnetAddressPrefix) privateEndpointSubnetAddressPrefix=$(privateEndpointSubnetAddressPrefix) bastionSubnetAddressPrefix=$(bastionSubnetAddressPrefix) dnsZoneResourceGroupName=$(operationsResourceGroupName) dnsZoneSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID) newOrExistingDnsZones=$(newOrExistingDnsZones)'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)

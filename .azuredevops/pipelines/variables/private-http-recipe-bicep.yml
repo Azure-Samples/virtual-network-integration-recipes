@@ -1,0 +1,10 @@
+variables:
+  operationsResourceGroupName: 'rg-scenario-operations'
+  operationsVirtualNetworkName: 'vnet-operations'
+  newOrExistingDnsZones: 'existing'
+  resourceGroupName: 'rg-funchttprcpi-bicep'
+  vnetAddressPrefix: '10.3.0.0/16'
+  vnetSubnetAppServiceIntegrationAddressPrefix: '10.3.1.0/24'
+  vnetSubnetPrivateEndpointAddressPrefix: '10.3.2.0/24'
+  location: 'eastus'
+  existingVirtualNetworkName: 'vnet-funchttprcpbi'

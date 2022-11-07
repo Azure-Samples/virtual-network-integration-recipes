@@ -1,0 +1,10 @@
+variables:
+  location: 'eastus'
+  resourceGroupName: 'rg-funcevhrcpi-bicep'
+  operationsResourceGroupName: 'rg-scenario-operations'
+  operationsVirtualNetworkName: 'vnet-operations'
+  newOrExistingDnsZones: 'existing'
+  vnetAddressPrefix: '10.1.0.0/16'
+  vnetSubnetAppServiceIntegrationAddressPrefix: '10.1.1.0/24'
+  vnetSubnetPrivateEndpointAddressPrefix: '10.1.2.0/24'
+  codeCoverageThreshold: '0'

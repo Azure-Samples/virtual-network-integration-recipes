@@ -1,0 +1,12 @@
+jobs:
+- job: bash_shell_lint
+  pool:
+    vmImage: "ubuntu-latest"
+
+  steps:
+    - task: Bash@3
+      displayName: "Validate Shell Scripts: Shellcheck"
+      inputs:
+        targetType: 'filePath'
+        filePath: './scripts/shellcheck-lint.sh'
+        failOnStderr: true

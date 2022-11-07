@@ -1,0 +1,24 @@
+name: Azure Data Factory Recipe CI
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+    - src/az-datafactory/**
+    - .github/workflows/adf-recipe-ci.yml
+  pull_request:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  validate-bicep:
+    uses: ./.github/workflows/bicep-build.yml
+    with:
+      azure-resource-group-name: "rg-datafactoryrcp-gh-bicep"
+      azure-resource-group-location: "eastus"
+      bicep-path: ./src/az-datafactory/deploy/bicep/main.bicep
+      bicep-parameters: "location=eastus vnetAddressPrefix=10.15.0.0/16 privateEndpointSubnetAddressPrefix=10.15.0.0/24 bastionSubnetAddressPrefix=10.15.1.0/24 dnsZoneResourceGroupName=rg-scenario-operations newOrExistingDnsZones=existing sqlAdminUsername=XXXX sqlAdminPassword=XXXXX"
+    secrets: inherit

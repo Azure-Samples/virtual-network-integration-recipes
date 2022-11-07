@@ -1,0 +1,52 @@
+name: Build Bicep workflow
+
+on:
+  workflow_call:
+    inputs:
+      azure-resource-group-name:
+        required: true
+        type: string
+      azure-resource-group-location:
+        required: true
+        type: string
+      bicep-path:
+        required: true
+        type: string
+      bicep-parameters:
+        required: false
+        type: string
+
+jobs:
+  bicep-preview:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Log into Azure
+      - name: "Az CLI login"
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Ensure resource group is created
+      - name: Create Resource Group
+        uses: Azure/CLI@v1
+        with:
+          inlineScript: |
+            #!/bin/bash
+            az group create --name ${{ inputs.azure-resource-group-name }} --location ${{ inputs.azure-resource-group-location }}
+            echo "Azure resource group created."
+
+      # Validate Azure Bicep changes.
+      - name: Preview Azure Bicep Changes
+        uses: azure/deployment-what-if-action@v1.0.0
+        with:
+          subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroup: ${{ inputs.azure-resource-group-name }}
+          templateFile: ${{ inputs.bicep-path}}
+          additionalParameters: ${{ inputs.bicep-parameters}}

@@ -1,0 +1,16 @@
+{
+    "recommendations": [
+        "ms-vscode.vscode-node-azure-pack",
+        "ms-vscode.azure-account",
+        "ms-dotnettools.csharp",
+        "ms-azuretools.vscode-azureterraform",
+        "timonwong.shellcheck",
+        "redhat.vscode-yaml",
+        "davidanson.vscode-markdownlint",
+        "hashicorp.terraform",
+        "hediet.vscode-drawio",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "dbaeumer.vscode-eslint"
+    ]
+}

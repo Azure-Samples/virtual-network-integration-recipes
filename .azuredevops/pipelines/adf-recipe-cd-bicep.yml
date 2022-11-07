@@ -1,0 +1,121 @@
+# The following variables should be set in the pipeline:
+# - AZURE_DEVOPS_AGENT_POOL
+# - AZURE_SERVICE_CONNECTION
+# - OPERATIONS_AZURE_SUBSCRIPTION_ID
+# - sqlAdminUsername
+# - sqlAdminPassword
+
+# The following variables are picked from the variable file "variables/adf-recipe-bicep.yml":
+# - resourceGroupName
+# - resourceBaseName
+# - location
+# - vnetAddressPrefix
+# - privateEndpointSubnetAddressPrefix
+# - bastionSubnetAddressPrefix
+# - operationsResourceGroupName
+# - newOrExistingDnsZones
+
+# The following variables are dynamically set based on bicep deployment output:
+# - azdoAppVnetName
+# - azdoStorageAccountName
+# - azdoKeyVaultName
+# - azdoSqlServerName
+# - azdoMpeStorageAccountName
+# - azdoMpeKeyVaultName
+# - azdoMpeSqlServerName
+
+name: 'ADF Recipe CD - Bicep'
+
+trigger: none
+pr: none
+resources:
+  pipelines:
+    - pipeline: adfCIPipeline
+      source: 'Azure Data Factory Recipe CI'
+      trigger:
+        branches:
+          include:
+          - main
+
+pool: $(AZURE_DEVOPS_AGENT_POOL)
+
+stages:
+  - stage: Deploy
+    displayName: Deploy
+
+    jobs:
+      - job: DeployBicep
+        displayName: Deploy Bicep Files
+        variables:
+        - template: variables/adf-recipe-bicep.yml
+        steps:
+          - template: ./templates/bicep-deploy.yml
+            parameters:
+              bicepPath: ./src/az-datafactory/deploy/bicep/main.bicep
+              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) vnetAddressPrefix=$(vnetAddressPrefix) privateEndpointSubnetAddressPrefix=$(privateEndpointSubnetAddressPrefix) bastionSubnetAddressPrefix=$(bastionSubnetAddressPrefix) sqlAdminUsername=$(sqlAdminUsername) sqlAdminPassword=$(sqlAdminPassword) dnsZoneResourceGroupName=$(operationsResourceGroupName) dnsZoneSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID) newOrExistingDnsZones=$(newOrExistingDnsZones)'
+              bicepArtifact: 'bicep-main'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Bicep Artifact"
+            inputs:
+              buildType: current
+              artifact: 'bicep-main'
+              targetPath: "$(Pipeline.Workspace)/bicep"
+          - bash: |
+                appVnetName=$(jq -r '.properties.outputs.outVirtualNetworkName.value' outputs.json)
+                storageAccountName=$(jq -r '.properties.outputs.outStorageAccountName.value' outputs.json)
+                keyVaultName=$(jq -r '.properties.outputs.outKeyvaultName.value' outputs.json)
+                sqlServerName=$(jq -r '.properties.outputs.outSqlServerName.value' outputs.json)
+                mpeStorageAccountName=$(jq -r '.properties.outputs.outMpeStorageAccountName.value' outputs.json)
+                mpeKeyVaultName=$(jq -r '.properties.outputs.outMpeKeyVaultName.value' outputs.json)
+                mpeSqlServerName=$(jq -r '.properties.outputs.outMpeSqlServerName.value' outputs.json)
+                echo "Application VNet name: ${appVnetName}"
+                echo "Storage Account name: ${storageAccountName}"
+                echo "Key Vault name: ${keyVaultName}"
+                echo "SQL Server name: ${sqlServerName}"
+                echo "Managed private endpoint name for Storage account: ${mpeStorageAccountName}"
+                echo "Managed private endpoint name for Key Vault: ${mpeKeyVaultName}"
+                echo "Managed private endpoint name for SQL Server: ${mpeSqlServerName}"
+                echo "##vso[task.setvariable variable=azdoAppVnetName]${appVnetName}"
+                echo "##vso[task.setvariable variable=azdoStorageAccountName;isoutput=true]${storageAccountName}"
+                echo "##vso[task.setvariable variable=azdoKeyVaultName;isoutput=true]${keyVaultName}"
+                echo "##vso[task.setvariable variable=azdoSqlServerName;isoutput=true]${sqlServerName}"
+                echo "##vso[task.setvariable variable=azdoMpeStorageAccountName;isoutput=true]${mpeStorageAccountName}"
+                echo "##vso[task.setvariable variable=azdoMpeKeyVaultName;isoutput=true]${mpeKeyVaultName}"
+                echo "##vso[task.setvariable variable=azdoMpeSqlServerName;isoutput=true]${mpeSqlServerName}"
+            name: retrieveBicepOutputVariables
+            displayName: "Retrieve bicep output variables"
+            workingDirectory: "$(Pipeline.Workspace)/bicep"
+          - template: ./templates/bicep-deploy.yml
+            parameters:
+              bicepPath: ./src/common/infrastructure/bicep/setup-networking-with-hub.bicep
+              bicepArtifact: 'bicep-vnet-peering'
+              bicepParameters: 'applicationVnetName=$(azdoAppVnetName) operationsVnetName=$(operationsVnetName) operationsResourceGroupName=$(operationsResourceGroupName) operationsSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID)'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+      - job: RunPostDeployScript
+        displayName: Run Post Deploy Script
+        dependsOn: DeployBicep
+        variables:
+        - template: variables/adf-recipe-bicep.yml
+        - name: azdoStorageAccountName
+          value : $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoStorageAccountName'] ]
+        - name: azdoKeyVaultName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoKeyVaultName'] ]
+        - name: azdoSqlServerName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoSqlServerName'] ]
+        - name: azdoMpeStorageAccountName
+          value : $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoMpeStorageAccountName'] ]
+        - name: azdoMpeKeyVaultName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoMpeKeyVaultName'] ]
+        - name: azdoMpeSqlServerName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoMpeSqlServerName'] ]
+        steps:
+          - task: AzureCLI@2
+            displayName: Run Post Deploy Script Task
+            inputs:
+              azureSubscription: $(AZURE_SERVICE_CONNECTION)
+              scriptType: bash
+              scriptLocation: scriptPath
+              scriptPath: '$(System.DefaultWorkingDirectory)/src/az-datafactory/deploy/scripts/approve-managed-private-endpoints.sh'
+              arguments: '$(resourceGroupName) $(azdoStorageAccountName) $(azdoKeyVaultName) $(azdoSqlServerName) $(azdoMpeStorageAccountName) $(azdoMpeKeyVaultName) $(azdoMpeSqlServerName)'
+              failOnStandardError: true

@@ -1,0 +1,85 @@
+parameters:
+    # Relative path to the directory that contains the main.tf file.
+  - name: terraformPath
+    type: string
+    
+    # The Azure service connection for the target Azure subscription.
+  - name: serviceConnection
+    type: string
+    
+    # The space delimited set of parameters and values necessary to run terraform commands on the provided templates.
+  - name: terraformVariables
+    type: string
+    
+    # The name of the resource group containing the tfstate storage account.
+  - name: tfStateResourceGroupName
+    type: string
+    
+    # The name of the storage account containing the tfstate container.
+  - name: tfStateStorageAccountName
+    type: string
+    
+    # The name of a new or existing tfstate container containing tfstate files.
+  - name: tfStateContainerName
+    type: string
+    
+    # The name of a new or existing tfstate file to base the deployment.
+  - name: tfStateFileName
+    type: string
+
+steps:
+  - bash: |
+      cp -v $(System.DefaultWorkingDirectory)/src/common/infrastructure/terraform/backends/azurerm.tf ${{ parameters.terraformPath }}
+    displayName: Copy azurerm terraform backend config to terraform directory
+    workingDirectory: $(System.DefaultWorkingDirectory)
+  - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+    displayName: Install Terraform
+    inputs:
+      terraformVersion: 1.3.2
+  - task: TerraformCLI@0
+    displayName: tf init
+    inputs:
+      command: 'init'
+      workingDirectory: ${{ parameters.terraformPath }}
+      backendType: 'azurerm'
+      backendServiceArm: ${{ parameters.serviceConnection }}
+      backendAzureRmResourceGroupName: ${{ parameters.tfStateResourceGroupName }}
+      backendAzureRmStorageAccountName: ${{ parameters.tfStateStorageAccountName }}
+      backendAzureRmContainerName: '${{ parameters.tfStateContainerName }}'
+      backendAzureRmKey: '${{ parameters.tfStateFileName }}.tfstate'
+  - task: AzureCLI@2
+    displayName: Get ARM credentials for Terraform
+    inputs:
+      azureSubscription: ${{ parameters.serviceConnection }}
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        set -eu
+        subscriptionId=$(az account show --query id -o tsv)
+        echo "##vso[task.setvariable variable=ARM_CLIENT_ID]$servicePrincipalId"
+        echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET;issecret=true]$servicePrincipalKey"
+        echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID]$subscriptionId"
+        echo "##vso[task.setvariable variable=ARM_TENANT_ID]$tenantId"
+      addSpnToEnvironment: true
+  - task: TerraformCLI@0
+    displayName: tf apply
+    inputs:
+      command: 'apply'
+      workingDirectory: ${{ parameters.terraformPath }}
+      commandOptions: '-compact-warnings ${{ parameters.terraformVariables }}'
+      backendType: 'azurerm'
+      environmentServiceName: ${{ parameters.serviceConnection }}
+  - task: Bash@3
+    displayName: Save Terraform Outputs
+    inputs:
+      targetType: "inline"
+      script: |
+        set -eu
+        mkdir $(Build.ArtifactStagingDirectory)/terraform
+        terraform output -json > $(Build.ArtifactStagingDirectory)/terraform/outputs.json
+      workingDirectory: ${{ parameters.terraformPath }}
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Artifact
+    inputs:
+      targetPath: "$(Build.ArtifactStagingDirectory)/terraform"
+      artifact: "terraform"

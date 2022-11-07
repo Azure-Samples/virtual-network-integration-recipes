@@ -1,0 +1,18 @@
+variables:
+  resourceGroupName: 'rg-apimappgwrcpi-terraform'
+  resourceBaseName: 'apimapgwrcpti'
+  location: 'eastus'
+  operationsResourceGroupName: 'rg-scenario-operations'
+  operationsVirtualNetworkName: 'vnet-operations'
+  vnetAddressPrefix: '10.8.0.0/16'
+  vnetSubnetAppServiceIntegrationAddressPrefix: '10.8.1.0/24'
+  vnetSubnetPrivateEndpointAddressPrefix: '10.8.2.0/24'
+  vnetSubnetAppGwAdddressPrefixes: '10.8.3.0/24'
+  vnetSubnetApimAdddressPrefixes: '10.8.4.0/24'
+  newOrExistingDnsZones: 'existing'
+  apimPublisherName: 'Microsoft'
+  tfStateResourceGroupName: 'rg-scenario-operations'
+  tfStateStorageAccountName: 'tfstatevnet001'
+  tfStateContainerName: 'tfstate'
+  tags: '{}'
+  

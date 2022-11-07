@@ -1,0 +1,56 @@
+parameters:
+    # Relative path to the .NET project.
+  - name: sourceCodePath
+    type: string
+
+    # Relative path to the .NET test project.
+  - name: testCodePath
+    type: string
+    
+    # Defines the build configuration for dotnet commands.
+  - name: buildConfiguration
+    type: string
+    
+    # Minimum threshold for code coverage before build fails.
+  - name: codeCoverageThreshold
+    type: string
+    
+steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core sdk'
+    inputs:
+      packageType: sdk
+      version: 3.1.x
+      installationPath: $(Agent.ToolsDirectory)/dotnet
+  - task: DotNetCoreCLI@2
+    name: 'Build'
+    inputs:
+      command: 'build'
+      projects: '${{ parameters.sourceCodePath }}'
+      arguments: '--configuration ${{ parameters.buildConfiguration }}'
+  - task: DotNetCoreCLI@2
+    condition: ne('${{ parameters.testCodePath }}', '')
+    name: 'Test'
+    inputs:
+      command: 'test'
+      testRunTitle: ' Test Run'
+      projects: '${{ parameters.testCodePath }}'
+      arguments: '--configuration ${{ parameters.buildConfiguration }} /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:threshold=${{ parameters.codeCoverageThreshold }} /p:ThresholdType=line /p:ThresholdStat=total /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
+  - task: PublishCodeCoverageResults@1
+    condition: ne('${{ parameters.testCodePath }}', '')
+    name: 'PublishCodeCoverageReport'
+    inputs:
+      codeCoverageTool: 'cobertura'
+      summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/Coverage/**/*coverage.cobertura.xml'
+  - task: DotNetCoreCLI@2
+    name: 'Publish'
+    inputs:
+      command: publish
+      publishWebProjects: False
+      projects: '${{ parameters.sourceCodePath }}'
+      arguments: '--configuration ${{ parameters.buildConfiguration }} --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: True
+  - task: PublishPipelineArtifact@1
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)
+      artifact: 'dotnetArtifact'

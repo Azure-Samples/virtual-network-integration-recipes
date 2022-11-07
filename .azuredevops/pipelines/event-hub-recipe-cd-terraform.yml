@@ -1,0 +1,87 @@
+# The following variables should be set in the pipeline:
+# AZURE_SERVICE_CONNECTION
+
+trigger: none
+pr: none
+resources:
+  pipelines:
+    - pipeline: evhCIPipeline
+      source: 'Private Event Hub Recipe CI'
+      trigger: 
+        branches:
+          include:
+          - main
+
+name: 'Private Event Hub Recipe CD - Terraform'
+
+pool: 
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Deploy
+    displayName: Deploy
+
+    jobs:
+      - job: DeployTerraform
+        displayName: Deploy Terraform Files
+        variables:
+        - template: variables/private-event-hub-recipe-terraform.yml
+        steps:
+          - template: ./templates/terraform-deploy.yml
+            parameters:
+              terraformPath: ./src/az-func-event-hub/deploy/terraform
+              terraformVariables: '-var "resource_group_name=$(resourceGroupName)" -var "dns_zone_resource_group_name=$(operationsResourceGroupName)" -var "newOrExistingDnsZones=$(newOrExistingDnsZones)" -var "resourceBaseName=$(resourceBaseName)" -var "location=$(location)" -var "tags=$(tags)" -var "vnet_address_prefix=$(vnetAddressPrefix)" -var "vnet_subnet_app_service_integration_address_prefixes=$(vnetSubnetAppServiceIntegrationAddressPrefix)" -var "vnet_subnet_private_endpoints_address_prefixes=$(vnetSubnetPrivateEndpointAddressPrefix)"'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+              tfStateResourceGroupName: $(tfStateResourceGroupName)
+              tfStateStorageAccountName: $(tfStateStorageAccountName)
+              tfStateContainerName: $(tfStateContainerName)
+              tfStateFileName: '$(tfStateFileName)'
+          - template: ./templates/vnet-peering.yml
+            parameters:
+              azureSubscription: $(AZURE_SERVICE_CONNECTION)
+              sourceResourceGroupName: $(resourceGroupName)
+              targetResourceGroupName: $(operationsResourceGroupName)
+              targetVirtualNetworkName: $(operationsVirtualNetworkName)
+              infraSourceType: terraform
+      - job: DeployAzureFunction
+        dependsOn: DeployTerraform
+        displayName: Deploy Azure Function
+        variables:
+        - template: variables/private-event-hub-recipe-terraform.yml
+        steps:
+          - template: ./templates/dotnet-build.yml
+            parameters: 
+              sourceCodePath: '**/src/common/app_code/eventhub-trigger/*.csproj'
+              testCodePath: ''
+              buildConfiguration: 'Release'
+              codeCoverageThreshold: '$(codeCoverageThreshold)'
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Function Artifact"
+            inputs:
+              buildType: "current"
+              artifact: "dotnetArtifact"
+              targetPath: "$(Pipeline.Workspace)/dotnetArtifact"
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Terraform Artifact"
+            inputs:
+              buildType: "current"
+              artifact: "terraform"
+              targetPath: "$(Pipeline.Workspace)/terraform"
+          - task: Bash@3
+            displayName: "Pull Azure Function App Name From Outputs"
+            inputs:
+              targetType: 'inline'
+              workingDirectory: "$(Pipeline.Workspace)/terraform"
+              script: |
+                # functionName=$(jq -r '.[]' outputs.json)
+                functionName=$(jq -r '.function_app_name.value' outputs.json)
+                echo "##vso[task.setvariable variable=azureFunctionName;]$functionName"
+          - task: AzureFunctionApp@1
+            displayName: Deploy Azure Function App
+            inputs:
+              appType: 'functionApp'
+              appName: '$(azureFunctionName)'
+              resourceGroupName: '$(resourceGroupName)'
+              azureSubscription: $(AZURE_SERVICE_CONNECTION)
+              package: '$(Pipeline.Workspace)/dotnetArtifact/eventhub-trigger.zip'
+              deploymentMethod: 'runFromPackage'

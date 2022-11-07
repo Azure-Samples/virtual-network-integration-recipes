@@ -1,0 +1,10 @@
+variables:
+  resourceGroupName: 'rg-synapsercpi-bicep'
+  resourceBaseName: 'synapsercpbi'
+  location: 'australiaeast'
+  vnetAddressPrefix: '10.9.0.0/16'
+  privateEndpointSubnetAddressPrefix: '10.9.0.0/24'
+  bastionSubnetAddressPrefix: '10.9.1.0/24'
+  operationsResourceGroupName: 'rg-scenario-operations'
+  operationsVnetName: 'vnet-operations'
+  newOrExistingDnsZones: 'existing'

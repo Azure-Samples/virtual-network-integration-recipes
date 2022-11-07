@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "eastus"
+        },
+        "resourceBaseName": {
+            "value": "webhttp"
+        },
+        "dnsZoneResourceGroupName": {
+            "value": "[NAME OF RESOURCE GROUP CONTAINING EXISTING AZURE PRIVATE DNS ZONES]"
+        },
+        "newOrExistingDnsZones": {
+            "value": "new"
+        },
+        "virtualNetworkAddressPrefix": {
+            "value": "10.5.0.0/16"
+        },
+        "virtualNetworkAppServiceIntegrationSubnetAddressPrefix": {
+            "value": "10.5.1.0/24"
+        },
+        "virtualNetworkPrivateEndpointSubnetAddressPrefix": {
+            "value": "10.5.2.0/24"
+        }
+    }
+}

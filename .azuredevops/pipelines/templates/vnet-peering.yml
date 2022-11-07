@@ -1,0 +1,89 @@
+parameters:
+    # The name of the Azure DevOps service connection to the Azure subscription to be used for peering virtual networks.
+  - name: azureSubscription
+    type: string
+
+    # The name of the Azure resource group associated for the application/recipe.
+  - name: sourceResourceGroupName
+    type: string
+
+    # The name of the Azure resource group associated with the central operations (the "hub") for management of various recipes.
+  - name: targetResourceGroupName
+    type: string
+
+    # The name of the Azure virtual network within $operationsResourceGroupName. The application/recipe virtual networks will be peered to the $operationsVirtualNetworkName virtual network.
+  - name: targetVirtualNetworkName
+    type: string
+
+    # The Bicep artifact name to be published. Default to "bicep". This allows multiple bicep deployments within the same build.
+  - name: bicepArtifact
+    type: string
+    default: bicep
+
+    # Determine if IaC source type for the deployed recipe (used to determine how to retrieve the virtual network name from output values.)
+  - name: infraSourceType
+    type: string
+    values:
+      - bicep
+      - terraform
+
+steps:
+  # ----- Azure Bicep specific tasks ----
+  - task: DownloadPipelineArtifact@2
+    condition: eq('${{ parameters.infraSourceType }}','bicep')
+    displayName: "Download Bicep Artifact"
+    inputs:
+      buildType: current
+      artifact: "${{ parameters.bicepArtifact }}"
+      targetPath: "$(Pipeline.Workspace)/bicep"
+  - bash: |
+        applicationVirtualNetworkName=$(jq -r '.properties.outputs.virtualNetworkName.value' outputs.json)
+        echo "Application Virtual Network Name: $applicationVirtualNetworkName"
+        echo "##vso[task.setvariable variable=appVnetName]$applicationVirtualNetworkName"
+    name: retrieveBicepAppVnetName
+    displayName: "Retrieve Application Virtual Network Name (Bicep)"
+    workingDirectory: "$(Pipeline.Workspace)/bicep"
+    condition: eq('${{ parameters.infraSourceType }}','bicep')
+  
+  # ----- Terraform specific tasks ----
+  - task: DownloadPipelineArtifact@2
+    condition: eq('${{ parameters.infraSourceType }}','terraform')
+    displayName: "Download Terraform Artifact"
+    inputs:
+      buildType: "current"
+      artifact: "terraform"
+      targetPath: "$(Pipeline.Workspace)/terraform"
+  - bash: |
+      applicationVirtualNetworkName=$(jq -r '.vnet_name.value' outputs.json)
+      echo "Application Virtual Network Name: $applicationVirtualNetworkName."
+      echo "##vso[task.setvariable variable=appVnetName;]$applicationVirtualNetworkName"
+    displayName: "Retrieve Virtual Network Name (Terraform)"
+    name: retrieveTerraformAppVnetName
+    workingDirectory: "$(Pipeline.Workspace)/terraform"
+    condition: eq('${{ parameters.infraSourceType }}','terraform')
+
+  # ---- Set virtual network peering relationship ----
+  - task: AzureCLI@2
+    displayName: Virtual Network Peering
+    inputs:
+      azureSubscription: '${{ parameters.azureSubscription }}'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az deployment group create --resource-group '${{ parameters.targetResourceGroupName }}' \
+          --template-file ./src/common/infrastructure/bicep/vnet-peering.bicep \
+          --parameters vnetName='${{ parameters.targetVirtualNetworkName }}' \
+                        remoteVnetName=$(appVnetName) \
+                        remoteResourceGroupName='${{ parameters.sourceResourceGroupName }}'
+  - task: AzureCLI@2
+    displayName: Virtual Network Peering 2
+    inputs:
+      azureSubscription: '${{ parameters.azureSubscription }}'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az deployment group create --resource-group '${{ parameters.sourceResourceGroupName }}' \
+          --template-file ./src/common/infrastructure/bicep/vnet-peering.bicep \
+          --parameters vnetName="$(appVnetName)" \
+                        remoteVnetName='${{ parameters.targetVirtualNetworkName }}' \
+                        remoteResourceGroupName='${{ parameters.targetResourceGroupName }}'

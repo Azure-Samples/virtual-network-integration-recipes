@@ -1,0 +1,58 @@
+# The following variables should be set in the pipeline:
+# - AZURE_SERVICE_CONNECTION
+# - vmAdminPassword
+# - vmAdminUsername
+
+name: 'Private Event Hub Recipe CI'
+
+trigger:
+  branches:
+    include:
+    - '*' 
+  paths:
+    include: 
+    - src/az-func-event-hub
+
+pool: 
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Build
+    displayName: Build
+
+    jobs:
+      - job: BuildDotNet
+        displayName: Validate .NET Project
+        variables:
+        - template: variables/private-event-hub-recipe-bicep.yml
+        steps:
+          - template: ./templates/dotnet-build.yml
+            parameters: 
+              sourceCodePath: '**/src/common/app_code/eventhub-trigger/*.csproj'
+              testCodePath: ''
+              buildConfiguration: 'Release'
+              codeCoverageThreshold: '$(codeCoverageThreshold)'
+      - job: BuildBicep
+        displayName: Validate Bicep Files
+        variables:
+        - template: variables/private-event-hub-recipe-bicep.yml
+        steps:
+          - template: ./templates/bicep-build.yml
+            parameters:
+              bicepPath: ./src/az-func-event-hub/deploy/bicep/main.bicep
+              bicepParameters: 'location=$(location) dnsZoneResourceGroupName=$(operationsResourceGroupName) newOrExistingDnsZones=$(newOrExistingDnsZones) virtualNetworkAddressPrefix=$(vnetAddressPrefix) virtualNetworkAppServiceIntegrationSubnetAddressPrefix=$(vnetSubnetAppServiceIntegrationAddressPrefix) virtualNetworkPrivateEndpointSubnetAddressPrefix=$(vnetSubnetPrivateEndpointAddressPrefix)'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+      - job: BuildTerraform
+        displayName: Validate Terraform Files
+        variables:
+        - template: variables/private-event-hub-recipe-terraform.yml
+        steps:
+          - template: ./templates/terraform-build.yml
+            parameters:
+              terraformPath: ./src/az-func-event-hub/deploy/terraform
+              terraformVariables: '-var "resource_group_name=$(resourceGroupName)" -var "dns_zone_resource_group_name=$(operationsResourceGroupName)" -var "newOrExistingDnsZones=$(newOrExistingDnsZones)" -var "resourceBaseName=$(resourceBaseName)" -var "location=$(location)" -var "tags=$(tags)" -var "vnet_address_prefix=$(vnetAddressPrefix)" -var "vnet_subnet_app_service_integration_address_prefixes=$(vnetSubnetAppServiceIntegrationAddressPrefix)" -var "vnet_subnet_private_endpoints_address_prefixes=$(vnetSubnetPrivateEndpointAddressPrefix)"'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+              tfStateResourceGroupName: $(tfStateResourceGroupName)
+              tfStateStorageAccountName: $(tfStateStorageAccountName)
+              tfStateContainerName: $(tfStateContainerName)
+              tfStateFileName: '$(tfStateFileName)'

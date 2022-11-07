@@ -1,0 +1,13 @@
+variables:
+  resourceGroupName: 'rg-scenario-operations'
+  location: 'northcentralus'
+  virtualNetworkName: 'vnet-operations'
+  subnetVmName: 'snet-vm'
+  subnetAzDOAgentName: 'snet-agent'
+  vnetAddressPrefix: '10.0.0.0/16'
+  subnetAzDOAddressPrefix: '10.0.2.0/24'
+  subnetVmAddressPrefix: '10.0.1.0/24'
+  imageName: 'selfhostedagent'
+  imageTag: 'latest'
+  agentCount: '1'
+  terraformStateStorageAccountName: 'tfstatevnet001'

@@ -1,0 +1,14 @@
+resource_group_name                            = "rg-sha"
+workload                                       = "selfhostedagent"
+location                                       = "northcentralus"
+environment                                    = "dev"
+azure_devops_personal_access_token             = "my-super-scret-azdo-pat"
+azure_devops_org_name                          = "Contoso"
+azure_devops_agent_pool_name                   = "agentpool"
+service_principal_client_id                    = "clientid"
+service_principal_client_secret                = "my-super-scret-client-scret"
+service_principal_tenant_id                    = "tenantid"
+agent_prefix                                   = "testagent"
+tags = {
+  environment = "dev"
+}

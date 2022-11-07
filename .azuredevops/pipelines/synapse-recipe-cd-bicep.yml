@@ -1,0 +1,113 @@
+# The following variable(s) should be set in the pipeline:
+# - AZURE_DEVOPS_AGENT_POOL
+# - AZURE_SERVICE_CONNECTION
+# - OPERATIONS_AZURE_SUBSCRIPTION_ID
+# - synSqlAdminUsername
+# - synSqlAdminPassword
+
+# The following variable(s) are picked from the variable file "variables/synapse-recipe-bicep.yml":
+# - resourceGroupName
+# - resourceBaseName
+# - location
+# - vnetAddressPrefix
+# - privateEndpointSubnetAddressPrefix
+# - bastionSubnetAddressPrefix
+# - operationsResourceGroupName
+# - operationsVnetName
+# - newOrExistingDnsZones
+
+# The following variables(s) are dynamically set based on bicep deployment output:
+# - azdoAppVnetName
+# - azdoSynapseWorkspaceName
+# - azdoSynStorageAccountName
+# - azdoAppStorageAccountName
+# - azdoKeyVaultName
+
+
+name: 'Azure Synapse Recipe CD - Bicep'
+
+trigger: none
+
+pr: none
+
+resources:
+  pipelines:
+    - pipeline: synapseCIPipeline
+      source: 'Azure Synapse Recipe CI'
+      trigger:
+        branches:
+          include:
+          - main
+
+pool: $(AZURE_DEVOPS_AGENT_POOL)
+
+stages:
+  - stage: Deploy
+    displayName: Deploy
+
+    jobs:
+      - job: DeployBicep
+        displayName: Deploy Bicep Files
+        variables:
+        - template: variables/synapse-recipe-bicep.yml
+        steps:
+          - template: ./templates/bicep-deploy.yml
+            parameters:
+              bicepPath: ./src/az-synapse/deploy/bicep/main.bicep
+              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) synSqlAdminUsername=$(SYNSQLADMINUSERNAME) synSqlAdminPassword=$(SYNSQLADMINPASSWORD) vnetAddressPrefix=$(vnetAddressPrefix) privateEndpointSubnetAddressPrefix=$(privateEndpointSubnetAddressPrefix) bastionSubnetAddressPrefix=$(bastionSubnetAddressPrefix) dnsZoneResourceGroupName=$(operationsResourceGroupName) dnsZoneSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID) newOrExistingDnsZones=$(newOrExistingDnsZones)'
+              bicepArtifact: 'bicep-main'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Bicep Artifact"
+            inputs:
+              buildType: current
+              artifact: 'bicep-main'
+              targetPath: "$(Pipeline.Workspace)/bicep"
+          - bash: |
+                appVnetName=$(jq -r '.properties.outputs.outVirtualNetworkName.value' outputs.json)
+                synapseWorkspaceName=$(jq -r '.properties.outputs.outSynapseWorkspaceName.value' outputs.json)
+                synStorageAccountName=$(jq -r '.properties.outputs.outSynapseDefaultStorageAccountName.value' outputs.json)
+                appStorageAccountName=$(jq -r '.properties.outputs.outMainStorageAccountName.value' outputs.json)
+                keyVaultName=$(jq -r '.properties.outputs.outKeyVaultName.value' outputs.json)
+                echo "Application VNet Name: ${appVnetName}"
+                echo "Synapse Workspace Name: ${synapseWorkspaceName}"
+                echo "Synapse Storage Account Name: ${synStorageAccountName}"
+                echo "Application Storage Account Name: ${appStorageAccountName}"
+                echo "Key Vault Name: ${keyVaultName}"
+                echo "##vso[task.setvariable variable=azdoAppVnetName]${appVnetName}"
+                echo "##vso[task.setvariable variable=azdoSynapseWorkspaceName;isoutput=true]${synapseWorkspaceName}"
+                echo "##vso[task.setvariable variable=azdoSynStorageAccountName;isoutput=true]${synStorageAccountName}"
+                echo "##vso[task.setvariable variable=azdoAppStorageAccountName;isoutput=true]${appStorageAccountName}"
+                echo "##vso[task.setvariable variable=azdoKeyVaultName;isoutput=true]${keyVaultName}"
+            name: retrieveBicepOutputVariables
+            displayName: "Retrieve bicep output variables"
+            workingDirectory: "$(Pipeline.Workspace)/bicep"
+          - template: ./templates/bicep-deploy.yml
+            parameters:
+              bicepPath: ./src/common/infrastructure/bicep/setup-networking-with-hub.bicep
+              bicepArtifact: 'bicep-vnet-peering'
+              bicepParameters: 'applicationVnetName=$(azdoAppVnetName) operationsVnetName=$(operationsVnetName) operationsResourceGroupName=$(operationsResourceGroupName) operationsSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID)'
+              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+      - job: RunPostDeployScript
+        displayName: Run Post Deploy Script
+        dependsOn: DeployBicep
+        variables:
+        - template: variables/synapse-recipe-bicep.yml
+        - name: azdoSynapseWorkspaceName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoSynapseWorkspaceName'] ]
+        - name: azdoSynStorageAccountName
+          value : $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoSynStorageAccountName'] ]
+        - name: azdoAppStorageAccountName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoAppStorageAccountName'] ]
+        - name: azdoKeyVaultName
+          value: $[ dependencies.DeployBicep.outputs['retrieveBicepOutputVariables.azdoKeyVaultName'] ]
+        steps:
+          - task: AzureCLI@2
+            displayName: Run Post Deploy Script Task
+            inputs:
+              azureSubscription: $(AZURE_SERVICE_CONNECTION)
+              scriptType: bash
+              scriptLocation: scriptPath
+              scriptPath: '$(System.DefaultWorkingDirectory)/src/az-synapse/deploy/scripts/deploy-managed-private-endpoints.sh'
+              arguments: '$(resourceGroupName) $(azdoSynapseWorkspaceName) $(azdoSynStorageAccountName) $(azdoAppStorageAccountName) $(azdoKeyVaultName)'
+              failOnStandardError: true

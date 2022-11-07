@@ -1,0 +1,11 @@
+variables:
+  resourceGroupName: 'rg-purviewrcpi-bicep'
+  resourceBaseName: 'purviewrcpbi'
+  location: 'australiaeast'
+  vnetAddressPrefix: '10.13.0.0/16'
+  privateEndpointSubnetAddressPrefix: '10.13.0.0/24'
+  bastionSubnetAddressPrefix: '10.13.1.0/24'
+  shirSubnetAddressPrefix: '10.13.2.0/24'
+  operationsResourceGroupName: 'rg-scenario-operations'
+  operationsVnetName: 'vnet-operations'
+  newOrExistingDnsZones: 'existing'

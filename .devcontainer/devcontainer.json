@@ -1,0 +1,61 @@
+{
+    "name": "vnet-recipes",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    // Set *default* container specific settings.json values on container create.
+    "settings": {
+        "files.associations": {
+            "**/.azuredevops/pipelines/**/*.yml": "azure-pipelines"
+        }
+    },
+    "forwardPorts": [
+        7071
+    ],
+    "mounts": [
+        // Saves the bash terminal history between instances of the devcontainer
+        "type=volume,source=vnetcmdhistory,target=/home/vscode/commandhistory",
+        // Persist the "machine-level" NuGet package cache between instances of the devcontainer
+        "type=volume,source=vnetnuget,target=/home/vscode/.nuget",
+        // Mounts the login details from the host machine to azcli works in the container
+        "type=bind,source=${env:HOME}${env:USERPROFILE}/.azure,target=/home/vscode/.azure",
+        // Mounts the ~/.ssh folder so that ssh keys can be used (typically for git commands through ssh protocol)
+        "type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh"
+    ],
+    "features": {
+        "ghcr.io/devcontainers/features/terraform:1": {
+            "tflint": "0.41.0",
+            "version": "1.3.2"
+        },
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "14"
+        },
+        "ghcr.io/devcontainers/features/powershell:1": {
+            "version": "7.2.6"
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {
+            "version": "2.17.0"
+        }
+    },
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+        "ms-azuretools.vscode-bicep",
+        "ms-azuretools.vscode-azureterraform",
+        "ms-azure-devops.azure-pipelines",
+        "ms-vscode.azure-account",
+        "ms-vscode.vscode-node-azure-pack",
+        "ms-dotnettools.csharp",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "davidanson.vscode-markdownlint",
+        "dbaeumer.vscode-eslint",
+        "hashicorp.terraform",
+        "hediet.vscode-drawio",
+        "redhat.vscode-yaml",
+        "timonwong.shellcheck"
+    ],
+    // Use 'postCreateCommand' to run commands after the container is created.
+    "postCreateCommand": "bash scripts/setup-dev-container.sh",
+    // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+    "remoteUser": "vscode"
+}
