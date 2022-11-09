@@ -31,7 +31,7 @@ var baseName = toLower(resourceBaseName) // Ensure that a user-provided value is
 var vnetName = 'vnet-${baseName}'
 var subnetName = 'snet-${baseName}-shir'
 var vmssName = 'vm-${baseName}'
-var subnetId = '${resourceId('Microsoft.Network/virtualNetworks', vnetName)}/subnets/${subnetName}'
+var subnetId = resourceId('Microsoft.Network/VirtualNetworks/subnets', vnetName, subnetName)
 var loadbalancerName = '${vmssName}-lb'
 
 // Resources
