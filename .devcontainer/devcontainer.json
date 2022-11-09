@@ -20,7 +20,7 @@
         // Mounts the login details from the host machine to azcli works in the container
         "type=bind,source=${env:HOME}${env:USERPROFILE}/.azure,target=/home/vscode/.azure",
         // Mounts the ~/.ssh folder so that ssh keys can be used (typically for git commands through ssh protocol)
-        "type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh"
+        "type=bind,source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh"
     ],
     "features": {
         "ghcr.io/devcontainers/features/terraform:1": {
