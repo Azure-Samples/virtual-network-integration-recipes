@@ -80,7 +80,7 @@ az deployment group what-if --resource-group <RESOURCE_GROUP_NAME> --template-fi
 az deployment group create --resource-group <RESOURCE_GROUP_NAME> --template-file .\main.bicep --parameters @.\azuredeploy.parameters.json --verbose
 ```
 
-#### 2. Create Self-Hosted Integration Runtime (SHIR) in Azure Purview
+#### 2. Create Jumpbox to enabled deployment of Self-Hosted Integration Runtime (SHIR) in Azure Purview
 
 Because the Azure Purview portal has public access disabled, these steps needs to be executed from a Virtual Machine (VM) in a VNet which has a network-line-of-site to Azure Purview. For simplicity, you can deploy this VM in the same application VNet which has been created as part of Bicep deployment as it has the required networking setup. Please follow the [Azure Documentation](https://docs.microsoft.com/azure/virtual-machines/linux/quick-create-portal) for detailed instructions.
 
@@ -94,7 +94,7 @@ This recipe comes with a Bicep deployment that deploys a [Virtual Machine Scale 
 ```bash
 az deployment group create \
     --resource-group <RESOURCE_GROUP_NAME> \
-    --template-file .\selfHostedIntegrationRuntime.bicep \
+    --template-file .\shir.bicep \
     --parameters resourceBaseName=<RESOURCE_BASE_NAME> administratorUsername=<USERNAME> administratorPassword=<PASSWORD> purviewIntegrationRuntimeAuthKey=<SHIR_AUTHENTICATION_KEY> \
     --confirm-with-what-if
 ```
