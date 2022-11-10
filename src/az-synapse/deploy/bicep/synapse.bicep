@@ -177,12 +177,14 @@ resource synapseBigDataPool001 'Microsoft.Synapse/workspaces/bigDataPools@2021-0
     }
     dynamicExecutorAllocation: {
       enabled: true
+      minExecutors: 1
+      maxExecutors: 4
     }
     autoPause: {
       enabled: true
       delayInMinutes: 15
     }
-    sparkVersion: '2.4'
+    sparkVersion: '3.2'
     sessionLevelPackagesEnabled: true
     customLibraries: []
     defaultSparkLogFolder: 'logs/'
