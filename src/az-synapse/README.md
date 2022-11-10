@@ -59,6 +59,7 @@ To deploy this recipe, please perform the following actions:
 #### Deploying Infrastructure Using Bicep
 
 - Open the command prompt and change directory to the `bicep` folder.
+
 ```bash
 cd <WORKSPACE_LOCATION>/src/az-synapse/deploy/bicep
 ```
