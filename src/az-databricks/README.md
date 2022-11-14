@@ -58,6 +58,20 @@ To deploy this recipe, please perform the following actions:
 
 #### Deploying Infrastructure Using Bicep
 
+- Open the command prompt and change directory to the `bicep` folder.
+
+```bash
+cd <WORKSPACE_LOCATION>/src/az-databricks/deploy/bicep
+```
+
+- Login to Azure CLI and set the subscription you want to use.
+
+```bash
+az login
+
+az account set -s <subscription_id>
+```
+
 - Create a new Azure resource group to deploy the Bicep template, passing in a location and name.
 
 ```bash
@@ -69,13 +83,13 @@ az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
 - Optionally, verify what Bicep will deploy, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
 
 ```bash
-az deployment group what-if --resource-group <RESOURCE_GROUP_NAME> --template-file .\main.bicep --parameters .\azuredeploy.parameters.json --verbose
+az deployment group what-if --resource-group <RESOURCE_GROUP_NAME> --template-file main.bicep --parameters azuredeploy.parameters.json --verbose
 ```
 
 - Deploy the template, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
 
 ```bash
-az deployment group create --resource-group <RESOURCE_GROUP_NAME> --template-file .\main.bicep --parameters .\azuredeploy.parameters.json --verbose
+az deployment group create --resource-group <RESOURCE_GROUP_NAME> --template-file main.bicep --parameters azuredeploy.parameters.json --verbose
 ```
 
 - Create an Azure Key Vault-backed secret scope and save the Azure Storage account Key as a secret in Azure Key Vault.
@@ -89,7 +103,10 @@ This is done by executing the shell script `/src/az-databricks/scripts/manage-da
 The 2nd step, which is to store the secret in Azure Key Vault, can't be done from a public network as the public access is disabled. That's why the script needs to be executed from a Virtual Machine (VM) in a VNet which has access to Azure Key Vault using private endpoints. For simplicity, you can deploy this VM in the same application VNet which has been created as part of Bicep deployment as it has the required networking setup. Please follow the [Azure Documentation](https://docs.microsoft.com/azure/virtual-machines/linux/quick-create-portal) for detailed instructions.
 
 ```bash
+cd <WORKSPACE_LOCATION>/src/az-databricks/deploy/scripts
+
 chmod +x manage-databricks-secret-scope.sh
+
 ./manage-databricks-secret-scope.sh <RESOURCE_GROUP_NAME> <DATABRICKS_WORKSPACE_NAME> <STORAGE_ACCOUNT_NAME> <KEYVAULT_NAME>
 ```
 

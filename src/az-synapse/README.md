@@ -58,6 +58,20 @@ To deploy this recipe, please perform the following actions:
 
 #### Deploying Infrastructure Using Bicep
 
+- Open the command prompt and change directory to the `bicep` folder.
+
+```bash
+cd <WORKSPACE_LOCATION>/src/az-synapse/deploy/bicep
+```
+
+- Login to Azure CLI and set the subscription you want to use.
+
+```bash
+az login
+
+az account set -s <subscription_id>
+```
+
 - Create a new Azure resource group to deploy the Bicep template, passing in a location and name.
 
 ```bash
@@ -69,13 +83,22 @@ az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
 - Optionally, verify what Bicep will deploy, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
 
 ```bash
-az deployment group what-if --resource-group <RESOURCE_GROUP_NAME> --template-file .\main.bicep --parameters .\azuredeploy.parameters.json --verbose
+az deployment group what-if --resource-group <RESOURCE_GROUP_NAME> --template-file main.bicep --parameters azuredeploy.parameters.json --verbose
 ```
 
 - Deploy the template, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
 
 ```bash
-az deployment group create --resource-group <RESOURCE_GROUP_NAME> --template-file .\main.bicep --parameters .\azuredeploy.parameters.json --verbose
+az deployment group create --resource-group <RESOURCE_GROUP_NAME> --template-file main.bicep --parameters azuredeploy.parameters.json --verbose
+```
+
+Please note down the value of the following output variables from the deployment:
+
+```
+outSynapseWorkspaceName
+outSynapseDefaultStorageAccountName
+outMainStorageAccountName
+outKeyVaultName
 ```
 
 - Create the managed private endpoints by executing the shell script [deploy-managed-private-endpoints.sh](./deploy/scripts/deploy-managed-private-endpoints.sh). This script requires five parameters which are the various resource names created in the previous step of Bicep deployment.
@@ -83,6 +106,8 @@ az deployment group create --resource-group <RESOURCE_GROUP_NAME> --template-fil
 Because the Synapse workspace has public access disabled, this script needs to be executed from a Virtual Machine (VM) in a VNet which has access to the Synapse endpoints using private endpoints. For simplicity, you can deploy this VM in the same application VNet which has been created as part of Bicep deployment as it has the required networking setup. Please follow the [Azure Documentation](https://docs.microsoft.com/azure/virtual-machines/linux/quick-create-portal) for detailed instructions.
 
 ```bash
+cd <WORKSPACE_LOCATION>/src/az-synapse/deploy/scripts
+
 chmod +x deploy-managed-private-endpoints.sh
 
 ./deploy-managed-private-endpoints.sh <RESOURCE_GROUP_NAME> <SYN_WORKSPACE_NAME> <SYN_STORAGE_ACCOUNT_NAME> <MAIN_STORAGE_ACCOUNT_NAME> <KEYVAULT_NAME>
