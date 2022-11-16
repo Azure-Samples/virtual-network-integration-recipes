@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
   push:
     paths:
-    - src/az-func-event-hub/**
-    - src/common/app_code/eventhub-trigger/**
-    - .github/workflows/event-hub-recipe-ci.yml
+      - src/az-func-event-hub/**
+      - src/common/app_code/eventhub-trigger/**
+      - .github/workflows/event-hub-recipe-ci.yml
   pull_request:
     branches: [main]
 
@@ -19,6 +19,7 @@ jobs:
     with:
       dotnet_version: "3.1.x"
       working_directory: "./src/common/app_code/eventhub-trigger/"
+      env: ${{ github.event.repository.name}}-branch
     secrets: inherit
 
   validate-bicep:
