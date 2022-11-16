@@ -22,13 +22,23 @@ jobs:
     secrets: inherit
 
   validate-bicep:
-    uses: ./.github/workflows/bicep-build.yml
-    with:
-      azure-resource-group-name: "rg-funcevhrcp-gh-bicep"
-      azure-resource-group-location: "eastus"
-      bicep-path: ./src/az-func-event-hub/deploy/bicep/main.bicep
-      env: ${{ github.event.repository.name}}-branch
-    secrets: inherit
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event.repository.name}}-branch
+    steps:
+      - uses: actions/build-bicep-action@v1
+        with:
+          azure-resource-group-name: "rg-funcevhrcp-gh-bicep"
+          azure-resource-group-location: "eastus"
+          bicep-path: ./src/az-func-event-hub/deploy/bicep/main.bicep
+  # validate-bicep:
+  #   uses: ./.github/workflows/bicep-build.yml
+  #   with:
+  #     azure-resource-group-name: "rg-funcevhrcp-gh-bicep"
+  #     azure-resource-group-location: "eastus"
+  #     bicep-path: ./src/az-func-event-hub/deploy/bicep/main.bicep
+  #     env: ${{ github.event.repository.name}}-branch
+  #   secrets: inherit
 
   validate-terraform:
     uses: ./.github/workflows/terraform-build.yml
