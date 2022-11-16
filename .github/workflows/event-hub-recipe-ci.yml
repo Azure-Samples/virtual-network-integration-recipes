@@ -26,7 +26,8 @@ jobs:
     environment:
       name: ${{ github.event.repository.name}}-branch
     steps:
-      - uses: actions/build-bicep-action@v1
+      - uses: actions/checkout@v3
+      - uses: actions/build-bicep-action
         with:
           azure-resource-group-name: "rg-funcevhrcp-gh-bicep"
           azure-resource-group-location: "eastus"
