@@ -9,16 +9,10 @@ on:
       working_directory:
         required: true
         type: string
-      env:
-        required: true
-        type: string
 
 jobs:
   build-dotnet:
     runs-on: ubuntu-latest
-
-    environment:
-      name: ${{ inputs.env }}
 
     steps:
       # Checkout code

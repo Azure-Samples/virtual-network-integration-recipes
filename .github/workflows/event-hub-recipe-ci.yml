@@ -19,7 +19,6 @@ jobs:
     with:
       dotnet_version: "3.1.x"
       working_directory: "./src/common/app_code/eventhub-trigger/"
-      env: ${{ github.event.repository.name}}-branch
     secrets: inherit
 
   validate-bicep:
@@ -28,6 +27,7 @@ jobs:
       azure-resource-group-name: "rg-funcevhrcp-gh-bicep"
       azure-resource-group-location: "eastus"
       bicep-path: ./src/az-func-event-hub/deploy/bicep/main.bicep
+      env: ${{ github.event.repository.name}}-branch
     secrets: inherit
 
   validate-terraform:
