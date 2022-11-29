@@ -1,5 +1,5 @@
-name: "Build Azure Bicep Action"
-description: "Build an Azure Bicep template"
+name: "Validate Azure Bicep Action"
+description: "Validate an Azure Bicep template"
 inputs:
   azure-resource-group-name:
     description: The Azure resource group name.
