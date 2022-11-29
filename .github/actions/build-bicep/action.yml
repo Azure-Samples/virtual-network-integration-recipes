@@ -7,6 +7,15 @@ inputs:
   azure-resource-group-location:
     description: The Azure region.
     required: true
+  azure-subscription-id:
+    description: The Azure subscription ID.
+    required: true
+  azure-client-id:
+    description: The Azure client ID.
+    required: true
+  azure-tenant-id:
+    description: The Azure tenant ID.
+    required: true
   bicep-path:
     description: Path to the Azure Bicep file.
     required: true
@@ -24,9 +33,12 @@ runs:
     - name: "Az CLI login"
       uses: azure/login@v1
       with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        # client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        # tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        # subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client-id: ${{ inputs.azure-client-id }}
+        tenant-id: ${{ inputs.azure-tenant-id }}
+        subscription-id: ${{ inputs.azure-subscription-id }}
 
     # Ensure resource group is created
     - name: Create Resource Group
@@ -41,7 +53,7 @@ runs:
     - name: Preview Azure Bicep Changes
       uses: azure/deployment-what-if-action@v1.0.0
       with:
-        subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        subscription: ${{ inputs.azure-subscription-id }} #${{ secrets.AZURE_SUBSCRIPTION_ID }}
         resourceGroup: ${{ inputs.azure-resource-group-name }}
         templateFile: ${{ inputs.bicep-path}}
         additionalParameters: ${{ inputs.bicep-parameters}}
