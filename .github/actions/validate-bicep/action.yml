@@ -48,7 +48,7 @@ runs:
 
     # Validate Azure Bicep changes.
     - name: Preview Azure Bicep Changes
-      id: Bicep What-If
+      id: BicepWhatIf
       uses: azure/deployment-what-if-action@v1.0.0
       with:
         subscription: ${{ inputs.azure-subscription-id }}
