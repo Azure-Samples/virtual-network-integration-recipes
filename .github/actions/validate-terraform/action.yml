@@ -42,6 +42,29 @@ runs:
       with:
         terraform_version: ${{ inputs.terraform_version }}
 
+    - uses: actions/cache@v3
+      name: Cache plugin dir
+      with:
+        path: ${{ inputs.working_directory }}
+        key: ${{ runner.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+
+    - name: Setup TFLint
+      uses: terraform-linters/setup-tflint@v2
+      with:
+        tflint_version: v0.41.0
+
+    - name: Show version
+      shell: bash
+      run: tflint --version
+
+    - name: Init TFLint
+      shell: bash
+      run: tflint --init
+
+    - name: Run TFLint
+      shell: bash
+      run: tflint -f compact
+
     - name: Terraform Init
       id: init
       shell: bash
