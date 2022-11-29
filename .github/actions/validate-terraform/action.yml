@@ -1,0 +1,67 @@
+name: "Validate Terraform configuration"
+description: "Validate Terraform configuration file"
+inputs:
+  # azure-resource-group-name:
+  #   description: The Azure resource group name.
+  #   required: true
+  # azure-resource-group-location:
+  #   description: The Azure region.
+  #   required: true
+  azure-subscription-id:
+    description: The Azure subscription ID.
+    required: true
+  azure-client-id:
+    description: The Azure client ID.
+    required: true
+  azure-tenant-id:
+    description: The Azure tenant ID.
+    required: true
+  terraform_version:
+    description: dd
+    required: true
+  terraform_variables:
+    description: dd
+    required: true
+  working_directory:
+    description: dd
+    required: true
+
+runs:
+  using: composite
+
+  steps:
+    # Checkout code
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Log into Azure
+    - name: "Az CLI login"
+      uses: azure/login@v1
+      with:
+        client-id: ${{ inputs.azure-client-id }}
+        tenant-id: ${{ inputs.azure-tenant-id }}
+        subscription-id: ${{ inputs.azure-subscription-id }}
+
+    # Validate Terraform changes.
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: ${{ inputs.terraform_version }}
+
+    - name: Terraform Init
+      id: init
+      shell: bash
+      run: terraform init
+      working-directory: ${{ inputs.working_directory }}
+
+    - name: Terraform Validate
+      id: validate
+      shell: bash
+      run: terraform validate
+      working-directory: ${{ inputs.working_directory }}
+
+    - name: Terraform Plan
+      id: Plan
+      shell: bash
+      run: terraform plan ${{ inputs.terraform_variables }}
+      working-directory: ${{ inputs.working_directory }}
