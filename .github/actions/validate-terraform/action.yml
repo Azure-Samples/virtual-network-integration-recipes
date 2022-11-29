@@ -11,13 +11,13 @@ inputs:
     description: The Azure tenant ID.
     required: true
   terraform_version:
-    description: dd
+    description: The version of Terraform to be used.
     required: true
   terraform_variables:
-    description: dd
+    description: Variables to be provided to the Terraform provider.
     required: true
   working_directory:
-    description: dd
+    description: The directory in which to run the commands.
     required: true
 
 runs:
