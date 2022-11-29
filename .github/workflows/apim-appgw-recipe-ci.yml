@@ -16,6 +16,7 @@ permissions:
 
 jobs:
   build-code:
+    name: Build .NET Code
     uses: ./.github/workflows/dotnet-build.yml
     with:
       dotnet_version: "3.1.x"
@@ -55,7 +56,7 @@ jobs:
           templateFile: ./src/az-webapp-apim-appgw/deploy/bicep/main.bicep
           additionalParameters: apiManagementCustomDnsName=contoso.net apiManagementManagementCustomHostname=management.contoso.net apiManagementProxyCustomHostname=api.contoso.net apiManagementPortalCustomHostname=portal.contoso.net apiManagementPublisherEmailAddress=user@email.com apiManagementPublisherName=Contoso apiManagementPortalCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} apiManagementProxyCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} apiManagementManagementCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} applicationGatewayTrustedRootBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_TRUSTED_ROOT_BASE64_ENCODED_PFX_CERT }}
 
-    # NOTE: Could not figure out how to pass secrets (certs) to the reusable workflow to had to duplicate the Bicep and Terraform workflows here. 
+    # NOTE: Could not figure out how to pass secrets (certs) to the reusable workflow to had to duplicate the Bicep and Terraform workflows here.
 
   lint-terraform:
     uses: ./.github/workflows/terraform-lint.yml
