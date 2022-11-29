@@ -35,6 +35,7 @@ jobs:
     name: Validate Azure Bicep template
     environment: ${{ github.event.repository.name}}-branch
     steps:
+      - uses: actions/checkout@v3
       - uses: ./.github/actions/build-bicep-action.yml
         with:
           azure-resource-group-name: "rg-funcevhrcp-gh-bicep"
