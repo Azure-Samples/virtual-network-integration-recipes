@@ -1,12 +1,6 @@
 name: "Validate Terraform configuration"
 description: "Validate Terraform configuration file"
 inputs:
-  # azure-resource-group-name:
-  #   description: The Azure resource group name.
-  #   required: true
-  # azure-resource-group-location:
-  #   description: The Azure region.
-  #   required: true
   azure-subscription-id:
     description: The Azure subscription ID.
     required: true
@@ -53,15 +47,30 @@ runs:
       shell: bash
       run: terraform init
       working-directory: ${{ inputs.working_directory }}
+      env:
+        ARM_USE_OIDC: "true"
+        ARM_CLIENT_ID: ${{ inputs.azure-client-id }}
+        ARM_SUBSCRIPTION_ID: ${{ inputs.azure-subscription-id }}
+        ARM_TENANT_ID: ${{ inputs.azure-tenant-id }}
 
     - name: Terraform Validate
       id: validate
       shell: bash
       run: terraform validate
       working-directory: ${{ inputs.working_directory }}
+      env:
+        ARM_USE_OIDC: "true"
+        ARM_CLIENT_ID: ${{ inputs.azure-client-id }}
+        ARM_SUBSCRIPTION_ID: ${{ inputs.azure-subscription-id }}
+        ARM_TENANT_ID: ${{ inputs.azure-tenant-id }}
 
     - name: Terraform Plan
       id: Plan
       shell: bash
       run: terraform plan ${{ inputs.terraform_variables }}
       working-directory: ${{ inputs.working_directory }}
+      env:
+        ARM_USE_OIDC: "true"
+        ARM_CLIENT_ID: ${{ inputs.azure-client-id }}
+        ARM_SUBSCRIPTION_ID: ${{ inputs.azure-subscription-id }}
+        ARM_TENANT_ID: ${{ inputs.azure-tenant-id }}
