@@ -38,8 +38,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/build-bicep
         with:
-          azure-tenant-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-client-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           azure-resource-group-name: "rg-funcevhrcp-gh-bicep"
           azure-resource-group-location: "eastus"
