@@ -24,8 +24,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/validate-bicep
-        # env:
-        #   LOCATION: eastus
         with:
           azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
