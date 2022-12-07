@@ -13,21 +13,40 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  AZURE_REGION: eastus
+
 jobs:
   # TODO: VALIDATE PYTHON
 
   validate-bicep:
-    uses: ./.github/workflows/bicep-build.yml
-    with:
-      azure-resource-group-name: "rg-funchttprcpi-gh-bicep"
-      azure-resource-group-location: "eastus"
-      bicep-path: ./src/az-func-http/deploy/bicep/main.bicep
-    secrets: inherit
+    runs-on: ubuntu-latest
+    name: Validate Azure Bicep template
+    environment: ${{ github.event.repository.name}}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/validate-bicep
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          azure-resource-group-name: "rg-funchttprcpi-gh-bicep"
+          azure-resource-group-location: ${{ env.AZURE_REGION }}
+          bicep-path: ./src/az-func-http/deploy/bicep/main.bicep
 
   validate-terraform:
-    uses: ./.github/workflows/terraform-build.yml
-    with:
-      working_directory: ./src/az-func-http/deploy/terraform/
-      terraform_version: "1.3.2"
-      terraform_variables: -var "resource_group_name=rg-funchttprcpi-gh-tf" -var "dns_zone_resource_group_name=rg-funchttprcpi-gh-tf" -var "newOrExistingDnsZones=new" -var "location=eastus" -var "tags={environment=\"Azure-Samples\"}"
-    secrets: inherit
+    runs-on: ubuntu-latest
+    name: Validate Terraform configuration
+    environment: ${{ github.event.repository.name}}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/validate-terraform
+        env:
+          RESOURCE_GROUP_NAME: rg-funchttprcpi-gh-tf
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          terraform_version: "1.3.2"
+          terraform_variables: -var "resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" -var "dns_zone_resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" -var "newOrExistingDnsZones=new" -var "location=${{ env.AZURE_REGION }}" -var "tags={environment=\"Azure-Samples\"}"
+          working_directory: ./src/az-func-http/deploy/terraform/

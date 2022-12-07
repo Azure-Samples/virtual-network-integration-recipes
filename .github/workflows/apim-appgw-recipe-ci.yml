@@ -14,8 +14,12 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  AZURE_REGION: eastus
+
 jobs:
   build-code:
+    name: Build .NET Code
     uses: ./.github/workflows/dotnet-build.yml
     with:
       dotnet_version: "3.1.x"
@@ -24,85 +28,33 @@ jobs:
 
   validate-bicep:
     runs-on: ubuntu-latest
+    name: Validate Azure Bicep template
+    environment: ${{ github.event.repository.name}}
     steps:
-      # Checkout code
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      # Log into Azure
-      - name: "Az CLI login"
-        uses: azure/login@v1
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/validate-bicep
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      # Ensure resource group is created
-      - name: Create Resource Group
-        uses: Azure/CLI@v1
-        with:
-          inlineScript: |
-            #!/bin/bash
-            az group create --name "rg-apimappgwrcp-gh-bicep" --location "eastus"
-            echo "Azure resource group created."
-
-      # Validate Azure Bicep changes.
-      - name: Preview Azure Bicep Changes
-        uses: azure/deployment-what-if-action@v1.0.0
-        with:
-          subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          resourceGroup: rg-apimappgwrcp-gh-bicep
-          templateFile: ./src/az-webapp-apim-appgw/deploy/bicep/main.bicep
-          additionalParameters: apiManagementCustomDnsName=contoso.net apiManagementManagementCustomHostname=management.contoso.net apiManagementProxyCustomHostname=api.contoso.net apiManagementPortalCustomHostname=portal.contoso.net apiManagementPublisherEmailAddress=user@email.com apiManagementPublisherName=Contoso apiManagementPortalCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} apiManagementProxyCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} apiManagementManagementCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} applicationGatewayTrustedRootBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_TRUSTED_ROOT_BASE64_ENCODED_PFX_CERT }}
-
-    # NOTE: Could not figure out how to pass secrets (certs) to the reusable workflow to had to duplicate the Bicep and Terraform workflows here. 
-
-  lint-terraform:
-    uses: ./.github/workflows/terraform-lint.yml
-    with:
-      working_directory: ./src/az-webapp-apim-appgw/deploy/terraform/
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          azure-resource-group-name: "rg-apimappgwrcp-gh-bicep"
+          azure-resource-group-location: ${{ env.AZURE_REGION }}
+          bicep-path: ./src/az-webapp-apim-appgw/deploy/bicep/main.bicep
+          bicep-parameters: apiManagementCustomDnsName=contoso.net apiManagementManagementCustomHostname=management.contoso.net apiManagementProxyCustomHostname=api.contoso.net apiManagementPortalCustomHostname=portal.contoso.net apiManagementPublisherEmailAddress=user@email.com apiManagementPublisherName=Contoso apiManagementPortalCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} apiManagementProxyCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} apiManagementManagementCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} applicationGatewayTrustedRootBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_TRUSTED_ROOT_BASE64_ENCODED_PFX_CERT }}
 
   validate-terraform:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./src/az-webapp-apim-appgw/deploy/terraform/
-
-    env:
-      ARM_USE_OIDC: true
-      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-
+    name: Validate Terraform configuration
+    environment: ${{ github.event.repository.name}}
     steps:
-      # Log into Azure
-      - name: "Az CLI login"
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      # Checkout code
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      # Validate Terraform changes.
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: "1.3.2"
-
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate
-
-      - name: Terraform Plan
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/validate-terraform
         env:
           RESOURCE_GROUP_NAME: rg-apimappgwrcp-gh-tf
-        id: Plan
-        run: terraform plan -var "resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" -var "dns_zone_resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" -var "newOrExistingDnsZones=new" -var "location=eastus" -var "tags={environment=\"Azure-Samples\"}" -var "custom_domain=contoso.net" -var "management_custom_domain_hostname=management.contoso.net" -var "gateway_custom_domain_hostname=api.contoso.net" -var "portal_custom_domain_hostname=portal.contoso.net" -var "azurerm_api_management_publisher_email=user@email.com" -var "azurerm_api_management_publisher_name=Contoso" -var "portal_custom_domain_certificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }}" -var "gateway_custom_domain_certificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }}" -var "management_custom_domain_certificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }}" -var "trusted_root_certificate=${{ secrets.APPLICATION_GATEWAY_TRUSTED_ROOT_BASE64_ENCODED_PFX_CERT }}"
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          terraform_version: "1.3.2"
+          terraform_variables: -var "resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" -var "dns_zone_resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" -var "newOrExistingDnsZones=new" -var "location=${{ env.AZURE_REGION }}" -var "tags={environment=\"Azure-Samples\"}" -var "custom_domain=contoso.net" -var "management_custom_domain_hostname=management.contoso.net" -var "gateway_custom_domain_hostname=api.contoso.net" -var "portal_custom_domain_hostname=portal.contoso.net" -var "azurerm_api_management_publisher_email=user@email.com" -var "azurerm_api_management_publisher_name=Contoso" -var "portal_custom_domain_certificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }}" -var "gateway_custom_domain_certificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }}" -var "management_custom_domain_certificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }}" -var "trusted_root_certificate=${{ secrets.APPLICATION_GATEWAY_TRUSTED_ROOT_BASE64_ENCODED_PFX_CERT }}"
+          working_directory: ./src/az-webapp-apim-appgw/deploy/terraform/

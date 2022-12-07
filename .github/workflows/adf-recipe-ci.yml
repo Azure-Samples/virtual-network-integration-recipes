@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-    - src/az-datafactory/**
-    - .github/workflows/adf-recipe-ci.yml
+      - src/az-datafactory/**
+      - .github/workflows/adf-recipe-ci.yml
   pull_request:
     branches: [main]
 
@@ -15,10 +15,19 @@ permissions:
 
 jobs:
   validate-bicep:
-    uses: ./.github/workflows/bicep-build.yml
-    with:
-      azure-resource-group-name: "rg-datafactoryrcp-gh-bicep"
-      azure-resource-group-location: "eastus"
-      bicep-path: ./src/az-datafactory/deploy/bicep/main.bicep
-      bicep-parameters: "location=eastus vnetAddressPrefix=10.15.0.0/16 privateEndpointSubnetAddressPrefix=10.15.0.0/24 bastionSubnetAddressPrefix=10.15.1.0/24 dnsZoneResourceGroupName=rg-scenario-operations newOrExistingDnsZones=existing sqlAdminUsername=XXXX sqlAdminPassword=XXXXX"
-    secrets: inherit
+    runs-on: ubuntu-latest
+    name: Validate Azure Bicep template
+    environment: ${{ github.event.repository.name}}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/validate-bicep
+        env:
+          LOCATION: eastus
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          azure-resource-group-name: "rg-datafactoryrcp-gh-bicep"
+          azure-resource-group-location: ${{ env.LOCATION }}
+          bicep-path: ./src/az-datafactory/deploy/bicep/main.bicep
+          bicep-parameters: "location=${{ env.LOCATION }} vnetAddressPrefix=10.15.0.0/16 privateEndpointSubnetAddressPrefix=10.15.0.0/24 bastionSubnetAddressPrefix=10.15.1.0/24 dnsZoneResourceGroupName=rg-scenario-operations newOrExistingDnsZones=existing sqlAdminUsername=XXXX sqlAdminPassword=XXXXX"

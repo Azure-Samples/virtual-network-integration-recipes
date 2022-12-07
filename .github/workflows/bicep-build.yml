@@ -15,10 +15,16 @@ on:
       bicep-parameters:
         required: false
         type: string
+      env:
+        required: true
+        type: string
 
 jobs:
   bicep-preview:
     runs-on: ubuntu-latest
+
+    environment:
+      name: ${{ inputs.env }}
 
     steps:
       # Checkout code

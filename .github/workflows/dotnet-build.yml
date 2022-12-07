@@ -13,8 +13,6 @@ on:
 jobs:
   build-dotnet:
     runs-on: ubuntu-latest
-    # env:
-    #   DOTNET_VERSION: "3.1.x"
 
     steps:
       # Checkout code

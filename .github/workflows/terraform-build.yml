@@ -12,6 +12,9 @@ on:
       terraform_variables:
         required: true
         type: string
+      env:
+        required: true
+        type: string
 
 env:
   ARM_USE_OIDC: true
@@ -27,6 +30,10 @@ jobs:
 
   validate-terraform:
     runs-on: ubuntu-latest
+
+    environment:
+      name: ${{ inputs.env }}
+
     defaults:
       run:
         working-directory: ${{ inputs.working_directory }}
