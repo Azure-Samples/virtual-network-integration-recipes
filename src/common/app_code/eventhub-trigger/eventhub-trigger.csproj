@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AzureFunctionsVersion>v3</AzureFunctionsVersion>
-    <RootNamespace>Recipes.AzureFunctions</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  <PropertyGroup>    
+    <TargetFramework>net6.0</TargetFramework>
+    <AzureFunctionsVersion>v4</AzureFunctionsVersion>
   </PropertyGroup>
-  <Import Project="../../../common.props" />
+  <!-- common.props is used for other projects that use .NET Core 3.1 -->
+  <!-- moving from Azure Functions v3 to v4 uses .NET 6 -->
+  <!-- uncomment once the other applications have been updated to use the latest version of .NET -->
+  <!-- <Import Project="../../../common.props" /> -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.EventHubs" Version="4.2.0" />
-    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.13" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.EventHubs" Version="5.1.2" />
+    <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
