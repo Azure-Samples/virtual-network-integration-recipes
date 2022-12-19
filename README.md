@@ -15,7 +15,7 @@ products:
 - azure-api-management
 - azure-synapse-analytics
 - azure-storage
-- azure-purview
+- microsoft-purview
 - azure-data-factory
 - azure-virtual-network
 name: Virtual Network Integration Recipes
