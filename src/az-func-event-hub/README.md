@@ -51,11 +51,11 @@ To deploy this recipe, perform the infrastructure deployment steps using _either
 
 ### Remote Access
 
-The recipe does not provision a Virutal Machine (VM) or Azure Bastion to provide remote access within the virtual network. If a VM or Bastion is needed, modify the virtual network topology to add the necessary subnets (for example, add subnets "snet-vm" for the VM and "AzureBastionSubnet" for Azure Bastion).
+The recipe does not provision a Virutal Machine (VM) or Azure Bastion to provide remote access within the virtual network.  If a VM or Bastion is needed, modify the virtual network topology to add the necessary subnets (for example, add subnets "snet-vm" for the VM and "AzureBastionSubnet" for Azure Bastion).
 
 #### Virtual Network
 
-The recipe provides for the ability to deploy Azure resources to a hub/spoke virtual network model. In the hub/spoke model, the recipe assumes Azure Private DNS zones reside in another resource group. The recipe includes parameters/variables to control how Azure Private DNS Zones are used - either use existing Private DNS Zones, or create new Private DNS Zones.
+The recipe provides for the ability to deploy Azure resources to a hub/spoke virtual network model.  In the hub/spoke model, the recipe assumes Azure Private DNS zones reside in another resource group.  The recipe includes parameters/variables to control how Azure Private DNS Zones are used - either use existing Private DNS Zones, or create new Private DNS Zones.
 
 #### Deploying Infrastructure Using Terraform
 
@@ -72,7 +72,7 @@ The following is an additional pre-requisite to use this recipe:
 
 > **_NOTE:_** The project contains a [deploy.sh](./deploy/terraform/deploy.sh) script file that uses similar steps to those above, as well as virtual network peering support (if needed).
 >
-> **_NOTE:_** Terraform (as of February 2022) does not support setting Network Access to 'Disabled' on Event Hub namespaces. The project offers the same functionality via the 'Selected Networks' option, restricting traffic from outside the virtual network. Please refer to <https://github.com/hashicorp/terraform-provider-azurerm/issues/14947> for additional information.
+> **_NOTE:_**  Terraform (as of February 2022) does not support setting Network Access to 'Disabled' on Event Hub namespaces. The project offers the same functionality via the 'Selected Networks' option, restricting traffic from outside the virtual network. Please refer to <https://github.com/hashicorp/terraform-provider-azurerm/issues/14947> for additional information.
 
 #### Deploying Infrastructure Using Bicep
 
@@ -81,31 +81,31 @@ The following is an additional pre-requisite to use this recipe:
 - [Bicep](https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/install)
 
 1. Create a new Azure resource group to deploy the Bicep template to, passing in a location and name.
-
-   ```bash
-   az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
-   ```
+  
+    ```bash
+    az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
+    ```
 
 1. The [azuredeploy.parameters.sample.json](./deploy/bicep/azuredeploy.parameters.sample.json) file contains the necessary variables to deploy the Bicep project. Rename the file to **azuredeploy.parameters.json** and update the file with appropriate values. Descriptions for each parameter can be found in the [main.bicep](./deploy/bicep/main.bicep) file.
    1. Set the `newOrExistingDnsZones` parameter to "new" (or don't set, as the default is "new") if creating a new Azure Private DNS Zone.
    1. Set the `dnsZoneResourceGroupName` parameter to the name of your resource group (or don't set, as the default is the name of the resource group) if creating a new Azure Private DNS Zone.
 1. Optionally, verify what Bicep will deploy, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
 
-   ```bash
-   az deployment group what-if --resource-group <RESOURCE_GROUP_NAME> \
-   --template-file .\main.bicep \
-   --parameters .\azuredeploy.parameters.json \
-   --verbose
-   ```
+    ```bash
+    az deployment group what-if --resource-group <RESOURCE_GROUP_NAME> \
+    --template-file .\main.bicep \
+    --parameters .\azuredeploy.parameters.json \
+    --verbose
+    ```
 
 1. Deploy the template, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template
 
-   ```bash
-   az deployment group create --resource-group <RESOURCE_GROUP_NAME> \
-   --template-file .\main.bicep \
-   --parameters .\azuredeploy.parameters.json \
-   --verbose
-   ```
+    ```bash
+    az deployment group create --resource-group <RESOURCE_GROUP_NAME> \
+    --template-file .\main.bicep \
+    --parameters .\azuredeploy.parameters.json \
+    --verbose
+    ```
 
 > **_NOTE:_** The project contains a [deploy.sh](./deploy/bicep/deploy.sh) script file that uses similar steps to those above, as well as virtual network peering support (if needed).
 
@@ -118,9 +118,9 @@ The project provides sample Azure Function code to verify that the solution is w
 1. Navigate to the [../common/app_code/eventhub-trigger](../common/app_code/eventhub-trigger) directory.
 1. Deploy the code to the function app provisioned by terraform.
 
-   ```bash
-   func azure functionapp publish <NAME_OF_FUNCTION_APP_PROVISIONED_BY_TERRAFORM_OR_BICEP> --dotnet
-   ```
+    ```bash
+    func azure functionapp publish <NAME_OF_FUNCTION_APP_PROVISIONED_BY_TERRAFORM_OR_BICEP> --dotnet
+    ```
 
 ![Azure Functions Deploy](./media/functionsDeploy.gif)
 
