@@ -6,8 +6,8 @@ on:
       - src/common/app_code/WeatherForecastAPI/**
       - src/az-webapp-http/**
       - .github/workflows/webapp-private-http-recipe-ci.yml
-  pull_request:
-    branches: [main]
+    branches: 
+      - main
 
 permissions:
   id-token: write

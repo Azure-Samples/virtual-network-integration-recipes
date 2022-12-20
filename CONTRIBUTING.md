@@ -260,21 +260,26 @@ You can file new issues by providing the above information at the corresponding 
 
 Before you submit your Pull Request (PR) consider the following guidelines:
 
-- Search the [repository](https://github.com/Azure-Samples/virtual-network-integration-recipes/pulls) for an open or closed PR
-  that relates to your submission. You don't want to duplicate effort.
+- Search the [repository](https://github.com/Azure-Samples/virtual-network-integration-recipes/pulls) for an open or closed PR that relates to your submission. You don't want to duplicate effort.
+- Run the GitHub workflows to validate the changes are likely to succeed when deployed to Azure.  Please include a link to the workflow runs in your PR.
+  - Authenticate to Azure from the GitHub Actions workflow.  [Setting up OpenID Connect is the preferred approach](https://learn.microsoft.com/azure/developer/github/connect-from-azure?tabs=azure-portal%2Cwindows#use-the-azure-login-action-with-openid-connect).
+  - Set the following secrets in your forked repository in order workflows to authenticate with your Azure subscription:
+    - AZURE_TENANT_ID
+    - AZURE_CLIENT_ID
+    - AZURE_SUBSCRIPTION_ID
 
-- Make your changes in a new git fork:
+Make your changes in a new git fork:
 
 - Commit your changes using a descriptive commit message
 - Push your fork to GitHub:
-- In GitHub, create a pull request
-- If we suggest changes then:
-  - Make the required updates.
-  - Rebase your fork and force push to your GitHub repository (this will update your Pull Request):
+  - In GitHub, create a pull request
+  - If we suggest changes then:
+    - Make the required updates.
+    - Rebase your fork and force push to your GitHub repository (this will update your Pull Request):
 
-    ```shell
-    git rebase master -i
-    git push -f
-    ```
+        ```shell
+        git rebase master -i
+        git push -f
+        ```
 
 That's it! Thank you for your contribution!
