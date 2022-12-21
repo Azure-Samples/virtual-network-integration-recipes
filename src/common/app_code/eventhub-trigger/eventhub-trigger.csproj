@@ -5,10 +5,7 @@
     <RootNamespace>Recipes.AzureFunctions</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-  <!-- common.props is used for other projects that use .NET Core 3.1 -->
-  <!-- moving from Azure Functions v3 to v4 uses .NET 6 -->
-  <!-- uncomment once the other applications have been updated to use the latest version of .NET -->
-  <!-- <Import Project="../../../common.props" /> -->
+  <Import Project="../../../common.props" />
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.EventHubs" Version="5.1.2" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.1.1" />
