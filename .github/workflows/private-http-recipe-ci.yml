@@ -6,8 +6,8 @@ on:
     paths:
       - src/az-func-http/**
       - .github/workflows/private-http-recipe-ci.yml
-  pull_request:
-    branches: [main]
+    branches: 
+      - main
 
 permissions:
   id-token: write

@@ -6,8 +6,8 @@ on:
       - src/az-func-event-hub/**
       - src/common/app_code/eventhub-trigger/**
       - .github/workflows/event-hub-recipe-ci.yml
-  pull_request:
-    branches: [main]
+    branches: 
+      - main
 
 permissions:
   id-token: write
