@@ -20,7 +20,7 @@ steps:
     displayName: 'Use .NET Core sdk'
     inputs:
       packageType: sdk
-      version: 3.1.x
+      version: 6.0.x
       installationPath: $(Agent.ToolsDirectory)/dotnet
   - task: DotNetCoreCLI@2
     name: 'Build'

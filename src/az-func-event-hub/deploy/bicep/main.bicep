@@ -149,7 +149,7 @@ resource additionalAppSettings 'Microsoft.Web/sites/config@2021-01-15' = {
     EventHubName: eventHub.outputs.eventHubName
     WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: '@Microsoft.KeyVault(SecretUri=${storageAccount.outputs.storageAccountConnectionStringSecretUriWithVersion})'
     WEBSITE_CONTENTSHARE: fileShareName
-    FUNCTIONS_EXTENSION_VERSION: '~3'
+    FUNCTIONS_EXTENSION_VERSION: '~4'
     FUNCTIONS_WORKER_RUNTIME: 'dotnet'
     WEBSITE_CONTENTOVERVNET: '1'
     WEBSITE_SKIP_CONTENTSHARE_VALIDATION: '1'

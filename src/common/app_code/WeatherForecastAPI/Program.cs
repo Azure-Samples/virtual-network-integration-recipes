@@ -6,14 +6,8 @@
 
 namespace Recipes.AzureWebApps.WeatherForecastAPI
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// The main entry point for the web API.

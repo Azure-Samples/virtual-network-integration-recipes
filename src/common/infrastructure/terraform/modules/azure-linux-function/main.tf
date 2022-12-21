@@ -16,7 +16,7 @@ resource "azurerm_linux_function_app" "linux_func" {
   service_plan_id                 = azurerm_service_plan.linux_plan.id
   storage_key_vault_secret_id     = var.azurerm_linux_function_app_storage_key_vault_id
   key_vault_reference_identity_id = var.azurerm_linux_function_app_identity_id
-  functions_extension_version     = "~3"
+  functions_extension_version     = "~4"
   builtin_logging_enabled         = false
 
   // Could not get a SystemAssigned identity to work correctly when using 
