@@ -40,11 +40,6 @@ locals {
 
 data "azurerm_client_config" "current" {}
 
-// TODO: REMOVE
-data "http" "myip" {
-  url = "https://ipv4.icanhazip.com/"
-}
-
 resource "random_string" "base_name" {
   length  = 13
   special = false
@@ -161,8 +156,6 @@ resource "azurerm_storage_account_network_rules" "st-network-rules" {
   default_action = "Deny"
 
   bypass = ["None"]
-
-  ip_rules = [data.http.myip.response_body] // TODO: REMOVE
 
   depends_on = [
     module.private-storage-account,
