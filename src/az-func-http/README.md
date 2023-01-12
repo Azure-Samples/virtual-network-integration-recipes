@@ -147,6 +147,7 @@ To verify the solution is working as intended, the Function App contains a singl
 
 ## Change Log
 
+- 2022-12-19 - Upgrade Azure Functions to version 4.
 - 2022-10-10 - Support AzureRM 3.25.0 and Terraform 1.3.2.
 - 2022-04-14
   - Terraform - remove Virtual Machine and Azure Bastion, and support hub/spok virtual network with Azure Private DNS Zones (similar to prior changes for Azure Bicep version).
