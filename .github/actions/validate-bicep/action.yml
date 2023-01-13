@@ -25,9 +25,9 @@ inputs:
 runs:
   using: composite
   steps:
-    # Checkout code
-    - name: Checkout Code
-      uses: actions/checkout@v3
+    # # Checkout code
+    # - name: Checkout Code
+    #   uses: actions/checkout@v3
 
     # Log into Azure
     - name: "Az CLI login"
