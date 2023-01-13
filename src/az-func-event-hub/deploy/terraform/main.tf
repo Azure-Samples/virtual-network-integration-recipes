@@ -135,8 +135,9 @@ module "function-app" {
   location            = var.location
   tags                = var.tags
 
-  azurerm_service_plan_name                                 = "plan-${local.base_name}"
-  azurerm_app_service_virtual_network_integration_subnet_id = module.vnet.network_details.app_service_integration_subnet_id
+  azurerm_service_plan_name = "plan-${local.base_name}"
+
+  azurerm_windows_function_app_virtual_network_integration_subnet_id = module.vnet.network_details.app_service_integration_subnet_id
 
   azurerm_windows_function_app_name                                   = local.azurerm_function_app_name
   azurerm_windows_function_app_storage_account_name                   = module.private-storage-account.storage_account_details.name

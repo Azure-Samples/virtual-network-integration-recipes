@@ -47,7 +47,7 @@ resource "azurerm_windows_function_app" "windows_func" {
     WEBSITE_SKIP_CONTENTSHARE_VALIDATION = 1
   })
 
-  virtual_network_subnet_id = var.azurerm_app_service_virtual_network_integration_subnet_id
+  virtual_network_subnet_id = var.azurerm_windows_function_app_virtual_network_integration_subnet_id
 }
 
 resource "azurerm_storage_share" "fn-content-share" {
