@@ -42,11 +42,11 @@ runs:
       with:
         terraform_version: ${{ inputs.terraform_version }}
 
-    # - uses: actions/cache@v3
-    #   name: Cache plugin dir
-    #   with:
-    #     path: ${{ inputs.working_directory }}
-    #     key: ${{ runner.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+    - uses: actions/cache@v3
+      name: Cache plugin dir
+      with:
+        path: ${{ inputs.working_directory }}/.terraform
+        key: ${{ GITHUB_SHA }}
 
     - name: Setup TFLint
       uses: terraform-linters/setup-tflint@v2
