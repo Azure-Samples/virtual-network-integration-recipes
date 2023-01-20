@@ -34,7 +34,7 @@ jobs:
       - uses: ./.github/actions/validate-bicep
         with:
           bicep-path: ./src/az-func-event-hub/deploy/bicep/main.bicep
-          output-path: ${RUNNER_TEMP}
+          output-path: ${GITHUB_WORKSPACE}
 
   validate-terraform:
     runs-on: ubuntu-latest
