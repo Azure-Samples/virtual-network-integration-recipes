@@ -34,13 +34,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/validate-bicep
         with:
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          azure-resource-group-name: "rg-apimappgwrcp-gh-bicep"
-          azure-resource-group-location: ${{ env.AZURE_REGION }}
           bicep-path: ./src/az-webapp-apim-appgw/deploy/bicep/main.bicep
-          bicep-parameters: apiManagementCustomDnsName=contoso.net apiManagementManagementCustomHostname=management.contoso.net apiManagementProxyCustomHostname=api.contoso.net apiManagementPortalCustomHostname=portal.contoso.net apiManagementPublisherEmailAddress=user@email.com apiManagementPublisherName=Contoso apiManagementPortalCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} apiManagementProxyCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} apiManagementManagementCustomHostnameBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }} applicationGatewayTrustedRootBase64EncodedPfxCertificate=${{ secrets.APPLICATION_GATEWAY_TRUSTED_ROOT_BASE64_ENCODED_PFX_CERT }}
 
   validate-terraform:
     runs-on: ubuntu-latest
@@ -49,12 +43,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/validate-terraform
-        env:
-          RESOURCE_GROUP_NAME: rg-apimappgwrcp-gh-tf
         with:
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           terraform_version: "1.3.2"
-          terraform_variables: -var "resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" -var "dns_zone_resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" -var "newOrExistingDnsZones=new" -var "location=${{ env.AZURE_REGION }}" -var "tags={environment=\"Azure-Samples\"}" -var "custom_domain=contoso.net" -var "management_custom_domain_hostname=management.contoso.net" -var "gateway_custom_domain_hostname=api.contoso.net" -var "portal_custom_domain_hostname=portal.contoso.net" -var "azurerm_api_management_publisher_email=user@email.com" -var "azurerm_api_management_publisher_name=Contoso" -var "portal_custom_domain_certificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }}" -var "gateway_custom_domain_certificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }}" -var "management_custom_domain_certificate=${{ secrets.APPLICATION_GATEWAY_CUSTOM_HOSTNAME_BASE64_ENCODED_PFX_CERT }}" -var "trusted_root_certificate=${{ secrets.APPLICATION_GATEWAY_TRUSTED_ROOT_BASE64_ENCODED_PFX_CERT }}"
           working_directory: ./src/az-webapp-apim-appgw/deploy/terraform/
