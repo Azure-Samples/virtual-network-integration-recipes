@@ -21,7 +21,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/validate-bicep
-        env:
-          LOCATION: eastus
         with:
           bicep-path: ./src/az-datafactory/deploy/bicep/main.bicep

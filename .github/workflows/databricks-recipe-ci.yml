@@ -13,9 +13,6 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  AZURE_REGION: eastus
-
 jobs:
   validate-bicep:
     runs-on: ubuntu-latest

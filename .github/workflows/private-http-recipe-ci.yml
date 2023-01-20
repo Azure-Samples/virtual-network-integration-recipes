@@ -13,9 +13,6 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  AZURE_REGION: eastus
-
 jobs:
   # TODO: VALIDATE PYTHON
 
@@ -32,7 +29,6 @@ jobs:
   validate-terraform:
     runs-on: ubuntu-latest
     name: Validate Terraform configuration
-    environment: ${{ github.event.repository.name}}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/validate-terraform
