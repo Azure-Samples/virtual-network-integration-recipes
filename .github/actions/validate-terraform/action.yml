@@ -22,7 +22,7 @@ runs:
       name: Cache plugin dir
       with:
         path: ${{ inputs.working_directory }}/.terraform
-        key: ${GITHUB_SHA}
+        key: ${{ github.sha }}
 
     - name: Setup TFLint
       uses: terraform-linters/setup-tflint@v2
