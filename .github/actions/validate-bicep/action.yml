@@ -7,6 +7,7 @@ inputs:
   output-path:
     description: Path to generated Azure ARM file.
     required: true
+    default: ${RUNNER_TEMP}/azuredeploy.json
 runs:
   using: composite
   steps:
