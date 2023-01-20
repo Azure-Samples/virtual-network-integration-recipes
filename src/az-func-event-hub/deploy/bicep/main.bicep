@@ -34,7 +34,7 @@ var fileShareName = 'fileshare'
 var keyVaultName = 'kv-${baseName}'
 var azureFunctionAppName = 'func-${baseName}'
 
-module network '../../../common/infrastructure/bicep/network.bicep' = {
+module network '../../../common/infrastructure/bicep/network.bice' = {
   name: 'networkDeploy'
   params: {
     location: location
