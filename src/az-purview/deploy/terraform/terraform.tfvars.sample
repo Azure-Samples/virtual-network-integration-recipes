@@ -1,0 +1,11 @@
+resource_group_name                                   = "rg-purview-dev-terraform"
+dns_zone_resource_group_name                          = "rg-scenario-operation"
+dns_zone_resource_group_subscription_id               = ""
+location                                              = "westeurope"
+new_or_existing_dns_zones                             = "new"
+vnet_address_prefix                                   = "10.14.0.0/16"
+bastion_subnet_address_prefix                         = "10.14.1.0/24"
+private_endpoint_subnet_address_prefix                = "10.14.0.0/24"
+tags = {
+  environment = "dev"
+}
