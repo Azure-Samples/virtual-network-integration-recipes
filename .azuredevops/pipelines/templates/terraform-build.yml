@@ -11,6 +11,16 @@ parameters:
   - name: terraformVariables
     type: string
     
+    # The terraform version used for the recipe.
+  - name: terraformVersion
+    type: string
+    default: '0.15.5'
+    
+    # The subscription id which the tfstate storage account belongs to.
+  - name: tfStateSubscriptionId
+    type: string
+    default: 'bc5a72d0-985f-4505-8ddc-53be1f638373'
+
     # The name of the resource group containing the tfstate storage account.
   - name: tfStateResourceGroupName
     type: string
@@ -28,17 +38,17 @@ parameters:
     type: string
 
 steps:
-  - task: charleszipp.azure-pipelines-tasks-terraform.azure-pipelines-tasks-terraform-installer.TerraformInstaller@0
+  - task: TerraformInstaller@0
     displayName: Install Terraform
     inputs:
-      terraformVersion: 1.3.2
+      terraformVersion: ${{ parameters.terraformVersion }}
   - task: Bash@3
     displayName: tf lint
     inputs:
       filePath: '$(System.DefaultWorkingDirectory)/scripts/terraform-lint-script.sh'
       workingDirectory: ${{ parameters.terraformPath }}
       failOnStderr: true
-      arguments: '0.41.0'
+      arguments: '0.29.1'
   - bash: |
       cp -v $(System.DefaultWorkingDirectory)/src/common/infrastructure/terraform/backends/azurerm.tf ${{ parameters.terraformPath }}
     displayName: Copy azurerm terraform backend config to terraform directory
@@ -50,6 +60,7 @@ steps:
       workingDirectory: ${{ parameters.terraformPath }}
       backendType: 'azurerm'
       backendServiceArm: ${{ parameters.serviceConnection }}
+      backendAzureRmSubscriptionId: ${{ parameters.tfStateSubscriptionId }}
       backendAzureRmResourceGroupName: ${{ parameters.tfStateResourceGroupName }}
       backendAzureRmStorageAccountName: ${{ parameters.tfStateStorageAccountName }}
       backendAzureRmContainerName: '${{ parameters.tfStateContainerName }}'

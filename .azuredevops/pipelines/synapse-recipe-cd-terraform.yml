@@ -1,0 +1,130 @@
+# The following variable(s) should be set in the pipeline:
+# - synSqlAdminUsername
+# - synSqlAdminPassword
+# - operationsSubscriptionId
+# - tfStateStorageAccountName
+# - tfStateSubscriptionId
+# The following variable(s) are picked from the variable file "variables/synapse-recipe-bicep.yml":
+# - resourceGroupName
+# - resourceBaseName
+# - location
+# - vnetAddressPrefix
+# - privateEndpointSubnetAddressPrefix
+# - bastionSubnetAddressPrefix
+# - integrateWithHub
+# - operationsVnetName
+# - operationsResourceGroupName
+# - agentPoolName
+# - tfStateResourceGroupName
+# - tfStateContainerName
+# The following variable(s) are selected at runtime:
+# - azureServiceConnection
+# The following variables(s) are dynamically set based on terraform deployment output:
+# - azdoAppVnetName
+# - azdoSynapseWorkspaceName
+# - azdoSynStorageAccountName
+# - azdoAppStorageAccountName
+# - azdoKeyVaultName
+
+name: 'Azure Synapse Recipe CD - Terraform'
+
+parameters: 
+- name: azureServiceConnection
+  displayName: Azure Service Connection
+  type: string
+  default: dtd-subscription
+
+trigger: none
+
+pr: none
+
+resources:
+  pipelines:
+    - pipeline: synapseCIPipeline
+      source: 'Azure Synapse Recipe CI - Terraform'
+      trigger: 
+        branches:
+          include:
+          - main
+
+pool: $(agentPoolName)
+
+variables:
+  azureServiceConnection: ${{ parameters.azureServiceConnection }}
+
+stages:
+  - stage: Deploy
+    displayName: Deploy
+    
+    jobs:
+      - job: DeployTerraform
+        displayName: Deploy Terraform Files
+        variables:
+        - template: variables/synapse-recipe-terraform.yml
+        steps:
+          - template: ./templates/terraform-deploy.yml
+            parameters:
+              terraformPath: ./src/az-synapse/deploy/terraform
+              terraformVariables: '-var "resource_group_name=$(resourceGroupName)" -var "resource_base_name=$(resourceBaseName)" -var "virtual_network_address_prefix=$(vnetAddressPrefix)" -var "bastion_subnet_address_prefix=$(bastionSubnetAddressPrefix)" -var "private_endpoint_subnet_address_prefix=$(privateEndpointSubnetAddressPrefix)" -var "location=$(location)" -var "tags=$(tags)" -var "synapse_sql_administrator_login=$(synSqlAdminUsername)" -var "synapse_sql_administrator_login_password=$(synSqlAdminPassword)" -var "integrate_with_hub=$(integrateWithHub)" -var "hub_virtual_network_name=$(operationsVnetName)" -var "hub_resource_group_name=$(operationsResourceGroupName)" -var "hub_subscription_id=$(operationsSubscriptionId)"'
+              serviceConnection: $(azureServiceConnection)
+              terraformVersion: '1.2.6'
+              terraformArtifact: 'terraform-main'
+              tfStateSubscriptionId: $(tfStateSubscriptionId)
+              tfStateResourceGroupName: $(tfStateResourceGroupName)
+              tfStateStorageAccountName: $(tfStateStorageAccountName)
+              tfStateContainerName: $(tfStateContainerName)
+              tfStateFileName: '$(resourceBaseName)'
+
+          - task: DownloadPipelineArtifact@2
+            displayName: "Download Terraform Artifact"
+            inputs:
+              buildType: current
+              artifact: 'terraform-main'
+              targetPath: "$(Pipeline.Workspace)/terraform"
+
+          - task: Bash@3
+            displayName: "Get names of deployed resources from Terraform Output and assign them to AzDo variables"
+            name: retrieveTerraformOutputVariables
+            inputs:
+              targetType: 'inline'
+              workingDirectory: "$(Pipeline.Workspace)/terraform"
+              script: |
+                appVnetName=$(jq -r '.vnet_name.value' outputs.json)
+                synapseWorkspaceName=$(jq -r '.synapse_workspace_name.value' outputs.json)
+                synStorageAccountName=$(jq -r '.synapse_default_storage_account_name.value' outputs.json)
+                appStorageAccountName=$(jq -r '.main_storage_account_name.value' outputs.json)
+                keyVaultName=$(jq -r '.keyvault_name.value' outputs.json)
+                echo "Application VNet Name: ${appVnetName}"
+                echo "Synapse Workspace Name: ${synapseWorkspaceName}"
+                echo "Synapse Storage Account Name: ${synStorageAccountName}"
+                echo "Application Storage Account Name: ${appStorageAccountName}"
+                echo "Key Vault Name: ${keyVaultName}"
+                echo "##vso[task.setvariable variable=azdoAppVnetName]${appVnetName}"
+                echo "##vso[task.setvariable variable=azdoSynapseWorkspaceName;isoutput=true]${synapseWorkspaceName}"
+                echo "##vso[task.setvariable variable=azdoSynStorageAccountName;isoutput=true]${synStorageAccountName}"
+                echo "##vso[task.setvariable variable=azdoAppStorageAccountName;isoutput=true]${appStorageAccountName}"
+                echo "##vso[task.setvariable variable=azdoKeyVaultName;isoutput=true]${keyVaultName}"
+
+      - job: RunPostDeployScript
+        displayName: Run Post Deploy Script
+        dependsOn: DeployTerraform
+        variables:
+        - template: variables/synapse-recipe-terraform.yml
+        - name: azdoSynapseWorkspaceName
+          value: $[ dependencies.DeployTerraform.outputs['retrieveTerraformOutputVariables.azdoSynapseWorkspaceName'] ]
+        - name: azdoSynStorageAccountName
+          value : $[ dependencies.DeployTerraform.outputs['retrieveTerraformOutputVariables.azdoSynStorageAccountName'] ]
+        - name: azdoAppStorageAccountName
+          value: $[ dependencies.DeployTerraform.outputs['retrieveTerraformOutputVariables.azdoAppStorageAccountName'] ]
+        - name: azdoKeyVaultName
+          value: $[ dependencies.DeployTerraform.outputs['retrieveTerraformOutputVariables.azdoKeyVaultName'] ]
+        steps:
+          - task: AzureCLI@2
+            displayName: Run Post Deploy Script Task
+            inputs:
+              azureSubscription: $(azureServiceConnection)
+              scriptType: bash
+              scriptLocation: scriptPath
+              scriptPath: '$(System.DefaultWorkingDirectory)/src/az-synapse/deploy/scripts/deploy-managed-private-endpoints.sh'
+              arguments: '$(resourceGroupName) $(azdoSynapseWorkspaceName) $(azdoSynStorageAccountName) $(azdoAppStorageAccountName) $(azdoKeyVaultName)'
+              failOnStandardError: true

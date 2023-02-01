@@ -1,0 +1,63 @@
+# The following variables should be set in the pipeline:
+# - synSqlAdminUsername
+# - synSqlAdminPassword
+# - operationsSubscriptionId
+# - tfStateStorageAccountName
+# - tfStateSubscriptionId
+# The following variables are picked from the variable file "variables/synapse-recipe-terraform.yml":
+# - resourceGroupName
+# - resourceBaseName
+# - location
+# - vnetAddressPrefix
+# - privateEndpointSubnetAddressPrefix
+# - bastionSubnetAddressPrefix
+# - integrateWithHub
+# - operationsResourceGroupName
+# - tfStateResourceGroupName
+# - tfStateContainerName
+# The following variables are selected at runtime:
+# - azureServiceConnection
+
+name: 'Azure Synapse Recipe CI - Terraform'
+
+parameters:
+- name: azureServiceConnection
+  displayName: Azure Service Connection
+  type: string
+  default: dtd-subscription
+
+trigger:
+  branches:
+    include:
+    - 'main'
+  paths:
+    include:
+    - '/src/az-synapse/deploy/terraform'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  azureServiceConnection: ${{ parameters.azureServiceConnection }}
+
+stages:
+  - stage: Build
+    displayName: Build
+
+    jobs:
+      - job: BuildTerraform
+        displayName: Validate Terraform Files
+        variables:
+        - template: variables/synapse-recipe-terraform.yml
+        steps:
+          - template: ./templates/terraform-build.yml
+            parameters:
+              terraformPath: ./src/az-synapse/deploy/terraform
+              terraformVariables: '-var "resource_group_name=$(resourceGroupName)" -var "resource_base_name=$(resourceBaseName)" -var "virtual_network_address_prefix=$(vnetAddressPrefix)" -var "bastion_subnet_address_prefix=$(bastionSubnetAddressPrefix)" -var "private_endpoint_subnet_address_prefix=$(privateEndpointSubnetAddressPrefix)" -var "location=$(location)" -var "tags=$(tags)" -var "synapse_sql_administrator_login=$(synSqlAdminUsername)" -var "synapse_sql_administrator_login_password=$(synSqlAdminPassword)" -var "integrate_with_hub=$(integrateWithHub)" -var "hub_virtual_network_name=$(operationsVnetName)" -var "hub_resource_group_name=$(operationsResourceGroupName)" -var "hub_subscription_id=$(operationsSubscriptionId)"'
+              serviceConnection: $(azureServiceConnection)
+              terraformVersion: '1.2.6'
+              tfStateSubscriptionId: $(tfStateSubscriptionId)
+              tfStateResourceGroupName: $(tfStateResourceGroupName)
+              tfStateStorageAccountName: $(tfStateStorageAccountName)
+              tfStateContainerName: $(tfStateContainerName)
+              tfStateFileName: '$(resourceBaseName)'
