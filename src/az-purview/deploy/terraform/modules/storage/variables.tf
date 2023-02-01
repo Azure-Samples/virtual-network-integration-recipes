@@ -13,6 +13,11 @@ variable "tags" {
   description = "The tags to apply to the resource."
 }
 
+variable "azurerm_purview_principal_id" {
+  type        = string
+  description = "Azure Purview principal id."
+}
+
 variable "storage_account_name" {
   type        = string
   description = "Specifies the Storage account name"

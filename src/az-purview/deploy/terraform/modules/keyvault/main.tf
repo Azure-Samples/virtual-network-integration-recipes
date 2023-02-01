@@ -11,13 +11,13 @@ terraform {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_key_vault" "kv" {
-  name                = var.key_vault_name
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  tags                = var.tags
-  tenant_id           = data.azurerm_client_config.current.tenant_id
-  sku_name            = var.keyvault_sku_name
-  provider            = azurerm.spoke
+  name                          = var.key_vault_name
+  resource_group_name           = var.resource_group_name
+  location                      = var.location
+  tags                          = var.tags
+  tenant_id                     = data.azurerm_client_config.current.tenant_id
+  sku_name                      = var.keyvault_sku_name
+  provider                      = azurerm.spoke
   public_network_access_enabled = false
 
   access_policy {
@@ -30,7 +30,7 @@ resource "azurerm_key_vault" "kv" {
   }
 
   network_acls {
-    bypass         = "AzureServices"
+    bypass         = "None"
     default_action = "Deny"
   }
 
@@ -57,6 +57,6 @@ resource "azurerm_private_endpoint" "private_endpoint_keyvault" {
 
   private_dns_zone_group {
     name                 = "keyvault-private-dns-zone-group"
-    private_dns_zone_ids = [ var.private_dns_zone_id ]
+    private_dns_zone_ids = [var.private_dns_zone_id]
   }
 }

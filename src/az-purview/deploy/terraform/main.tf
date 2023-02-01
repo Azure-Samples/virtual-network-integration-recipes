@@ -5,6 +5,7 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.41.0"
     }
+
   }
 
   required_version = "1.3.2"
@@ -104,6 +105,19 @@ module "vnet" {
   }
 }
 
+resource "azurerm_private_dns_zone_virtual_network_link" "private-dns-zone-vnet-links" {
+  for_each              = local.private_dns_names_map
+  name                  = "${local.calc_rg_for_private_dns_zone}-${each.key}-link"
+  resource_group_name   = local.calc_rg_for_private_dns_zone
+  private_dns_zone_name = each.value
+  provider              = azurerm.spoke
+  virtual_network_id    = module.vnet.vnet_id
+
+  depends_on = [
+    module.dns
+  ]
+}
+
 module "purview" {
   source                          = "./modules/purview"
   resource_group_name             = azurerm_resource_group.spoke.name
@@ -117,15 +131,10 @@ module "purview" {
   providers = {
     azurerm.spoke = azurerm.spoke
   }
-}
 
-resource "azurerm_private_dns_zone_virtual_network_link" "private-dns-zone-vnet-links" {
-  for_each              = local.private_dns_names_map
-  name                  = "${local.calc_rg_for_private_dns_zone}-${each.key}-link"
-  resource_group_name   = local.calc_rg_for_private_dns_zone
-  private_dns_zone_name = each.value
-  provider              = azurerm.spoke
-  virtual_network_id    = module.vnet.vnet_id
+  depends_on = [
+    azurerm_private_dns_zone_virtual_network_link.private-dns-zone-vnet-links
+  ]
 }
 
 module "storage" {
@@ -145,9 +154,15 @@ module "storage" {
   pe_base_name                      = local.pe_base_name_suffix
   private_dns_names_map_for_storage = local.private_dns_names_map_for_storage
 
+  azurerm_purview_principal_id = module.purview.purview_principal_id
+
   providers = {
     azurerm.spoke = azurerm.spoke
   }
+
+  depends_on = [
+    azurerm_private_dns_zone_virtual_network_link.private-dns-zone-vnet-links
+  ]
 }
 
 module "keyvault" {
@@ -166,4 +181,8 @@ module "keyvault" {
   providers = {
     azurerm.spoke = azurerm.spoke
   }
+
+  depends_on = [
+    azurerm_private_dns_zone_virtual_network_link.private-dns-zone-vnet-links
+  ]
 }
