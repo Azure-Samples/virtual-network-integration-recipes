@@ -78,10 +78,10 @@ module "app-service" {
   location            = var.location
   tags                = var.tags
 
-  azurerm_app_service_plan_name                                  = "plan-${local.base_name}"
-  azurerm_app_service_app_name                                   = local.web_app_name
-  azurerm_app_service_appinsights_instrumentation_key            = "@Microsoft.KeyVault(VaultName=${module.private-key-vault.key_vault_name};SecretName=kvs-${local.base_name}-aikey)"
-  azurerm_app_service_virtual_network_swift_connection_subnet_id = module.vnet.network_details.app_service_integration_subnet_id
+  azurerm_app_service_plan_name                             = "plan-${local.base_name}"
+  azurerm_app_service_app_name                              = local.web_app_name
+  azurerm_app_service_appinsights_instrumentation_key       = "@Microsoft.KeyVault(VaultName=${module.private-key-vault.key_vault_name};SecretName=kvs-${local.base_name}-aikey)"
+  azurerm_app_service_virtual_network_integration_subnet_id = module.vnet.network_details.app_service_integration_subnet_id
 }
 
 module "private-key-vault" {
