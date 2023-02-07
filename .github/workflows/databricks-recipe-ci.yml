@@ -13,9 +13,6 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  AZURE_REGION: eastus
-
 jobs:
   validate-bicep:
     runs-on: ubuntu-latest
@@ -25,10 +22,4 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/validate-bicep
         with:
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          azure-resource-group-name: "rg-databricksrcp-gh-bicep"
-          azure-resource-group-location: ${{ env.AZURE_REGION }}
           bicep-path: ./src/az-databricks/deploy/bicep/main.bicep
-          bicep-parameters: "location=${{ env.AZURE_REGION }} vnetAddressPrefix=10.11.0.0/16 privateEndpointSubnetAddressPrefix=10.11.0.0/24 bastionSubnetAddressPrefix=10.11.1.0/24 containerSubnetAddressPrefix=10.11.2.0/24 hostSubnetAddressPrefix=10.11.3.0/24 dnsZoneResourceGroupName=rg-scenario-operations newOrExistingDnsZones=existing"
