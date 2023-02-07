@@ -1,20 +1,8 @@
 name: "Validate Terraform configuration"
 description: "Validate Terraform configuration file"
 inputs:
-  azure-subscription-id:
-    description: The Azure subscription ID.
-    required: true
-  azure-client-id:
-    description: The Azure client ID.
-    required: true
-  azure-tenant-id:
-    description: The Azure tenant ID.
-    required: true
   terraform_version:
     description: The version of Terraform to be used.
-    required: true
-  terraform_variables:
-    description: Variables to be provided to the Terraform provider.
     required: true
   working_directory:
     description: The directory in which to run the commands.
@@ -24,15 +12,6 @@ runs:
   using: composite
 
   steps:
-
-    # Log into Azure
-    - name: "Az CLI login"
-      uses: azure/login@v1
-      with:
-        client-id: ${{ inputs.azure-client-id }}
-        tenant-id: ${{ inputs.azure-tenant-id }}
-        subscription-id: ${{ inputs.azure-subscription-id }}
-
     # Validate Terraform changes.
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
@@ -67,30 +46,9 @@ runs:
       shell: bash
       run: terraform init
       working-directory: ${{ inputs.working_directory }}
-      env:
-        ARM_USE_OIDC: "true"
-        ARM_CLIENT_ID: ${{ inputs.azure-client-id }}
-        ARM_SUBSCRIPTION_ID: ${{ inputs.azure-subscription-id }}
-        ARM_TENANT_ID: ${{ inputs.azure-tenant-id }}
 
     - name: Terraform Validate
       id: validate
       shell: bash
       run: terraform validate
       working-directory: ${{ inputs.working_directory }}
-      env:
-        ARM_USE_OIDC: "true"
-        ARM_CLIENT_ID: ${{ inputs.azure-client-id }}
-        ARM_SUBSCRIPTION_ID: ${{ inputs.azure-subscription-id }}
-        ARM_TENANT_ID: ${{ inputs.azure-tenant-id }}
-
-    - name: Terraform Plan
-      id: Plan
-      shell: bash
-      run: terraform plan ${{ inputs.terraform_variables }}
-      working-directory: ${{ inputs.working_directory }}
-      env:
-        ARM_USE_OIDC: "true"
-        ARM_CLIENT_ID: ${{ inputs.azure-client-id }}
-        ARM_SUBSCRIPTION_ID: ${{ inputs.azure-subscription-id }}
-        ARM_TENANT_ID: ${{ inputs.azure-tenant-id }}

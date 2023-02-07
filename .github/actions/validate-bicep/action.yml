@@ -1,53 +1,19 @@
 name: "Validate Azure Bicep Action"
 description: "Validate an Azure Bicep template"
 inputs:
-  azure-resource-group-name:
-    description: The Azure resource group name.
-    required: true
-  azure-resource-group-location:
-    description: The Azure region.
-    required: true
-  azure-subscription-id:
-    description: The Azure subscription ID.
-    required: true
-  azure-client-id:
-    description: The Azure client ID.
-    required: true
-  azure-tenant-id:
-    description: The Azure tenant ID.
-    required: true
   bicep-path:
     description: Path to the Azure Bicep file.
     required: true
-  bicep-parameters:
-    description: Parameters used in the Azure Bicep file.
-    required: false
+  output-path:
+    description: Path to generated Azure ARM file.
+    required: true
+    default: ${{ runner.temp }}/azuredeploy.json
 runs:
   using: composite
   steps:
-
-    # Log into Azure
-    - name: "Az CLI login"
-      uses: azure/login@v1
-      with:
-        client-id: ${{ inputs.azure-client-id }}
-        tenant-id: ${{ inputs.azure-tenant-id }}
-        subscription-id: ${{ inputs.azure-subscription-id }}
-
-    # Ensure resource group is created
-    - name: Create Resource Group
-      uses: Azure/CLI@v1
-      with:
-        inlineScript: |
-          #!/bin/bash
-          az group create --name ${{ inputs.azure-resource-group-name }} --location ${{ inputs.azure-resource-group-location }}
-          echo "Azure resource group created."
-
     # Validate Azure Bicep changes.
-    - name: Preview Azure Bicep Changes
-      uses: azure/deployment-what-if-action@v1.0.0
+    - name: Bicep Build
+      uses: azure/bicep-build-action@v1.0.0
       with:
-        subscription: ${{ inputs.azure-subscription-id }}
-        resourceGroup: ${{ inputs.azure-resource-group-name }}
-        templateFile: ${{ inputs.bicep-path}}
-        additionalParameters: ${{ inputs.bicep-parameters}}
+        bicepFilePath: ${{ inputs.bicep-path }}
+        outputFilePath: ${{ inputs.output-path }}
