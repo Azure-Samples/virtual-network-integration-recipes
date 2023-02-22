@@ -46,7 +46,7 @@ The following pre-requisites should be in place in order to successfully use thi
 
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
 - [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/install) (Only if using Azure Bicep)
-- [Terraform](https://developer.hashicorp.com/terraform/downloads?product_intent=terraform) (Only if using Azure Bicep)
+- [Terraform](https://developer.hashicorp.com/terraform/downloads?product_intent=terraform) (Only if using Terraform)
 - [Azure PowerShell](https://docs.microsoft.com/powershell/azure/install-az-ps) (Only if using Azure PowerShell to deploy via Azure Bicep)
 
 ### Deployment
@@ -89,7 +89,7 @@ az deployment group create --resource-group <RESOURCE_GROUP_NAME> --template-fil
 
 To deploy this recipe using Terraform, please perform the following actions:
 
-- The [terraform.tfvars.sample](./deploy/terraform/terraform.tfvars.sample) file contains the necessary variables to deploy the Terraform project. Rename the file to **terraform.tfvars** and update the file with appropriate values. Descriptions for each parameter can be found in the [variables.tf](./deploy/terraform/variables.tf) file.
+- The [terraform.tfvars.sample](./deploy/terraform/terraform.tfvars.sample) file contains the necessary variables to deploy the Terraform project. Copy the file to **terraform.tfvars** and update the file with appropriate values. Descriptions for each parameter can be found in the [variables.tf](./deploy/terraform/variables.tf) file.
 
 - Initialize the working directory containing Terraform configuration files.
 

@@ -17,14 +17,14 @@ OPERATIONS_VNET_NAME=[YOUR-OPERATIONS-VIRUTAL-NETWORK-NAME]
 PEER_VNET="false"
 
 # !!!! NOTE !!!! 
-# Overriding the resource group values in terraform.tfvars file to ensure resoruce group values set in script are used
+# Overriding the resource group values in terraform.tfvars file to ensure resource group values set in script are used
 # since the resource group values are used in the Azure CLI commands below to peer virtual network.
 
 terraform init -input=false
 terraform apply -var resource_group_name="$RESOURCE_GROUP_NAME" -var dns_zone_resource_group_name="$OPERATIONS_RESOURCE_GROUP_NAME" -input=false -auto-approve
 
 if [[ $PEER_VNET == "true" ]]; then
-    echo "Retrieving virtual network name created in Function Private HTTP recipe deployment . . ."
+    echo "Retrieving virtual network name created in Azure Purview recipe deployment . . ."
 
     RECIPE_VNET_NAME="$(terraform output -json | jq -r '.vnet_name.value')"
 

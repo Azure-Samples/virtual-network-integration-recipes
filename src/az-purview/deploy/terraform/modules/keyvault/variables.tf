@@ -12,6 +12,10 @@ variable "keyvault_sku_name" {
   description = "keyvault sku - potential values Standard and Premium"
   type        = string
   default     = "standard"
+  validation {
+    condition     = contains(["standard", "premium"], var.keyvault_sku_name)
+    error_message = "Value must be either 'standard' or 'premium'."
+  }
 }
 
 variable "tags" {

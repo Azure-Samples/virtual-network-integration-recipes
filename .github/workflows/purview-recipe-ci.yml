@@ -19,33 +19,20 @@ env:
 jobs:
   validate-bicep:
     runs-on: ubuntu-latest
-    name: Validate Terraform
+    name: Validate Bicep
     environment: ${{ github.event.repository.name}}
     steps:
       - uses: actions/checkout@v3
-      - uses: ./.github/actions/validate-terraform
+      - uses: ./.github/actions/validate-bicep
         with:
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          azure-resource-group-name: "rg-purview-gh-bicep"
-          azure-resource-group-location: ${{ env.AZURE_REGION }}
           bicep-path: ./src/az-purview/deploy/bicep/main.bicep
-          bicep-parameters: "location=${{ env.AZURE_REGION }} vnetAddressPrefix=10.11.0.0/16 privateEndpointSubnetAddressPrefix=10.11.0.0/24 bastionSubnetAddressPrefix=10.11.1.0/24 containerSubnetAddressPrefix=10.11.2.0/24 hostSubnetAddressPrefix=10.11.3.0/24 dnsZoneResourceGroupName=rg-scenario-operations newOrExistingDnsZones=existing"
   
   validate-terraform:
     runs-on: ubuntu-latest
-    name: Validate Terraform configuration
-    environment: ${{ github.event.repository.name}}
+    name: Validate Terraform
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/validate-terraform
-        env:
-          RESOURCE_GROUP_NAME: rg-purview-gh-tf
         with:
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           terraform_version: "1.3.2"
-          terraform_variables: -var "resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" -var "dns_zone_resource_group_name=${{ env.RESOURCE_GROUP_NAME }}" -var "new_or_existing_dns_zones=new" -var "location=${{ env.AZURE_REGION }}" -var "tags={environment=\"Azure-Samples\"}" -var "dns_zone_resource_group_subscription_id=\"\"" -var "vnet_address_prefix=\"10.14.0.0/16\"" -var "bastion_subnet_address_prefix=\"10.14.1.0/24\"" -var "private_endpoint_subnet_address_prefix=\"10.14.0.0/24\""
           working_directory: ./src/az-purview/deploy/terraform/
