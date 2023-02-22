@@ -46,11 +46,8 @@ resource "azurerm_linux_function_app" "linux_func" {
     WEBSITE_CONTENTSHARE                 = azurerm_storage_share.fn-content-share.name
     WEBSITE_SKIP_CONTENTSHARE_VALIDATION = 1
   })
-}
 
-resource "azurerm_app_service_virtual_network_swift_connection" "fn-vnet-swift" {
-  app_service_id = azurerm_linux_function_app.linux_func.id
-  subnet_id      = var.azurerm_app_service_virtual_network_swift_connection_subnet_id
+  virtual_network_subnet_id = var.azurerm_linux_function_app_virtual_network_integration_subnet_id
 }
 
 resource "azurerm_storage_share" "fn-content-share" {

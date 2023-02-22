@@ -40,12 +40,6 @@ variable "azurerm_windows_function_app_storage_account_name" {
   description = "The Azure storage account name which will be used by the function app."
 }
 
-# variable "azurerm_windows_function_app_storage_account_access_key" {
-#   type        = string
-#   description = "The access key which will be used to access the Azure storage account for the function app."
-#   sensitive   = true
-# }
-
 variable "azurerm_windows_function_app_application_insights_connection_string" {
   type        = string
   description = "The Application Insights instrumentation key used by the function app."
@@ -57,7 +51,7 @@ variable "azurerm_windows_function_app_website_content_share" {
   description = "The name of the Azure Storage file share used by the function app."
 }
 
-variable "azurerm_app_service_virtual_network_swift_connection_subnet_id" {
+variable "azurerm_windows_function_app_virtual_network_integration_subnet_id" {
   type        = string
   description = "The ID for the virtual network subnet used for virtual network integration."
 }

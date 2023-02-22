@@ -39,7 +39,7 @@ variable "azurerm_linux_function_app_website_content_share" {
   description = "The name of the Azure Storage file share used by the function app."
 }
 
-variable "azurerm_app_service_virtual_network_swift_connection_subnet_id" {
+variable "azurerm_linux_function_app_virtual_network_integration_subnet_id" {
   type        = string
   description = "The ID for the virtual network subnet used for virtual network integration."
 }

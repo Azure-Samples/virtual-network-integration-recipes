@@ -41,7 +41,7 @@ variable "azurerm_app_service_appinsights_instrumentation_key" {
   sensitive   = true
 }
 
-variable "azurerm_app_service_virtual_network_swift_connection_subnet_id" {
+variable "azurerm_app_service_virtual_network_integration_subnet_id" {
   type        = string
   description = "The ID for the virtual network subnet used for virtual network integration."
 }

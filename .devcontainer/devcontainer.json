@@ -3,12 +3,6 @@
     "build": {
         "dockerfile": "Dockerfile"
     },
-    // Set *default* container specific settings.json values on container create.
-    "settings": {
-        "files.associations": {
-            "**/.azuredevops/pipelines/**/*.yml": "azure-pipelines"
-        }
-    },
     "forwardPorts": [
         7071
     ],
@@ -37,23 +31,32 @@
             "version": "2.17.0"
         }
     },
-    // Add the IDs of extensions you want installed when the container is created.
-    "extensions": [
-        "ms-azuretools.vscode-bicep",
-        "ms-azuretools.vscode-azureterraform",
-        "ms-azure-devops.azure-pipelines",
-        "ms-vscode.azure-account",
-        "ms-vscode.vscode-node-azure-pack",
-        "ms-dotnettools.csharp",
-        "ms-python.python",
-        "ms-python.vscode-pylance",
-        "davidanson.vscode-markdownlint",
-        "dbaeumer.vscode-eslint",
-        "hashicorp.terraform",
-        "hediet.vscode-drawio",
-        "redhat.vscode-yaml",
-        "timonwong.shellcheck"
-    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "files.associations": {
+                    "**/.azuredevops/pipelines/**/*.yml": "azure-pipelines"
+                }
+            },
+            "extensions": [
+                "ms-azuretools.vscode-bicep",
+                "ms-azuretools.vscode-azureterraform",
+                "ms-azure-devops.azure-pipelines",
+                "ms-vscode.azure-account",
+                "ms-vscode.vscode-node-azure-pack",
+                "ms-dotnettools.csharp",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "davidanson.vscode-markdownlint",
+                "dbaeumer.vscode-eslint",
+                "hashicorp.terraform",
+                "hediet.vscode-drawio",
+                "redhat.vscode-yaml",
+                "timonwong.shellcheck",
+                "github.vscode-pull-request-github"
+            ]
+        }
+    },
     // Use 'postCreateCommand' to run commands after the container is created.
     "postCreateCommand": "bash scripts/setup-dev-container.sh",
     // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
