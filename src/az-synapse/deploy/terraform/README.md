@@ -80,7 +80,7 @@ Both of these pipelines use the common variable file [synapse-recipe-terraform.y
 | operationsResourceGroupName | The name of the Azure resource group containing the Azure Private DNS Zones used for registering private endpoints | Variable File |
 | operationsSubscriptionId | The subscription id of the Hub | Pipeline Variable |
 | agentPoolName | The name of the Agent Pool for running the pipeline | Variable File |
-| tfStateSubscriptionId | Subscription Id of storage account for saving terraform state |
+| tfStateSubscriptionId | Subscription Id of storage account for saving terraform state | Pipeline Variable |
 | tfStateResourceGroupName | Resource group of storage account for saving terraform state | Variable File |
 | tfStateStorageAccountName | Storage account name for saving terraform state | Pipeline Variable |
 | tfStateContainerName | Storage container name for saving terraform state | Variable File |
