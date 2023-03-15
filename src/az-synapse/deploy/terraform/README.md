@@ -49,7 +49,7 @@ The following is an additional pre-requisite to use this recipe:
 
 ### Manual Deployment
 
-1. The [terraform.tfvars.sample](./terraform.tfvars.sample) file contains the necessary variables to apply the terraform configuration. Rename the file to **terraform.tfvars** and update the file with appropriate values. Descriptions for each variable can be found in the [variables.tf](./variables.tf) file. By default, it assumes that the recipe is deployed as standalone i.e., it's not integrated with existing operational hub (`**integrate_with_hub**` set to `false`). If you have an existing operational hub, you can set this variable to `true` and provide details of corresponding variables.
+1. The [terraform.tfvars.sample](./terraform.tfvars.sample) file contains the necessary variables to apply the terraform configuration. Rename the file to **terraform.tfvars** and update the file with appropriate values. Descriptions for each variable can be found in the [variables.tf](./variables.tf) file. By default, it assumes that the recipe is deployed as standalone i.e., it's not integrated with existing operational hub (`**integrate_with_hub**` set to `false`). If you have an existing operational hub, you can set this variable to `true` and provide details of corresponding additional variables.
 1. Initialize terraform - `terraform init`
 1. Optionally, verify what terraform will deploy - `terraform plan`
 1. Deploy the configuration - `terraform apply`
@@ -67,29 +67,29 @@ There are two pipelines for deploying the terraform version of Synapse Recipe:
 
 Both of these pipelines use the common variable file [synapse-recipe-terraform.yml](./../../../../.azuredevops/pipelines/variables/synapse-recipe-terraform.yml). In addition to the variables defined in this variable file, there are other variables as well required for the CI/CD pipelines. Here is a complete list of the variables and their description:
 
-| Variable Name | Description | Where to Set? | Default Value |
-| --- | --- | --- | --- |
-| resourceGroupName | The name of the resource group where the recipe is deployed | Variable File | rg-synapsercpi-terraform |
-| resourceBaseName | The base name to be appended to all provisioned resources | Variable File | synapsercpti |
-| location | Specifies the supported Azure location (region) where the resources exist | Variable File | australiaeast |
-| vnetAddressPrefix | The IP address prefix for the recipe's virtual network | Variable File | 10.10.0.0/16 |
-| privateEndpointSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for private endpoints | Variable File | 10.10.0.0/24 |
-| bastionSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for Azure Bastion integration | Variable File | 10.10.0.0/24 |
-| integrateWithHub | Indicates if the recipe is to be integrated with centrally deployed hub or not | Variable File | true |
-| operationsVnetName | The name of virtual network where the self hosted agent is deployed in the Hub  | Variable File | vnet-operations |
-| operationsResourceGroupName | The name of the Azure resource group containing the Azure Private DNS Zones used for registering private endpoints | Variable File | rg-scenario-operations |
-| operationsSubscriptionId | The subscription id of the Hub | Pipeline Variable | - |
-| agentPoolName | The name of the Agent Pool for running the pipeline | Variable File | network-integration-pool |
-| tfStateSubscriptionId | Subscription Id of storage account for saving terraform state | Pipeline Variable | - |
-| tfStateResourceGroupName | Resource group of storage account for saving terraform state | Variable File | rg-scenario-operations |
-| tfStateStorageAccountName | Storage account name for saving terraform state | Pipeline Variable | - |
-| tfStateContainerName | Storage container name for saving terraform state | Variable File | tfstate |
-| tags | Tag object for the resources created | Variable File | environment: "dev" |
-| synSqlAdminUsername | Specifies The login name of the SQL administrator | Pipeline Variable | - |
-| synSqlAdminPassword | The Password associated with the sql_administrator_login for the SQL administrator | Pipeline Variable | - |
-| azureServiceConnection | The AzDo Service Connection used for recipe deployment | Picked at Runtime | - |
-| azdoAppVnetName | The name of the recipe's virtual network | Derived in pipeline | vnet-synapsercpti |
-| azdoSynapseWorkspaceName | The name of deployed Azure Synapse workspace in the recipe | Derived in pipeline | synw-synapsercpti |
-| azdoSynStorageAccountName | The name of deployed Synapse Storage Account in the recipe | Derived in pipeline | st1synapsercpti |
-| azdoAppStorageAccountName | The name of deployed Application Storage Account in the recipe | Derived in pipeline | st2synapsercpti |
-| azdoKeyVaultName | The name of the deployed Key Vault in the recipe | Derived in pipeline | kv-synapsercpti |
+| Variable Name | Description | Where to Set? |
+| --- | --- | --- |
+| resourceGroupName | The name of the resource group where the recipe is deployed | Variable File |
+| resourceBaseName | The base name to be appended to all provisioned resources | Variable File |
+| location | Specifies the supported Azure location (region) where the resources exist | Variable File |
+| vnetAddressPrefix | The IP address prefix for the recipe's virtual network | Variable File |
+| privateEndpointSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for private endpoints | Variable File |
+| bastionSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for Azure Bastion integration | Variable File |
+| integrateWithHub | Indicates if the recipe is to be integrated with centrally deployed hub or not | Variable File |
+| operationsVnetName | The name of virtual network where the self hosted agent is deployed in the Hub  | Variable File |
+| operationsResourceGroupName | The name of the Azure resource group containing the Azure Private DNS Zones used for registering private endpoints | Variable File |
+| operationsSubscriptionId | The subscription id of the Hub | Pipeline Variable |
+| agentPoolName | The name of the Agent Pool for running the pipeline | Variable File |
+| tfStateSubscriptionId | Subscription Id of storage account for saving terraform state |
+| tfStateResourceGroupName | Resource group of storage account for saving terraform state | Variable File |
+| tfStateStorageAccountName | Storage account name for saving terraform state | Pipeline Variable |
+| tfStateContainerName | Storage container name for saving terraform state | Variable File |
+| tags | Tag object for the resources created | Variable File |
+| synSqlAdminUsername | Specifies The login name of the SQL administrator | Pipeline Variable |
+| synSqlAdminPassword | The Password associated with the sql_administrator_login for the SQL administrator | Pipeline Variable |
+| azureServiceConnection | The AzDo Service Connection used for recipe deployment | Picked at Runtime |
+| azdoAppVnetName | The name of the recipe's virtual network | Derived in pipeline |
+| azdoSynapseWorkspaceName | The name of deployed Azure Synapse workspace in the recipe | Derived in pipeline |
+| azdoSynStorageAccountName | The name of deployed Synapse Storage Account in the recipe | Derived in pipeline |
+| azdoAppStorageAccountName | The name of deployed Application Storage Account in the recipe | Derived in pipeline |
+| azdoKeyVaultName | The name of the deployed Key Vault in the recipe | Derived in pipeline |
