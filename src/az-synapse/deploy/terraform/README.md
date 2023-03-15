@@ -22,7 +22,7 @@ All of these components (and other supporting resources) are together referred a
 
 ### Deployment of Operational Hub
 
-The **network-integration-operations** Azure DevOps pipeline (backed by [management-operations.yml](./../../../../.azuredevops/pipelines/management-operations.yml)) can be used to deploy the central "Operational Hub". It deploys a new resource group, **rg-scenario-operations**, containing an Azure Virtual Network, Azure Container Registry, a number of Linux Azure Container Instances, along with several other supporting resources. The Azure Container Registry contains a repository with a single image, built via Dockerfile, that ensures the agents have the proper packages installed to run CD pipelines. The Linux container instances are built via this image and connected to an agent pool, **network-integration-pool**, in Azure DevOps, subsequently serving as the self-hosted agents for a recipe's CD pipeline.
+The Azure DevOps pipeline [management-operations](./../../../../.azuredevops/pipelines/management-operations.yml) can be used to deploy the central "Operational Hub". It deploys a new resource group, `rg-scenario-operations`, containing an Azure Virtual Network, Azure Container Registry, a number of Linux Azure Container Instances, along with several other supporting resources. The Azure Container Registry contains a repository with a single image, built via Dockerfile, that ensures the agents have the proper packages installed to run CD pipelines. The Linux container instances are built via this image and connected to an agent pool `network-integration-pool` in Azure DevOps, subsequently serving as the self-hosted agents for a recipe's CD pipeline.
 
 Here is a snapshot of the main resources being deployed as part of "Operational Hub".
 
@@ -43,13 +43,13 @@ Here is a view of the extended architecture of Synapse recipe when integrated wi
 
 ## Deployment Instructions
 
-### Manual Deployment
-
 The following is an additional pre-requisite to use this recipe:
 
 - [Terraform](https://www.terraform.io/downloads.html)
 
-1. The [terraform.tfvars.sample](./terraform.tfvars.sample) file contains the necessary variables to apply the terraform configuration. Rename the file to **terraform.tfvars** and update the file with appropriate values. Descriptions for each variable can be found in the [variables.tf](./variables.tf) file.
+### Manual Deployment
+
+1. The [terraform.tfvars.sample](./terraform.tfvars.sample) file contains the necessary variables to apply the terraform configuration. Rename the file to **terraform.tfvars** and update the file with appropriate values. Descriptions for each variable can be found in the [variables.tf](./variables.tf) file. By default, it assumes that the recipe is deployed as standalone i.e., it's not integrated with existing operational hub (`**integrate_with_hub**` set to `false`). If you have an existing operational hub, you can set this variable to `true` and provide details of corresponding variables.
 1. Initialize terraform - `terraform init`
 1. Optionally, verify what terraform will deploy - `terraform plan`
 1. Deploy the configuration - `terraform apply`
@@ -78,20 +78,18 @@ Both of these pipelines use the common variable file [synapse-recipe-terraform.y
 | integrateWithHub | Indicates if the recipe is to be integrated with centrally deployed hub or not | Variable File | true |
 | operationsVnetName | The name of virtual network where the self hosted agent is deployed in the Hub  | Variable File | vnet-operations |
 | operationsResourceGroupName | The name of the Azure resource group containing the Azure Private DNS Zones used for registering private endpoints | Variable File | rg-scenario-operations |
-| operationsSubscriptionId | The subscription id of the Hub | Pipeline Variable | bc5a72d0-985f-4505-8ddc-53be1f638373^ |
-| agentPoolName | --- | Variable File | network-integration-pool^ |
-| tfStateSubscriptionId | --- | Pipeline Variable | bc5a72d0-985f-4505-8ddc-53be1f638373^ |
-| tfStateResourceGroupName | --- | Variable File | rg-scenario-operations |
-| tfStateStorageAccountName | --- | Variable File | tfstatenetworkint^ |
-| tfStateContainerName | --- | Pipeline Variable | tfstate |
-| tags | --- | Variable File | environment: "dev" |
+| operationsSubscriptionId | The subscription id of the Hub | Pipeline Variable | - |
+| agentPoolName | The name of the Agent Pool for running the pipeline | Variable File | network-integration-pool |
+| tfStateSubscriptionId | Subscription Id of storage account for saving terraform state | Pipeline Variable | - |
+| tfStateResourceGroupName | Resource group of storage account for saving terraform state | Variable File | rg-scenario-operations |
+| tfStateStorageAccountName | Storage account name for saving terraform state | Pipeline Variable | - |
+| tfStateContainerName | Storage container name for saving terraform state | Variable File | tfstate |
+| tags | Tag object for the resources created | Variable File | environment: "dev" |
 | synSqlAdminUsername | Specifies The login name of the SQL administrator | Pipeline Variable | - |
 | synSqlAdminPassword | The Password associated with the sql_administrator_login for the SQL administrator | Pipeline Variable | - |
-| azureServiceConnection | The AzDo Service Connection used for recipe deployment | Picked at Runtime | dtd-subscription^ |
+| azureServiceConnection | The AzDo Service Connection used for recipe deployment | Picked at Runtime | - |
 | azdoAppVnetName | The name of the recipe's virtual network | Derived in pipeline | vnet-synapsercpti |
 | azdoSynapseWorkspaceName | The name of deployed Azure Synapse workspace in the recipe | Derived in pipeline | synw-synapsercpti |
 | azdoSynStorageAccountName | The name of deployed Synapse Storage Account in the recipe | Derived in pipeline | st1synapsercpti |
 | azdoAppStorageAccountName | The name of deployed Application Storage Account in the recipe | Derived in pipeline | st2synapsercpti |
 | azdoKeyVaultName | The name of the deployed Key Vault in the recipe | Derived in pipeline | kv-synapsercpti |
-
-^ _These variable are required to be updated otherwise the deployment would fail._
