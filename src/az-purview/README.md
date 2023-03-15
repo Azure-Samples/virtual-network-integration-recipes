@@ -46,6 +46,7 @@ The following pre-requisites should be in place in order to successfully use thi
 
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
 - [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/install) (Only if using Azure Bicep)
+- [Terraform](https://developer.hashicorp.com/terraform/downloads?product_intent=terraform) (Only if using Terraform)
 - [Azure PowerShell](https://docs.microsoft.com/powershell/azure/install-az-ps) (Only if using Azure PowerShell to deploy via Azure Bicep)
 
 ### Deployment
@@ -54,11 +55,15 @@ There are three parts in this deployment:
 
 1. Deploy main Azure Purview recipe.
 2. Create Self-Hosted Integration Runtime (SHIR) in Azure Purview.
-3. Deploy VM scaleset to act as the Purview SHIR.
+3. Deploy VM scale set to act as the Purview SHIR.
   
 #### 1. Deploy main Azure Purview Recipe
 
-To deploy this recipe, please perform the following actions:
+This recipe is available in Bicep and Terraform.
+
+#### Using Bicep
+
+To deploy this recipe using Bicep, please perform the following actions:
 
 - Create a new Azure resource group to deploy the Bicep template, passing in a location and name.
 
@@ -78,6 +83,30 @@ az deployment group what-if --resource-group <RESOURCE_GROUP_NAME> --template-fi
 
 ```bash
 az deployment group create --resource-group <RESOURCE_GROUP_NAME> --template-file .\main.bicep --parameters @.\azuredeploy.parameters.json --verbose
+```
+
+#### Using Terraform
+
+To deploy this recipe using Terraform, please perform the following actions:
+
+- The [terraform.tfvars.sample](./deploy/terraform/terraform.tfvars.sample) file contains the necessary variables to deploy the Terraform project. Copy the file to **terraform.tfvars** and update the file with appropriate values. Descriptions for each parameter can be found in the [variables.tf](./deploy/terraform/variables.tf) file.
+
+- Initialize the working directory containing Terraform configuration files.
+
+```bash
+terraform init
+```
+
+- Optionally, verify what Terraform will deploy, passing the necessary parameters.
+
+```bash
+terraform plan -var-file=terraform.tfvars
+```
+
+- Deploy the resources with the necessary parameters.
+
+```bash
+terraform apply -var-file=terraform.tfvars
 ```
 
 #### 2. Create Jumpbox to enabled deployment of Self-Hosted Integration Runtime (SHIR) in Azure Purview

@@ -405,3 +405,6 @@ src/*/deploy/bicep/azuredeploy.parameters.json
 
 # Ignore .vscode settings
 .vscode/settings.json
+
+# Ignore OSX files
+.DS_Store
