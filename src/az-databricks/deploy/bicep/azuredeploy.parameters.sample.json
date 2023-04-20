@@ -2,20 +2,26 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vnetAddressPrefix": {
+        "workspaceVnetAddressPrefix": {
             "value": "10.11.0.0/16"
         },
-        "privateEndpointSubnetAddressPrefix": {
+        "workspaceBackendPrivateEndpointSubnetAddressPrefix": {
             "value": "10.11.0.0/24"
         },
         "bastionSubnetAddressPrefix": {
             "value": "10.11.1.0/24"
         },
-        "containerSubnetAddressPrefix": {
+        "workspaceContainerSubnetAddressPrefix": {
             "value": "10.11.2.0/24"
         },
-        "hostSubnetAddressPrefix": {
-            "value": "10.11.3.0/24"
+        "transitVnetAddressPrefix": {
+            "value": "10.12.0.0/16"
+        },
+        "transitPrivateEndpointSubnetAddressPrefix": {
+            "value": "10.12.0.0/24"
+        },
+        "transitBastionSubnetAddressPrefix": {
+            "value": "10.12.1.0/24"
         },
         "dnsZoneResourceGroupName": {
             "value": "[NAME OF RESOURCE GROUP CONTAINING EXISTING AZURE PRIVATE DNS ZONES]"

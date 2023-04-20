@@ -1,23 +1,53 @@
-# VNet injection of Azure Databricks workspace
-
-<!-- Replace "Recipe Template" title with name of the recipe. -->
+# Azure Databricks Deployment in Secured Networking Environment
 
 ## Scenario
 
-<!-- Describe the usage scenario for this template.  Describe the challenges this recipe aims to address. -->
-This scenario aims to address the challenge of correctly configuring an Azure Databricks within a VNet including ensuring appropriate connectivity with common services such as Storage and Key Vault.
+This scenario aims to provide a sample architecture to deploy Azure Databricks in a secured networking environment using various available configuration options.
 
-### Problem Summary
+## Problem Summary
 
-<!--Briefly describe the problem that this recipe intends to resolve or make easier. -->
-Azure Databricks supports deployment of data plane resources into a customer provided VNet in a process called [VNet injection](https://docs.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/vnet-inject). Isolating Azure Databricks networking differs to other data services (particularly ones which utilizes primarily Private Endpoints and/or support Managed VNets to isolate traffic) because of the need for the management of the Data Plane VNet by the user and explicit handling of the required network traffic to the shared, multi-tenanted Azure Databricks Control Plane.
+Azure Databricks provides a secure networking environment by default, but it also provides several additional features to further harden the network security. Here is a list of some of these features which the recipe uses.
 
-This recipe aims to provide developers a starting point with IaC (Infrastructure as code) example of deploying Azure Databricks into a VNet while still being able to connect to common additional services such as Storage and Key Vault. Note that an enterprise-grade Azure Databricks deployment will typically involve routing control plane traffic through a central firewall or similar network appliance. See this article on [Data Exfiltration Protection with Azure Databricks](https://databricks.com/blog/2020/03/27/data-exfiltration-protection-with-azure-databricks.html) and a [corresponding sample](https://github.com/Azure-Samples/modern-data-warehouse-dataops/tree/main/single_tech_samples/databricks/sample2_enterprise_azure_databricks_environment).
+- [VNet Injection](https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/vnet-inject)
+- [Secure Cluster Connectivity](https://learn.microsoft.com/azure/databricks/security/network/secure-cluster-connectivity)
+- [IP Access List](https://learn.microsoft.com/azure/databricks/security/network/ip-access-list-workspace)
+- [Azure Private Link](https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/private-link)
 
-### Architecture
+This recipe aims to provide developers a starting point with IaC(Infrastructure as Code) example of deploying Azure Databricks into a VNet and [enabling Azure Private Link as a standard deployment](https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/private-link-standard). Please note that this is just one of the many possible configurations in which such an environment can be deployed based on your requirements.
 
-<!-- Include a high-level architecture diagram of the components used in this recipe. -->
-![architecture](./media/databricksVNETArchitecture.png)
+## Architecture
+
+![architecture](./media/databricks-vnet-architecture.drawio.svg)
+
+There are a lot of peculiarities in the above architecture which are described below.
+
+### Private DNS Zone "privatelink.azuredatabricks.net"
+
+Earlier, there was no private links for front-end and back-end connectivity of Azure Databricks. Users relied on IP access list to control the front-end access and User Defined Routes to relay the back-end traffic from data plane to Azure Databricks control plane.
+
+Now, Azure Databricks has added a new Private DNS Zone called "privatelink.azuredatabricks.net" to support back-end and front-end connectivity using private links.
+
+### Private Endpoints
+
+#### Front-end Private Endpoint, also known as user to workspace
+
+A front-end private endpoint allows users to connect to the Azure Databricks web application, REST API, and Databricks Connect API over a VNet interface endpoint. The front-end connection is also used by JDBC/ODBC and PowerBI integrations.
+
+It uses a new sub-resource type called "databricks-ui-api".
+
+#### Back-end Private Endpoint, also known as data plane to control plane
+
+Databricks Runtime clusters in a customer-managed VNet (the data plane) connect to an Azure Databricks workspace’s core services (the control plane) in the Azure Databricks cloud account. This enables private connectivity from the clusters to the secure cluster connectivity relay endpoint and REST API endpoint.
+
+It uses the same sub-resource type "databricks-ui-api" as frond-end private endpoint.
+
+#### Web Authentication Private Endpoint
+
+To support private front-end connections, special configuration is required to support the single sign-on (SSO) login callbacks to the Azure Databricks web application, also known as web authentication. A special type of private connection with sub-resource type "browser_authentication" hosts a private connection from the transit VNet that allows Azure Active Directory to redirect users after login to the correct control plane instance.
+
+One of these connections is shared for all workspaces in the region that share the same private DNS zone. The recommendation from Databricks is to create one web-auth workspace for each region to host the web-auth private network settings. Please note that this workspace doesn't need a connection from the data plane to the control plane. So, it can be configured to for no user login.
+
+Please read through [Private Endpoint to support SSO]https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/private-link-standard#web-authentication) for details.
 
 ### Recommendations
 
@@ -161,20 +191,16 @@ from pyspark.sql.functions import to_date
 # Please update <storage_account_name> and <container_name> with actual values
 storage_account_name = "<storage-account-name>"
 container_name = "<storage-container-name>"
-mount_name = "raw"
 scope_name = "storage-scope"
 key_name = "StorageAccountKey"
 
-# Mounting the filesystem, skip if already mounted
-mounts = [str(i) for i in dbutils.fs.ls('/mnt/')]
-if "FileInfo(path='dbfs:/mnt/" + mount_name + "/', name='" + mount_name + "/', size=0)" in mounts:
-    print("'%s' has already been mounted." % (mount_name))
-else:
-# As we are using Azure Key Vault-backed secret scope, the Storage Account key is retreived from the Azure Key Vault in "extra_configs" attribute.
-    dbutils.fs.mount(
-      source = format("wasbs://%s@%s.blob.core.windows.net", container_name, storage_account_name),
-      mount_point = format("/mnt/%s", mount_name),
-      extra_configs = {format("fs.azure.account.key.%s.blob.core.windows.net", storage_account_name):dbutils.secrets.get(scope = scope_name, key = key_name)})
+base_path = "abfss://" + container_name + "@" + storage_account_name + ".dfs.core.windows.net"
+raw_dir = base_path + "/raw/ticker"
+
+# Config to access ADLS Gen2 using account key
+spark.conf.set(
+    "fs.azure.account.key." + storage_account_name + ".dfs.core.windows.net",
+    dbutils.secrets.get(scope=scope_name, key=key_name))
 
 # Creating a dummy data frame
 df = spark.createDataFrame(
@@ -196,22 +222,23 @@ df = spark.createDataFrame(
 
 # Defining "Date" as date column
 df = df.withColumn('Date', to_date('Date'))
+
 # Writing the dataframe to the file system as parquet
-df.write.mode('overwrite').parquet("/mnt/raw/")
+df.write.format('parquet').mode('overwrite').save(raw_dir)
 
 # Now, reading those parquet files in a different dataframe and displaying the content
-data = spark.read.parquet("/mnt/raw")
+data = spark.read.parquet(raw_dir)
 display(data)
 ```
 
 There are few points worth mentioning here as follows:
 
-- In case of Azure Databricks, the workspace access is still possible from public network, even if it's deployed in a secured VNet configuration. This behaviour is different from Azure Synapse which can restrict public workspace access altogether.
+- In case of Azure Databricks, the workspace access is still possible from public network, even if it's deployed in a secured VNet configuration. This behavior is different from Azure Synapse which can restrict public workspace access altogether.
 
 - A simple way of controlling workspace (aka web application) access is by defining an [IP access list](https://docs.microsoft.com/azure/databricks/security/network/ip-access-list). Azure Databricks customers can use the IP access lists feature to define a set of approved IP addresses. All incoming access to the web application and REST APIs requires the user connect from an authorized IP address. Here is an illustration of how this feature works.
 
 ```bash
-# Geting the Databricks token for authentication
+# Getting the Databricks token for authentication
 # 2ff814a6-3304-4ab8-85cb-cd0e6f879c1d is a constant, unique applicationId that identifies Azure Databricks workspace resource inside Azure
 $ adbGlobalToken=$(az account get-access-token --resource 2ff814a6-3304-4ab8-85cb-cd0e6f879c1d --output json | jq -r .accessToken)
 # Building the header
@@ -269,9 +296,29 @@ Similarly, if you try to access the Databricks workspace, you get the following 
 
 Congratulations, you have successfully deployed and tested Azure Databricks in a secured VNet configuration!
 
-## Specific Observations and their Explainations
+## Specific Observations and their Explanations
 
-### The Azure CLI command to generate Datbricks access token fails on Ubuntu
+### Two different resource groups for Private DNS Zones
+
+The recipe deploys two set of Private DNS Zones in two different resource groups. As mentioned in the [Simplified Deployment](https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/private-link-simplified), it's possible to use the same private endpoint for both back-end and front-end traffic or only using private connection for back-end traffic only. But for the recommended [Standard Deployment](https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/private-link-standard), there should be two separate private endpoints for back-end and front-end.
+
+Now, both of these endpoints uses the same sub-resource type "databricks_ui_api" and Private DNS Zone "privatelink.azuredatabricks.net" (for A record entries). If a single private DNS Zone is used, the A record entry gets overwritten because the front-end and back-end private endpoints are from different VNets.
+
+To address this issue, the recipe always creates a separate resource group for hosting the back-end specific DNS Zones. For customer VNet, the user has an option to use the existing DNS Zones or create new ones in the main resource group where all the resources are deployed.
+
+### Azure KeyVault has allowed Trusted Azure Services
+
+This is to highlight a particular behaviour of Azure Databricks when using a Key-vault based secret scope in Azure Databricks. If the access to trusted Azure services is not granted for the Azure Key Vault with public access disabled, then:
+
+- The [Azure key Vault-backed secret scope](https://learn.microsoft.com/azure/databricks/security/secrets/secret-scopes#azure-key-vault-backed-scopes) can be created successfully. Please note that creating an Azure Key Vault-backed secret scope role grants the `Get` and `List` permissions to the **resource ID for the Azure Databricks service** using key vault access policies, even if the key vault is using the Azure RBAC permissions model.
+
+- But the call to databricks secret utility `dbutils.secrets.get` fails, even if a private endpoint for Azure Key Vault from databricks VNet has been created. This is due to the fact that this call is made from Azure Control Plane and thus Azure Key Vault sees this call originating from a public IP rather which is the control plane NAT id and blocks it. As Azure Databricks is a [trusted service](https://learn.microsoft.com/azure/key-vault/general/overview-vnet-service-endpoints#trusted-services), this connectivity can be enabled by checking "Allow trusted services" option for the Azure Key Vault.
+
+If you don't want to allow all the trusted services to be able to access Azure Key Vault, another alternative is to add the IP address of the control plane NAT (Network Address Translation) service to the Key Vault Firewall. This IP address is regional specific which you can get from the [Azure Documentation](https://learn.microsoft.com/azure/databricks/resources/supported-regions#--control-plane-nat-webapp-and-extended-infrastructure-ip-addresses-and-domains) and add it to the Azure Key Vault firewall. This would be a more restrictive setting as compared to allowing all trusted Azure Services.
+
+A different approach is to use REST API calls to retrieve the Azure Key Vault secrets. And this will work if you have the private endpoints created for Azure Key Vault from Databricks VNet. But it has other downside that the retrieved password won't be redacted and thus this approach needs to be applied carefully.
+
+### The Azure CLI command to generate Databricks access token fails on Ubuntu
 
 If you are deploying this recipe from VM running on Ubuntu (and few other version of linux), the Azure CLI command to generate the Databricks access token might fail:
 
@@ -303,7 +350,7 @@ Currently, there is a limitation that Azure Key Vault-backed secret scope can't 
 {"error_code":"CUSTOMER_UNAUTHORIZED","message":"Unable to grant read/list permission to Databricks service principal to KeyVault 'https://<keyvault-name>.vault.azure.net/': key not found: https://graph.windows.net/"}
 ```
 
-To avoid this, the secret scope is created only if logged in as `User`. In case of `Service Pricipal` login, this step is skipped in the script and has to be performed manually.
+To avoid this, the secret scope is created only if logged in as `User`. In case of `Service Principal` login, this step is skipped in the script and has to be performed manually.
 
 ## Change Log
 
@@ -315,4 +362,4 @@ Describe the change history for this recipe. For example:
 
 ## Next Steps
 
-Note that the Azure Databricks deployment can be further hardened from a network security perspective in order to prevent data exfilteration. See this article on [Data Exfiltration Protection with Azure Databricks](https://databricks.com/blog/2020/03/27/data-exfiltration-protection-with-azure-databricks.html) and a [corresponding sample](https://github.com/Azure-Samples/modern-data-warehouse-dataops/tree/main/single_tech_samples/databricks/sample2_enterprise_azure_databricks_environment) for more information and implementation details.
+Note that the Azure Databricks deployment can be further hardened from a network security perspective in order to prevent data exfiltration. See this article on [Data Exfiltration Protection with Azure Databricks](https://databricks.com/blog/2020/03/27/data-exfiltration-protection-with-azure-databricks.html) and a [corresponding sample](https://github.com/Azure-Samples/modern-data-warehouse-dataops/tree/main/single_tech_samples/databricks/sample2_enterprise_azure_databricks_environment) for more information and implementation details.
