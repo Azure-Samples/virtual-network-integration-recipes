@@ -46,10 +46,14 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2021-02-01' = {
       bypass: 'None'
     }
   }
-}
 
-resource storageAccountFileShare 'Microsoft.Storage/storageAccounts/fileServices/shares@2021-02-01' = {
-  name: '${storageAccount.name}/default/${fileShareName}'
+  resource service 'fileServices' = {
+    name: 'default'
+
+    resource share 'shares' = {
+      name: fileShareName
+    }
+  }
 }
 
 // -- Private Endpoints --
