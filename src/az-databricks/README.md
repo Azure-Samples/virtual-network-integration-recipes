@@ -160,7 +160,6 @@ az account set -s <subscription_id>
 
 Here is a description of the various parameters available for this recipe:
 
-```
 | Variable Name | Description | Default Value |
 | --- | --- | --- |
 | location | The Azure region for the deployment of recipe. | Specified as part of bicep deploy command. |
@@ -182,7 +181,6 @@ Here is a description of the various parameters available for this recipe:
 |webAuthWorkspaceContainerSubnetAddressPrefix | The IP address prefix for the container subnet if "webAuthWorkspacePreference" is set to "CreateNew". | |
 |webAuthWorkspaceHostSubnetAddressPrefix | The IP address prefix for the host subnet if "webAuthWorkspacePreference" is set to "CreateNew". | |
 |existingWebAuthWorkspaceId | The resource id of the Azure Databricks workspace to be used for web authentication if "webAuthWorkspacePreference" is set to "useExisting". | |
-```
 
 - Optionally, verify what Bicep will deploy, passing in the location where you want to deploy the recipe, deployment name ("adbVnetRecipeDeploy") and the necessary parameters for the Bicep template.
 
