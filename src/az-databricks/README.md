@@ -29,17 +29,19 @@ Now, Azure Databricks has added a new Private DNS Zone called "privatelink.azure
 
 ### Private Endpoints
 
-#### Front-end Private Endpoint, also known as user to workspace
+#### Front-end Private Endpoint (aka user to workspace)
 
 A front-end private endpoint allows users to connect to the Azure Databricks web application, REST API, and Databricks Connect API over a VNet interface endpoint. The front-end connection is also used by JDBC/ODBC and PowerBI integrations.
 
 It uses a new sub-resource type called "databricks-ui-api".
 
-#### Back-end Private Endpoint, also known as data plane to control plane
+#### Back-end Private Endpoint (aka data plane to control plane)
 
 Databricks Runtime clusters in a customer-managed VNet (the data plane) connect to an Azure Databricks workspace’s core services (the control plane) in the Azure Databricks cloud account. This enables private connectivity from the clusters to the secure cluster connectivity relay endpoint and REST API endpoint.
 
 It uses the same sub-resource type "databricks-ui-api" as frond-end private endpoint.
+
+As the recipe implements both front-end and back-end private endpoints separately, it also allows the private connectivity for the workspace to be mandated. It means that Azure Databricks rejects any connections over the public network.
 
 #### Web Authentication Private Endpoint
 
@@ -47,7 +49,59 @@ To support private front-end connections, special configuration is required to s
 
 One of these connections is shared for all workspaces in the region that share the same private DNS zone. The recommendation from Databricks is to create one web-auth workspace for each region to host the web-auth private network settings. Please note that this workspace doesn't need a connection from the data plane to the control plane. So, it can be configured to for no user login.
 
-Please read through [Private Endpoint to support SSO]https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/private-link-standard#web-authentication) for details.
+Please read through [Private Endpoint to support SSO](https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/private-link-standard#web-authentication) for details.
+
+#### Azure Storage Private Endpoints
+
+The recipe create three different private endpoints for same ADLS Gen2 storage account. Two of these are from Transit VNet with sub-resource "blob" and "dfs". These endpoint allows users to securely access the storage account from the VM to upload/download data.
+
+The third private endpoint is from Databricks workspace VNet with sub-resource "dfs". This endpoint is exclusively used by Databricks to securely access the storage account from the notebooks.
+
+#### Azure Key Vault
+
+This private endpoint is created from the transit VNet with sub-resource "vault". It allows the users to securely access the Key Vault and create or retrieve the secrets.
+
+Due to a particular behaviour of Azure Databricks when using a Key-vault based secret scope in Azure Databricks, the private endpoint from Databricks workspace VNet doesn't work and thus it's not created. Rather, it relies on the option of allowing "Trusted Azure Services" option for accessing Azure Key Vault. Please check [this section](#azure-keyVault-has-allowed-trusted-azure-services) for details.
+
+### Virtual Networks (VNet)
+
+Depending on the deployment choices, the recipe would deploy either two or three virtual networks as described below.
+
+#### Databricks Workspace VNet
+
+It is the VNet in which the Databricks workspace is deployed. This configuration where you deploy Azure Databricks data plane resources in your own virtual network is called as [VNet injection](https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/vnet-inject).
+
+#### Transit VNet
+
+This VNet is created to allow the front-end connectivity to Azure Databricks workspace. It also allows the users to access the storage account and key vault using private endpoints. Please note that the recipe DOESN'T deploy the Virtual Machine (VM), it's shown in the architecture diagram for clarity.
+
+It's also worth noting that the transit VNet and databricks workspace VNet are not peered. That means the frond-end and back-end traffic are completely separated and the databricks workspace has no connectivity in and out of the workspace VNet (except through the private endpoints).
+
+#### Web Authentication Workspace VNet
+
+This VNet is optionally created, if you choose to deploy a separate Web Authentication workspace (`webAuthWorkspacePreference` = `createNew`). 
+
+Please note that this VNet uses a hard-coded IP address range of '10.179.0.0/16' and subnet ranges accordingly. Modify the following parameters to override these default values:
+
+```txt
+webAuthWorkspaceVnetAddressPrefix = '10.179.0.0/16'
+webAuthWorkspaceContainerSubnetAddressPrefix = '10.179.0.0/24'
+webAuthWorkspaceHostSubnetAddressPrefix string = '10.179.1.0/24'
+```
+
+### Azure Databricks Workspaces
+
+### Production (Main) Workspace
+
+This is the main workspace which needs to be protected and accessed securely. This workspace is deployed in a user-defined VNet (VNet injection), has workspace public access disabled, has secured cluster connectivity between data plane and control plane (via private links) and Data Exfiltration protection (outbound traffic is disabled via Security Group outbound rule).
+
+To use this workspace as the web-authentication workspace as well, please set the value of parameter `webAuthWorkspacePreference` to `useNew`.
+
+### Web Auth Workspace
+
+As mentioned [here](#web-authentication-private-endpoint), there is generally a single Azure Databricks workspace per region to support web authentication. If you already has such a workspace in your region, please set the value of parameter `webAuthWorkspacePreference` to `useExisting` and pass the resource id of the existing web-auth workspace via parameter `existingWebAuthWorkspaceId`.
+
+For a non-production deployment, you can also choose to use the main Databricks workspace to act as the web authentication workspace as well. For that, please set the value of parameter `webAuthWorkspacePreference` to `useNew`. With this, there would be only one 
 
 ### Recommendations
 
@@ -102,24 +156,18 @@ az login
 az account set -s <subscription_id>
 ```
 
-- Create a new Azure resource group to deploy the Bicep template, passing in a location and name.
+- Please note that this recipe is deployed with a target scope of "subscription". The [main.bicep](./deploy/bicep/main.bicep), which is the main file for the Bicep deployment, already has the default values for the required parameters. Please carefully review these values and make sure it doesn't clash with your existing infrastructure (For ex: the VNet address ranges). If you prefer to override these, you can rename the [azuredeploy.parameters.sample.json](./deploy/bicep/azuredeploy.parameters.sample.json) file to **azuredeploy.parameters.json** and modify/add the required parameter values.
+
+- Optionally, verify what Bicep will deploy, passing in the location where you want to deploy the recipe, deployment name ("adbVnetRecipeDeploy") and the necessary parameters for the Bicep template.
 
 ```bash
-az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
+az deployment sub what-if --name adbVnetRecipeDeploy --location <LOCATION> --template-file main.bicep --parameters azuredeploy.parameters.json --verbose
 ```
 
-- The [main.bicep](./deploy/bicep/main.bicep), which is the main file for the Bicep deployment, already has the default values for the required parameters. If you prefer to override these default values, you can rename the [azuredeploy.parameters.sample.json](./deploy/bicep/azuredeploy.parameters.sample.json) file to **azuredeploy.parameters.json** and modify the required parameters.
-
-- Optionally, verify what Bicep will deploy, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
+- Deploy the template, passing in the location where you want to deploy the recipe, deployment name ("adbVnetRecipeDeploy") and the necessary parameters for the Bicep template.
 
 ```bash
-az deployment group what-if --resource-group <RESOURCE_GROUP_NAME> --template-file main.bicep --parameters azuredeploy.parameters.json --verbose
-```
-
-- Deploy the template, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
-
-```bash
-az deployment group create --resource-group <RESOURCE_GROUP_NAME> --template-file main.bicep --parameters azuredeploy.parameters.json --verbose
+az deployment sub create --name adbVnetRecipeDeploy --location <LOCATION> --template-file main.bicep --parameters azuredeploy.parameters.json --verbose
 ```
 
 - Create an Azure Key Vault-backed secret scope and save the Azure Storage account Key as a secret in Azure Key Vault.
@@ -296,7 +344,7 @@ Similarly, if you try to access the Databricks workspace, you get the following 
 
 Congratulations, you have successfully deployed and tested Azure Databricks in a secured VNet configuration!
 
-## Specific Observations and their Explanations
+## Specific Observations and Comments
 
 ### Two different resource groups for Private DNS Zones
 
