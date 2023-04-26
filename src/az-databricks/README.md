@@ -158,6 +158,32 @@ az account set -s <subscription_id>
 
 - Please note that this recipe is deployed with a target scope of "subscription". The [main.bicep](./deploy/bicep/main.bicep), which is the main file for the Bicep deployment, already has the default values for the required parameters. Please carefully review these values and make sure it doesn't clash with your existing infrastructure (For ex: the VNet address ranges). If you prefer to override these, you can rename the [azuredeploy.parameters.sample.json](./deploy/bicep/azuredeploy.parameters.sample.json) file to **azuredeploy.parameters.json** and modify/add the required parameter values.
 
+Here is a description of the various parameters available for this recipe:
+
+```
+| Variable Name | Description | Default Value |
+| --- | --- | --- |
+| location | The Azure region for the deployment of recipe. | Specified as part of bicep deploy command. |
+| resourceBaseName | <br> The base name to be appended to all provisioned resources.</br> <br> Minimum Length: 3, Maximum Length: 13 </br> | uniqueString(subscription().subscriptionId) |
+|resourceGroupName | The name of the resource group to deploy most of the recipe resources. | |
+|adbPrivateDnsZoneResourceGroupName | The name of the resource group for creating databricks private DNS Zone to support Back-end private link connection. | |
+|workspaceVnetAddressPrefix | The IP address prefix for the Azure Databricks workspace VNet | |
+|workspaceBackendPrivateEndpointSubnetAddressPrefix | The IP address prefix for the VNet subnet used for private endpoints. | |
+|workspaceContainerSubnetAddressPrefix | The IP address prefix for the container subnet of Azure Databricks. | |
+|workspaceHostSubnetAddressPrefix | The IP address prefix for the host subnet of Azure Databricks. | |
+|transitVnetAddressPrefix | The IP address prefix for the Transit virtual network. | |
+|transitPrivateEndpointSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for private endpoints. | |
+|transitBastionSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for AzureBastionSubnet subnet. | |
+|newOrExistingDnsZones | Indicator if new Azure Private DNS Zones should be created, or using existing Azure Private DNS Zones. | |
+|dnsZoneResourceGroupName | The name of the Azure resource group containing the Azure Private DNS Zones used for registering private endpoints. | |
+|dnsZoneSubscriptionId | The ID of the Azure subscription containing the Azure Private DNS Zones used for registering private endpoints. | |
+|webAuthWorkspacePreference | The flag to indicate preference about the Azure Databricks web authentication workspace. | |
+|webAuthWorkspaceVnetAddressPrefix | The IP address prefix for the VNet if "webAuthWorkspacePreference" is set to "CreateNew". | |
+|webAuthWorkspaceContainerSubnetAddressPrefix | The IP address prefix for the container subnet if "webAuthWorkspacePreference" is set to "CreateNew". | |
+|webAuthWorkspaceHostSubnetAddressPrefix | The IP address prefix for the host subnet if "webAuthWorkspacePreference" is set to "CreateNew". | |
+|existingWebAuthWorkspaceId | The resource id of the Azure Databricks workspace to be used for web authentication if "webAuthWorkspacePreference" is set to "useExisting". | |
+```
+
 - Optionally, verify what Bicep will deploy, passing in the location where you want to deploy the recipe, deployment name ("adbVnetRecipeDeploy") and the necessary parameters for the Bicep template.
 
 ```bash

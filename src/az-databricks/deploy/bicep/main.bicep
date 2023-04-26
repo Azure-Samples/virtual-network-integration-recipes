@@ -1,6 +1,6 @@
 targetScope = 'subscription'
 
-@description('The Azure region for the specified resources.')
+@description('The Azure region for the deployment of specified resources.')
 param location string = deployment().location
 
 @description('The base name to be appended to all provisioned resources.')
@@ -8,7 +8,7 @@ param location string = deployment().location
 @maxLength(13)
 param resourceBaseName string = uniqueString(subscription().subscriptionId)
 
-@description('The name of the resource group to reploy the resources.')
+@description('The name of the resource group to deploy most of the recipe resources.')
 param resourceGroupName string = 'rg-adbrcpi-bicep'
 
 // Resource group to create ADB Private DNS Zone to support Back-end private link connection
@@ -66,7 +66,7 @@ param webAuthWorkspaceContainerSubnetAddressPrefix string = '10.179.0.0/24'
 @description('The IP address prefix for the host subnet if "webAuthWorkspacePreference" is set to "CreateNew".')
 param webAuthWorkspaceHostSubnetAddressPrefix string = '10.179.1.0/24'
 
-@description('The name of the Azure Databricks workspace to be used for web authentication if "webAuthWorkspacePreference" is set to "useExisting".')
+@description('The resource id of the Azure Databricks workspace to be used for web authentication if "webAuthWorkspacePreference" is set to "useExisting".')
 param existingWebAuthWorkspaceId string = ''
 
 // General/Common variables
