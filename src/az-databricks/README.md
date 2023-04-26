@@ -163,23 +163,23 @@ Here is a description of the various parameters available for this recipe:
 | Variable Name | Description | Default Value |
 | --- | --- | --- |
 | location | The Azure region for the deployment of recipe. | Specified as part of bicep deploy command. |
-| resourceBaseName | <br> The base name to be appended to all provisioned resources.</br> <br> Minimum Length: 3, Maximum Length: 13 </br> | uniqueString(subscription().subscriptionId) |
-|resourceGroupName | The name of the resource group to deploy most of the recipe resources. | |
-|adbPrivateDnsZoneResourceGroupName | The name of the resource group for creating databricks private DNS Zone to support Back-end private link connection. | |
-|workspaceVnetAddressPrefix | The IP address prefix for the Azure Databricks workspace VNet | |
-|workspaceBackendPrivateEndpointSubnetAddressPrefix | The IP address prefix for the VNet subnet used for private endpoints. | |
-|workspaceContainerSubnetAddressPrefix | The IP address prefix for the container subnet of Azure Databricks. | |
-|workspaceHostSubnetAddressPrefix | The IP address prefix for the host subnet of Azure Databricks. | |
-|transitVnetAddressPrefix | The IP address prefix for the Transit virtual network. | |
-|transitPrivateEndpointSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for private endpoints. | |
-|transitBastionSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for AzureBastionSubnet subnet. | |
-|newOrExistingDnsZones | Indicator if new Azure Private DNS Zones should be created, or using existing Azure Private DNS Zones. | |
-|dnsZoneResourceGroupName | The name of the Azure resource group containing the Azure Private DNS Zones used for registering private endpoints. | |
-|dnsZoneSubscriptionId | The ID of the Azure subscription containing the Azure Private DNS Zones used for registering private endpoints. | |
-|webAuthWorkspacePreference | The flag to indicate preference about the Azure Databricks web authentication workspace. | |
-|webAuthWorkspaceVnetAddressPrefix | The IP address prefix for the VNet if "webAuthWorkspacePreference" is set to "CreateNew". | |
-|webAuthWorkspaceContainerSubnetAddressPrefix | The IP address prefix for the container subnet if "webAuthWorkspacePreference" is set to "CreateNew". | |
-|webAuthWorkspaceHostSubnetAddressPrefix | The IP address prefix for the host subnet if "webAuthWorkspacePreference" is set to "CreateNew". | |
+| resourceBaseName | The base name to be appended to all provisioned resources.<br/> Minimum Length: 3, Maximum Length: 13 | uniqueString(subscription().subscriptionId) |
+|resourceGroupName | The name of the resource group to deploy most of the recipe resources. | rg-adbrcpi-bicep |
+|adbPrivateDnsZoneResourceGroupName | The name of the resource group for creating databricks private DNS Zone to support Back-end private link connection. | '${resourceGroupName}-dns' |
+|workspaceVnetAddressPrefix | The IP address prefix for the Azure Databricks workspace VNet | 10.11.0.0/16 |
+|workspaceBackendPrivateEndpointSubnetAddressPrefix | The IP address prefix for the VNet subnet used for private endpoints. | 10.11.0.0/24 |
+|workspaceContainerSubnetAddressPrefix | The IP address prefix for the container subnet of Azure Databricks. | 10.11.1.0/24 |
+|workspaceHostSubnetAddressPrefix | The IP address prefix for the host subnet of Azure Databricks. | 10.11.2.0/24 |
+|transitVnetAddressPrefix | The IP address prefix for the Transit virtual network. | 10.12.0.0/16 |
+|transitPrivateEndpointSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for private endpoints. | 10.12.0.0/24 |
+|transitBastionSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for AzureBastionSubnet subnet. | 10.12.1.0/24 |
+|newOrExistingDnsZones | Indicator if new Azure Private DNS Zones should be created, or using existing Azure Private DNS Zones. | new |
+|dnsZoneResourceGroupName | The name of the Azure resource group containing the Azure Private DNS Zones used for registering private endpoints. | resourceGroupName |
+|dnsZoneSubscriptionId | The ID of the Azure subscription containing the Azure Private DNS Zones used for registering private endpoints. | subscription().subscriptionId |
+|webAuthWorkspacePreference | The flag to indicate preference about the Azure Databricks web authentication workspace. | useNew |
+|webAuthWorkspaceVnetAddressPrefix | The IP address prefix for the VNet if "webAuthWorkspacePreference" is set to "CreateNew". | 10.179.0.0/16 |
+|webAuthWorkspaceContainerSubnetAddressPrefix | The IP address prefix for the container subnet if "webAuthWorkspacePreference" is set to "CreateNew". | 10.179.0.0/24 |
+|webAuthWorkspaceHostSubnetAddressPrefix | The IP address prefix for the host subnet if "webAuthWorkspacePreference" is set to "CreateNew". | 10.179.1.0/24 |
 |existingWebAuthWorkspaceId | The resource id of the Azure Databricks workspace to be used for web authentication if "webAuthWorkspacePreference" is set to "useExisting". | |
 
 - Optionally, verify what Bicep will deploy, passing in the location where you want to deploy the recipe, deployment name ("adbVnetRecipeDeploy") and the necessary parameters for the Bicep template.
