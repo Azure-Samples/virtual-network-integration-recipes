@@ -1,9 +1,10 @@
 targetScope = 'subscription'
 
 @description('The Azure region for the specified resources.')
-param location string = 'australiaeast'
+param location string = deployment().location
 
 @description('The base name to be appended to all provisioned resources.')
+@minLength(3)
 @maxLength(13)
 param resourceBaseName string = uniqueString(subscription().subscriptionId)
 
@@ -179,7 +180,7 @@ module network 'network.bicep' = {
   name: 'networkDeploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     workspaceVnetName: workspaceVnetName
     workspaceVnetAddressPrefix: workspaceVnetAddressPrefix
     workspaceHostSubnetName: workspaceHostSubnetName
@@ -231,7 +232,7 @@ module keyVault 'key-vault.bicep' = {
   name: 'keyVaultDeploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     keyVaultName: keyVaultName
     tags: tags
   }
@@ -241,7 +242,7 @@ module storage 'storage.bicep' = {
   name: 'storageDeploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     storageAccountName: storageAccountName
     defaultContainerName: defaultContainerName
     tags: tags
@@ -252,7 +253,7 @@ module adb 'databricks-main.bicep' = {
   name: 'databricksDeploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     databricksWorkspaceName: databricksMainWorkspaceName
     managedResourceGroupName: databricksMainWorkspaceManagedResourceGroupName
     vnetName: network.outputs.outWorkspaceVnetName
@@ -266,7 +267,7 @@ module adbWebAuth 'databricks-web-auth.bicep' = if (webAuthWorkspacePreference =
   name: 'databricksWebAuthDeploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     databricksWorkspaceName: databricksWebAuthWorkspaceName
     managedResourceGroupName: databricksWebAuthManagedResourceGroupName
     vnetName: webAuthWorkspaceVnetName
@@ -284,7 +285,7 @@ module adbBackendApiPrivateEndpoint 'private-endpoint.bicep' = {
   name: 'adbBackendApiPrivateEndpointDeploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     privateEndpointName: adbBackendApiPrivateEndpointName
     privateEndpointDnsZoneGroupName: adbBackendApiPrivateEndpointDnsZoneGroupName
     privateLinkServiceId: adb.outputs.outDatabricksWorkspaceId
@@ -299,7 +300,7 @@ module adbFrontendApiPrivateEndpoint 'private-endpoint.bicep' = {
   name: 'adbFrontendApiPrivateEndpointDeploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     privateEndpointName: adbFrontendApiPrivateEndpointName
     privateEndpointDnsZoneGroupName: adbFrontendApiPrivateEndpointDnsZoneGroupName
     privateLinkServiceId: adb.outputs.outDatabricksWorkspaceId
@@ -317,7 +318,7 @@ module adbBrowserAuthPrivateEndpoint 'private-endpoint.bicep' = {
   name: 'adbBrowserAuthPrivateEndpointDeploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     privateEndpointName: adbBrowserAuthPrivateEndpointName
     privateEndpointDnsZoneGroupName: adbBrowserAuthPrivateEndpointDnsZoneGroupName
     privateLinkServiceId: (webAuthWorkspacePreference == 'createNew') ? adbWebAuth.outputs.outDatabricksWorkspaceId : (webAuthWorkspacePreference == 'useExisting') ? existingWebAuthWorkspaceId : adb.outputs.outDatabricksWorkspaceId
@@ -333,7 +334,7 @@ module storageDfsPrivateEndpoint1 'private-endpoint.bicep' = {
   name: 'storageDfsPrivateEndpoint1Deploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     privateEndpointName: '${storageDfsPrivateEndpointName}-workspace'
     privateEndpointDnsZoneGroupName: '${storageDfsPrivateEndpointDnsZoneGroupName}-workspace'
     privateLinkServiceId: storage.outputs.outStorageAccountResourceId
@@ -349,7 +350,7 @@ module storageBlobPrivateEndpoint2 'private-endpoint.bicep' = {
   name: 'storageBlobPrivateEndpoint2Deploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     privateEndpointName: '${storageBlobPrivateEndpointName}-transit'
     privateEndpointDnsZoneGroupName: '${storageBlobPrivateEndpointDnsZoneGroupName}-transit'
     privateLinkServiceId: storage.outputs.outStorageAccountResourceId
@@ -364,7 +365,7 @@ module storageDfsPrivateEndpoint2 'private-endpoint.bicep' = {
   name: 'storageDfsPrivateEndpoint2Deploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     privateEndpointName: '${storageDfsPrivateEndpointName}-transit'
     privateEndpointDnsZoneGroupName: '${storageDfsPrivateEndpointDnsZoneGroupName}-transit'
     privateLinkServiceId: storage.outputs.outStorageAccountResourceId
@@ -379,7 +380,7 @@ module keyVaultPrivateEndpoint2 'private-endpoint.bicep' = {
   name: 'keyVaultPrivateEndpoint2Deploy'
   scope: rgMain
   params: {
-    location: location
+    location: rgMain.location
     privateEndpointName: '${keyVaultPrivateEndpointName}-transit'
     privateEndpointDnsZoneGroupName: '${keyVaultPrivateEndpointDnsZoneGroupName}-transit'
     privateLinkServiceId: keyVault.outputs.outKeyVaultResourceId

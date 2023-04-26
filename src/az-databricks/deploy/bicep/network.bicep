@@ -41,7 +41,7 @@ param transitPrivateEndpointSubnetName string
 param transitPrivateEndpointSubnetAddressPrefix string
 
 @description('The name of the AzureBastionSubnet subnet.')
-param transitBastionSubnetName string
+param transitBastionSubnetName string = 'AzureBastionSubnet'
 
 @description('The IP space to use for the AzureBastionSubnet subnet.')
 param transitBastionSubnetAddressPrefix string

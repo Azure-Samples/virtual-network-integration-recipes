@@ -28,21 +28,19 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
   kind: 'StorageV2'
   tags: tags
-}
 
-resource storageBlobService 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
-  name: 'default'
-  parent: storageAccount
-}
+  resource storageBlobService 'blobServices@2022-09-01' = {
+    name: 'default'
 
-resource storageFileSystem 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
-  name: defaultContainerName
-  parent: storageBlobService
-  properties: {
-    publicAccess: 'None'
+    resource storageFileSystem 'containers@2022-09-01' = {
+      name: defaultContainerName
+      properties: {
+        publicAccess: 'None'
+      }
+    }
   }
 }
 
 output outStorageAccountResourceId string = storageAccount.id
 output outStorageAccountName string = storageAccount.name
-output outStorageFilesysName string = storageFileSystem.name
+output outStorageFilesysName string = defaultContainerName

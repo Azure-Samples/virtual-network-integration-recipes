@@ -23,14 +23,29 @@
         "transitBastionSubnetAddressPrefix": {
             "value": "10.12.1.0/24"
         },
+        "newOrExistingDnsZones": {
+            "value": "new"
+        },
         "dnsZoneResourceGroupName": {
             "value": "[NAME OF RESOURCE GROUP CONTAINING EXISTING AZURE PRIVATE DNS ZONES]"
         },
         "dnsZoneSubscriptionId": {
             "value": "[SUBSCRIPTION ID IN WHICH THE RESOURCE GROUP CONTAINING EXISTING AZURE PRIVATE DNS ZONES HAS BEEN CREATED]"
         },
-        "newOrExistingDnsZones": {
-            "value": "new"
+        "webAuthWorkspacePreference": {
+            "value": "createNew"
+        },
+        "webAuthWorkspaceVnetAddressPrefix": {
+            "value": "10.179.0.0/16"
+        },
+        "webAuthWorkspaceContainerSubnetAddressPrefix": {
+            "value": "10.179.0.0/24"
+        },
+        "webAuthWorkspaceHostSubnetAddressPrefix": {
+            "value": "10.179.1.0/24"
+        },
+        "existingWebAuthWorkspaceId": {
+            "value": "[RESOURCE ID OF THE EXISTING AZURE DATABRICKS WEB-AUTH WORKSPACE]"
         }
     }
 }
