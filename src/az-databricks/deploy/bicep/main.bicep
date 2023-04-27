@@ -49,13 +49,13 @@ param dnsZoneResourceGroupName string = resourceGroupName
 @description('The ID of the Azure subscription containing the Azure Private DNS Zones used for registering private endpoints.')
 param dnsZoneSubscriptionId string = subscription().subscriptionId
 
-@description('The flag to indicate preference about the Azure Databricks web authentication workspace.')
+@description('Parameter to specify the preference about Azure Databricks web authentication workspace.')
 @allowed([
   'createNew'
   'useNew'
   'useExisting'
 ])
-param webAuthWorkspacePreference string = 'useNew'
+param webAuthWorkspacePreference string = 'createNew'
 
 @description('The IP address prefix for the VNet if "webAuthWorkspacePreference" is set to "CreateNew".')
 param webAuthWorkspaceVnetAddressPrefix string = '10.179.0.0/16'

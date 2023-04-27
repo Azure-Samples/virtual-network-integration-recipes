@@ -23,25 +23,21 @@ There are a lot of peculiarities in the above architecture which are described b
 
 ### Private DNS Zone "privatelink.azuredatabricks.net"
 
-Earlier, there was no private links for front-end and back-end connectivity of Azure Databricks. Users relied on IP access list to control the front-end access and User Defined Routes to relay the back-end traffic from data plane to Azure Databricks control plane.
-
-Now, Azure Databricks has added a new Private DNS Zone called "privatelink.azuredatabricks.net" to support back-end and front-end connectivity using private links.
+Previously, Azure Databricks lacked a mechanism for facilitating private links for front-end and back-end traffic. Instead, users were obliged to rely on IP access lists for regulating front-end access and User Defined Routes (UDR) for transmitting back-end traffic from the data plane to the Azure Databricks control plane. However, Azure Databricks has recently implemented a new Private DNS Zone, designated as "privatelink.azuredatabricks.net", to enable private links for both front-end and back-end traffic.
 
 ### Private Endpoints
 
 #### Front-end Private Endpoint (aka user to workspace)
 
-A front-end private endpoint allows users to connect to the Azure Databricks web application, REST API, and Databricks Connect API over a VNet interface endpoint. The front-end connection is also used by JDBC/ODBC and PowerBI integrations.
-
-It uses a new sub-resource type called "databricks-ui-api".
+The implementation of a front-end private endpoint enables users to establish a secure connection to the Azure Databricks web application, REST API, and Databricks Connect API over a VNet interface endpoint. Notably, the front-end connection is also leveraged by JDBC/ODBC and PowerBI integrations. This capability is facilitated by a novel sub-resource type, designated as "databricks-ui-api".
 
 #### Back-end Private Endpoint (aka data plane to control plane)
 
-Databricks Runtime clusters in a customer-managed VNet (the data plane) connect to an Azure Databricks workspace’s core services (the control plane) in the Azure Databricks cloud account. This enables private connectivity from the clusters to the secure cluster connectivity relay endpoint and REST API endpoint.
+Databricks Runtime clusters, situated within a customer-managed VNet, are capable of connecting to the core services of an Azure Databricks workspace located within an Azure Databricks cloud account (the control plane). This functionality facilitates private connectivity between the clusters and the secure cluster connectivity relay endpoint, as well as the REST API endpoint.
 
-It uses the same sub-resource type "databricks-ui-api" as frond-end private endpoint.
+The "databricks-ui-api" sub-resource type, employed by the front-end private endpoint, is also utilized in the context of data plane connectivity.
 
-As the recipe implements both front-end and back-end private endpoints separately, it also allows the private connectivity for the workspace to be mandated. It means that Azure Databricks rejects any connections over the public network.
+By virtue of the recipe's inclusion of both front-end and back-end private endpoints, it is feasible to enforce private connectivity for the workspace. This entails Azure Databricks' rejection of any attempted connections originating from the public network.
 
 #### Web Authentication Private Endpoint
 
@@ -103,27 +99,23 @@ As mentioned [here](#web-authentication-private-endpoint), there is generally a 
 
 For a non-production deployment, you can also choose to use the main Databricks workspace to act as the web authentication workspace as well. For that, please set the value of parameter `webAuthWorkspacePreference` to `useNew`. With this, there would be only one 
 
-### Recommendations
+## Recommendations
 
 The following sections provide recommendations on when this recipe should, and should not, be used.
 
-#### Recommended
+### Recommended
 
-<!-- Provide details on when usage of this recipe is recommended. -->
 This recipe is recommended if the following conditions are true:
 
 - You want a starting point to deploy an Azure Databricks workspace with VNet injection enabled.
 
-#### Not Recommended
+### Not Recommended
 
-<!-- Provide details on when usage of this recipe is NOT recommended. -->
 This recipe is **not** recommended if the following conditions are true:
 
 - A fully configurable, enterprise-grade Azure Databricks deployment with data exfiltration prevention. This recipe gets you part way there but doesn't configure everything to enable this use case.
 
 ## Getting Started
-
-<!-- Provide instructions on how a user would use this recipe (e.g., how they would deploy the resources). -->
 
 ### Pre-requisites
 
@@ -138,9 +130,59 @@ The following pre-requisites should be in place in order to successfully use thi
 
 ### Deployment
 
-To deploy this recipe, please perform the following actions:
+### Deployment Options
 
-#### Deploying Infrastructure Using Bicep
+There are several options which can be made while deploying this recipe. Based on these choices, 
+
+#### Option regarding Private DNS Zones used by Transit VNet
+
+This option allows user to either use existing Private DNS Zones or create new ones in the same resource group in which the recipe is being deployed. Please note that this choice is applicable only to the Private DNS Zones which are used by transit VNet. For the Private DNS Zones used by Databricks VNet, the recipe always creates the required private DNS Zones in a different resource group.
+
+Here are the details of the relevant parameters:
+
+```txt
+newOrExistingDnsZones: Parameter to specify if new private DNS Zones are to be created or to use existing ones.
+  1. new - Create new Private DNS Zones as part of recipe deployment.
+  2. existing - Use existing Private DNS Zones instead of creating new ones.
+```
+
+When using the "existing" value for the above parameter, please set the following additional parameter:
+
+```txt
+dnsZoneResourceGroupName: 
+dnsZoneSubscriptionId
+```
+
+The assumption here is that all the required Private DNS Zones are already existing within the same resource group "dnsZoneResourceGroupName". The "dnsZoneSubscriptionId" supports cross-subscription deployment i.e. the existing Private DNS Zones can be in a different subscription than the one in which the recipe is being deployed.
+
+#### Option regarding Web Authentication Databricks Workspace
+
+This feature enables users to exercise discretion in relation to the Azure Databricks Web Authentication workspace. Specifically, users may opt to utilize a pre-existing workspace for web authentication, create a distinct workspace within the recipe, or employ the primary workspace for web authentication purposes. It should be noted that the latter configuration is generally discouraged for production purposes.
+
+Here are the details of the relevant parameters:
+
+```txt
+webAuthWorkspacePreference: Parameter to specify the preference about Azure Databricks web authentication workspace. This parameter has three possible values:
+  1. createNew (Default) - Create a new distinct workspace in addition to the main workspace. With this option, two Azure Databricks workspaces are created.
+  2. useNew              - Use the main workspace as web-authentication workspace as well. With this option, only one Azure Databricks workspace is created.
+  3. useExisting         - Use an already existing web-authentication workspace. With this option, only one Azure Databricks workspace is created.
+```
+
+When using the "CreateNew" value for the above parameter, please set/review these additional parameters:
+
+```txt
+webAuthWorkspaceVnetAddressPrefix: The IP address prefix for the VNet used by web-auth workspace.
+webAuthWorkspaceContainerSubnetAddressPrefix: The IP address prefix for the container subnet of the VNet used by web-auth workspace.
+webAuthWorkspaceHostSubnetAddressPrefix: The IP address prefix for the host subnet of the VNet used by web-auth workspace.
+```
+
+When using the "useExisting" value for the above parameter, please set the following additional parameter:
+
+```txt
+existingWebAuthWorkspaceId: The resource id of the already existing Azure Databricks workspace to be used for web-auth.
+```
+
+### Deploying Infrastructure Using Bicep
 
 - Open the command prompt and change directory to the `bicep` folder.
 
@@ -158,29 +200,7 @@ az account set -s <subscription_id>
 
 - Please note that this recipe is deployed with a target scope of "subscription". The [main.bicep](./deploy/bicep/main.bicep), which is the main file for the Bicep deployment, already has the default values for the required parameters. Please carefully review these values and make sure it doesn't clash with your existing infrastructure (For ex: the VNet address ranges). If you prefer to override these, you can rename the [azuredeploy.parameters.sample.json](./deploy/bicep/azuredeploy.parameters.sample.json) file to **azuredeploy.parameters.json** and modify/add the required parameter values.
 
-Here is a description of the various parameters available for this recipe:
-
-| Variable Name | Description | Default Value |
-| --- | --- | --- |
-| location | The Azure region for the deployment of recipe. | Specified as part of bicep deploy command. |
-| resourceBaseName | The base name to be appended to all provisioned resources.<br/> Minimum Length: 3, Maximum Length: 13 | uniqueString(subscription().subscriptionId) |
-|resourceGroupName | The name of the resource group to deploy most of the recipe resources. | rg-adbrcpi-bicep |
-|adbPrivateDnsZoneResourceGroupName | The name of the resource group for creating databricks private DNS Zone to support Back-end private link connection. | '${resourceGroupName}-dns' |
-|workspaceVnetAddressPrefix | The IP address prefix for the Azure Databricks workspace VNet | 10.11.0.0/16 |
-|workspaceBackendPrivateEndpointSubnetAddressPrefix | The IP address prefix for the VNet subnet used for private endpoints. | 10.11.0.0/24 |
-|workspaceContainerSubnetAddressPrefix | The IP address prefix for the container subnet of Azure Databricks. | 10.11.1.0/24 |
-|workspaceHostSubnetAddressPrefix | The IP address prefix for the host subnet of Azure Databricks. | 10.11.2.0/24 |
-|transitVnetAddressPrefix | The IP address prefix for the Transit virtual network. | 10.12.0.0/16 |
-|transitPrivateEndpointSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for private endpoints. | 10.12.0.0/24 |
-|transitBastionSubnetAddressPrefix | The IP address prefix for the virtual network subnet used for AzureBastionSubnet subnet. | 10.12.1.0/24 |
-|newOrExistingDnsZones | Indicator if new Azure Private DNS Zones should be created, or using existing Azure Private DNS Zones. | new |
-|dnsZoneResourceGroupName | The name of the Azure resource group containing the Azure Private DNS Zones used for registering private endpoints. | resourceGroupName |
-|dnsZoneSubscriptionId | The ID of the Azure subscription containing the Azure Private DNS Zones used for registering private endpoints. | subscription().subscriptionId |
-|webAuthWorkspacePreference | The flag to indicate preference about the Azure Databricks web authentication workspace. | useNew |
-|webAuthWorkspaceVnetAddressPrefix | The IP address prefix for the VNet if "webAuthWorkspacePreference" is set to "CreateNew". | 10.179.0.0/16 |
-|webAuthWorkspaceContainerSubnetAddressPrefix | The IP address prefix for the container subnet if "webAuthWorkspacePreference" is set to "CreateNew". | 10.179.0.0/24 |
-|webAuthWorkspaceHostSubnetAddressPrefix | The IP address prefix for the host subnet if "webAuthWorkspacePreference" is set to "CreateNew". | 10.179.1.0/24 |
-|existingWebAuthWorkspaceId | The resource id of the Azure Databricks workspace to be used for web authentication if "webAuthWorkspacePreference" is set to "useExisting". | |
+Please carefully read the [Deployment Options](#deployment-options) and set the variables accordingly before moving to the next step.
 
 - Optionally, verify what Bicep will deploy, passing in the location where you want to deploy the recipe, deployment name ("adbVnetRecipeDeploy") and the necessary parameters for the Bicep template.
 
