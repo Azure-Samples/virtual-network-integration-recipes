@@ -323,11 +323,11 @@ data = spark.read.parquet(raw_dir)
 display(data)
 ```
 
-There are few points worth mentioning here as follows:
+Please note that with Databricks property "publicNetworkAccess" set to "Disabled", no user access is permitted from the public internet and the front-end connection can be accessed only using Private Link connectivity. Also note that the IP access lists are not effective on Private Link connections.
 
-- In case of Azure Databricks, the workspace access is still possible from public network, even if it's deployed in a secured VNet configuration. This behavior is different from Azure Synapse which can restrict public workspace access altogether.
+For certain scenarios, you can set this property to "Enabled". In this case, users and REST API calls on the public internet can access Azure Databricks. But the access can be limited to specific IP ranges from approved source networks.
 
-- A simple way of controlling workspace (aka web application) access is by defining an [IP access list](https://docs.microsoft.com/azure/databricks/security/network/ip-access-list). Azure Databricks customers can use the IP access lists feature to define a set of approved IP addresses. All incoming access to the web application and REST APIs requires the user connect from an authorized IP address. Here is an illustration of how this feature works.
+A simple way of controlling workspace (aka web application) access is by defining an [IP access list](https://docs.microsoft.com/azure/databricks/security/network/ip-access-list). Azure Databricks customers can use the IP access lists feature to define a set of approved IP addresses. All incoming access to the web application and REST APIs requires the user connect from an authorized IP address. Here is an illustration of how this feature works.
 
 ```bash
 # Getting the Databricks token for authentication
@@ -386,8 +386,6 @@ Similarly, if you try to access the Databricks workspace, you get the following 
 
 ![databricks-access-error](./media/databricks-access-denied.png)
 
-Congratulations, you have successfully deployed and tested Azure Databricks in a secured VNet configuration!
-
 ## Specific Observations and Comments
 
 ### Two different resource groups for Private DNS Zones
@@ -445,12 +443,6 @@ Currently, there is a limitation that Azure Key Vault-backed secret scope can't 
 To avoid this, the secret scope is created only if logged in as `User`. In case of `Service Principal` login, this step is skipped in the script and has to be performed manually.
 
 ## Change Log
-
-<!--
-Describe the change history for this recipe. For example:
-- 2021-06-01
-  - Fix for bug in Terraform template that prevented Key Vault reference resolution for function app.
--->
 
 ## Next Steps
 
