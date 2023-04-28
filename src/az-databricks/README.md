@@ -489,7 +489,7 @@ Please note that setting the value "NoAzureDatabricksRules" for this parameter d
 
 ### Misleading error message while login to Databricks workspace for the first time
 
-This is the behaviour which has started to surface since last few months. After the IaC deployment of recipe, when you try to login to Azure Databricks for the first time from public network, you would expect a access related error. Instead, the following message is shown.
+This behaviour has started to surface since last few months. After the IaC deployment of recipe, when you try to login to Azure Databricks for the first time from public network, you would expect a access related error. Instead, the following message is shown.
 
 ![incorrect-login-message](./media/incorrect-login-message.png)
 

@@ -391,7 +391,9 @@ module keyVaultPrivateEndpoint2 'private-endpoint.bicep' = {
   }
 }
 
+output outResourceGroupName string = rgMain.name
 output outWorkspaceVirtualNetworkName string = network.outputs.outWorkspaceVnetName
+output outTransitVirtualNetworkName string = network.outputs.outTransitVnetName
 output outTransitPrivateEndpointSubnetName string = network.outputs.outTransitPrivateEndpointSubnetName
 output outKeyVaultName string = keyVault.outputs.outKeyVaultName
 output outStorageAccountName string = storage.outputs.outStorageAccountName
