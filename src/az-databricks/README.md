@@ -442,8 +442,59 @@ Currently, there is a limitation that Azure Key Vault-backed secret scope can't 
 
 To avoid this, the secret scope is created only if logged in as `User`. In case of `Service Principal` login, this step is skipped in the script and has to be performed manually.
 
-## Change Log
+### Understanding "enableNoPublicIp", "publicNetworkAccess" and "requiredNsgRules" Parameters
 
-## Next Steps
+As described earlier, the "publicNetworkAccess" parameter in Azure Databricks module controls the settings for the **front-end** use case of Private Link. Whereas, the "requiredNsgRules" parameter is applicable to back-end Private Link. This parameter is discussed in details later.
 
-Note that the Azure Databricks deployment can be further hardened from a network security perspective in order to prevent data exfiltration. See this article on [Data Exfiltration Protection with Azure Databricks](https://databricks.com/blog/2020/03/27/data-exfiltration-protection-with-azure-databricks.html) and a [corresponding sample](https://github.com/Azure-Samples/modern-data-warehouse-dataops/tree/main/single_tech_samples/databricks/sample2_enterprise_azure_databricks_environment) for more information and implementation details.
+The "enableNoPublicIp" parameter is for enabling Secure Cluster Connectivity, also known as No Public IP (NPIP). When SCC is enabled (enableNoPublicIp=true), customer VNet has no open ports and Databricks Runtime cluster nodes have no public IP addresses.
+
+The below table describes the various combinations of these parameters:
+
+| enableNoPublicIp (SCC) | publicNetworkAccess | requiredNsgRules       | Back-end Private Endpoint | Front-end Private Endpoint | Browser Auth Private Endpoint | Configuration Comments                                                                      |
+| ---------------------- | ------------------- | ---------------------- | ------------------------- | -------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------- |
+| true                   | Disabled            | NoAzureDatabricksRules | Required                  | Required                   | Required (One per region)     | Recommended                                                                                 |
+| true                   | Enabled             | NoAzureDatabricksRules | Required                  | Optional                   | Optional (One per region)     | Hybrid  - Used together with IP access lists                                                |
+| true                   | Enabled             | AllRules               | Not Allowed               | Optional                   | Optional (One per region)     | Hybrid  - Used together with IP access lists                                                |
+| false                  | Enabled             | AllRules               | Not Allowed               | Optional                   | Optional (One per region)     | Hybrid  - Used together with IP access lists                                                |
+| true                   | Disabled            | AllRules               | -                         | -                          | -                             | Invalid - Required NSG cannot be 'AllRules' for disabled Public Network Access.             |
+| false                  | Enabled             | NoAzureDatabricksRules | Required                  | Optional                   | Optional (One per region)     | Invalid - Required NSG 'No Azure Databricks Rules' can only be selected for SCC workspaces. |
+| false                  | Disabled            | -                      | -                         | -                          | -                             | Invalid - Public Network Access can only be disabled for SCC workspaces.                    |
+| false                  | Disabled            | -                      | -                         | -                          | -                             | Invalid - Public Network Access can only be disabled for SCC workspaces.                    |
+
+By default, the recipe is deployed with the "Recommended" configuration i.e., it disables the front-end public access, enabled Secured Cluster Connectivity and created both front-end and back-end private endpoints.
+
+```
+enableNoPublicIp: true
+publicNetworkAccess: Disabled
+requiredNsgRules: NoAzureDatabricksRules
+```
+
+Having said that, please be informed that all Azure Databricks network traffic between the data plane VNet and the Azure Databricks control plane goes across the Microsoft network backbone, not the public Internet. This is true even if secure cluster connectivity is disabled.
+
+For further discussion around the different scenarios, please read through the Microsoft [documentation](https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/private-link-standard#--step-3-provision-an-azure-databricks-workspace-and-private-endpoints).
+
+### Working of "requiredNsgRules" Parameter
+
+This parameter governs how the back-end traffic from workspace data plane is going to the Azure Databricks control plane. It has the following three possible values:
+
+1. AllRules - This indicates that your workspace data plane needs a network security group that includes Azure Databricks rules that allow connections on the public internet from the data plane to the control plane. If you are **not using back-end Private Link, use this setting**.
+2. NoAzureDatabricksRules - This indicates that your workspace data plane does not need network security group rules to connect to the Azure Databricks control plane. If you are **using back-end Private Link, use this setting**. This is the default setting used in the recipe.
+3. NoAzureServiceRules - For internal use only, can't be set by users.
+
+Please note that setting the value "NoAzureDatabricksRules" for this parameter doesn't mean that the network security group (NSG) isn't required at all. The NSG and the default security group rules (1 outbound and 4 inbound) are still required. This parameter only affect a specific security group rule as shown below.
+
+![requiredNsgRules](./media/requiredNsgRules.png)
+
+### Misleading error message while login to Databricks workspace for the first time
+
+This is the behaviour which has started to surface since last few months. After the IaC deployment of recipe, when you try to login to Azure Databricks for the first time from public network, you would expect a access related error. Instead, the following message is shown.
+
+![incorrect-login-message](./media/incorrect-login-message.png)
+
+Next time you try to login, the expected [error message](https://learn.microsoft.com/azure/databricks/administration-guide/cloud-configurations/azure/private-link-standard#authentication-troubleshooting) related to access starts to show up.
+
+![correct-login-message](./media/correct-login-message.png)
+
+Apparently, the initial authentication attempt for Azure Databricks involves logging into the workspace and provisioning an initial admin user account. Subsequent login attempts operate under normal conditions. It should be noted that this behavior is not specific to the "VNet injected" Databricks deployment, but rather it is present across all Infrastructure as Code (IaC) based Databricks deployments. As a result, the automation of end-to-end deployments, which includes steps beyond workspace creation, is also failing.
+
+This behaviour is currently under investigation and we will update the details here as progress is made. If you are testing this recipe, please disregard any error messages encountered during the first login attempt.
