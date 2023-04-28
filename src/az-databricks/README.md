@@ -461,6 +461,19 @@ The below table describes the various combinations of these parameters:
 | false                  | Disabled            | -                      | -                         | -                          | -                             | Invalid - Public Network Access can only be disabled for SCC workspaces.                    |
 | false                  | Disabled            | -                      | -                         | -                          | -                             | Invalid - Public Network Access can only be disabled for SCC workspaces.                    |
 
+```txt
+enableNoPublicIp (SCC) | publicNetworkAccess | requiredNsgRules       | Back-end Private Endpoint | Front-end Private Endpoint | Browser Auth Private Endpoint | Configuration Comments                                                                      |
+---------------------- | ------------------- | ---------------------- | ------------------------- | -------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------
+true                   | Disabled            | NoAzureDatabricksRules | Required                  | Required                   | Required (One per region)     | Recommended
+true                   | Enabled             | NoAzureDatabricksRules | Required                  | Optional                   | Optional (One per region)     | Hybrid  - Used together with IP access lists.
+true                   | Enabled             | AllRules               | Not Allowed               | Optional                   | Optional (One per region)     | Hybrid  - Used together with IP access lists.
+false                  | Enabled             | AllRules               | Not Allowed               | Optional                   | Optional (One per region)     | Hybrid  - Used together with IP access lists.
+true                   | Disabled            | AllRules               | -                         | -                          | -                             | Invalid - Required NSG cannot be 'AllRules' for disabled Public Network Access.
+false                  | Enabled             | NoAzureDatabricksRules | Required                  | Optional                   | Optional (One per region)     | Invalid - Required NSG 'No Azure Databricks Rules' can only be selected for SCC workspaces.
+false                  | Disabled            | -                      | -                         | -                          | -                             | Invalid - Public Network Access can only be disabled for SCC workspaces.
+false                  | Disabled            | -                      | -                         | -                          | -                             | Invalid - Public Network Access can only be disabled for SCC workspaces.
+```
+
 By default, the recipe is deployed with the "Recommended" configuration i.e., it disables the front-end public access, enabled Secured Cluster Connectivity and created both front-end and back-end private endpoints.
 
 ```
