@@ -62,7 +62,7 @@ resource azureFunction 'Microsoft.Web/sites@2020-12-01' = {
     siteConfig: {
       vnetRouteAllEnabled: vnetRouteAllEnabled
       functionsRuntimeScaleMonitoringEnabled: true
-      linuxFxVersion: isReserved ? linuxRuntime : json('null')
+      linuxFxVersion: isReserved ? linuxRuntime : null
       appSettings: [
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'

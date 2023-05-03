@@ -124,12 +124,10 @@ resource additionalAppSettings 'Microsoft.Web/sites/config@2021-01-15' = {
     APPINSIGHTS_INSTRUMENTATIONKEY: '@Microsoft.KeyVault(SecretUri=${appInsightsInstrumentationKeyKeyVaultSecret.properties.secretUriWithVersion})'
     FUNCTIONS_EXTENSION_VERSION: '~4'
     FUNCTIONS_WORKER_RUNTIME: 'python'
-
-    // Set the below settings if using a Windows plan.
-    // WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: '@Microsoft.KeyVault(storageAccount.outputs.storageAccountConnectionStringSecretUriWithVersion})'
-    // WEBSITE_CONTENTSHARE: fileShareName
-    // WEBSITE_CONTENTOVERVNET: '1'
-    // WEBSITE_SKIP_CONTENTSHARE_VALIDATION: '1'
+    WEBSITE_CONTENTAZUREFILECONNECTIONSTRING: '@Microsoft.KeyVault(SecretUri=${storageAccount.outputs.storageAccountConnectionStringSecretUriWithVersion})'
+    WEBSITE_CONTENTOVERVNET: '1'
+    WEBSITE_CONTENTSHARE: fileShareName
+    WEBSITE_SKIP_CONTENTSHARE_VALIDATION: '1'
   }
 }
 
