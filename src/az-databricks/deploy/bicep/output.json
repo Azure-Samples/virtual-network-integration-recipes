@@ -1,0 +1,960 @@
+{
+  "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/providers/Microsoft.Resources/deployments/databricksVnetRcpDeploy",
+  "location": "australiaeast",
+  "name": "databricksVnetRcpDeploy",
+  "properties": {
+    "correlationId": "12233f79-f651-4dd5-b71f-c4d7b485a667",
+    "debugSetting": null,
+    "dependencies": [
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns",
+            "resourceName": "rg-adbrcpi-bicep-dns",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns/providers/Microsoft.Resources/deployments/workspacePrivateDnsZoneDeploy",
+        "resourceGroup": "rg-adbrcpi-bicep-dns",
+        "resourceName": "workspacePrivateDnsZoneDeploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/transitDnsZoneDeploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "transitDnsZoneDeploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "networkDeploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/keyVaultDeploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "keyVaultDeploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/storageDeploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "storageDeploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/databricksDeploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "databricksDeploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/databricksWebAuthDeploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "databricksWebAuthDeploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/databricksDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "databricksDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/databricksDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "databricksDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/adbBackendApiPrivateEndpointDeploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "adbBackendApiPrivateEndpointDeploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/databricksDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "databricksDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/adbBackendApiPrivateEndpointDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "adbBackendApiPrivateEndpointDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/databricksDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "databricksDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/adbFrontendApiPrivateEndpointDeploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "adbFrontendApiPrivateEndpointDeploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/databricksDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "databricksDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/databricksWebAuthDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "databricksWebAuthDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/databricksWebAuthDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "databricksWebAuthDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/adbBrowserAuthPrivateEndpointDeploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "adbBrowserAuthPrivateEndpointDeploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/storageDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "storageDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/storageDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "storageDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/storageDfsPrivateEndpoint1Deploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "storageDfsPrivateEndpoint1Deploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/storageDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "storageDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/storageDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "storageDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/storageBlobPrivateEndpoint2Deploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "storageBlobPrivateEndpoint2Deploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/storageDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "storageDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/storageDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "storageDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/storageDfsPrivateEndpoint2Deploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "storageDfsPrivateEndpoint2Deploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/keyVaultDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "keyVaultDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep",
+            "resourceName": "rg-adbrcpi-bicep",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/keyVaultDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "keyVaultDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/keyVaultPrivateEndpoint2Deploy",
+        "resourceGroup": "rg-adbrcpi-bicep",
+        "resourceName": "keyVaultPrivateEndpoint2Deploy",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns",
+            "resourceName": "rg-adbrcpi-bicep-dns",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns/providers/Microsoft.Resources/deployments/workspacePrivateDnsZoneDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep-dns",
+            "resourceName": "workspacePrivateDnsZoneDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns/providers/Microsoft.Resources/deployments/privateDnsZoneWorkspaceVnetLinkDeploy-0",
+        "resourceGroup": "rg-adbrcpi-bicep-dns",
+        "resourceName": "privateDnsZoneWorkspaceVnetLinkDeploy-0",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns",
+            "resourceName": "rg-adbrcpi-bicep-dns",
+            "resourceType": "Microsoft.Resources/resourceGroups"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns/providers/Microsoft.Resources/deployments/workspacePrivateDnsZoneDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep-dns",
+            "resourceName": "workspacePrivateDnsZoneDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns/providers/Microsoft.Resources/deployments/privateDnsZoneWorkspaceVnetLinkDeploy-1",
+        "resourceGroup": "rg-adbrcpi-bicep-dns",
+        "resourceName": "privateDnsZoneWorkspaceVnetLinkDeploy-1",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/transitDnsZoneDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "transitDnsZoneDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-private-dns/providers/Microsoft.Resources/deployments/privateDnsZoneTransitVnetLinkDeploy-0",
+        "resourceGroup": "rg-private-dns",
+        "resourceName": "privateDnsZoneTransitVnetLinkDeploy-0",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/transitDnsZoneDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "transitDnsZoneDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-private-dns/providers/Microsoft.Resources/deployments/privateDnsZoneTransitVnetLinkDeploy-1",
+        "resourceGroup": "rg-private-dns",
+        "resourceName": "privateDnsZoneTransitVnetLinkDeploy-1",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/transitDnsZoneDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "transitDnsZoneDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-private-dns/providers/Microsoft.Resources/deployments/privateDnsZoneTransitVnetLinkDeploy-2",
+        "resourceGroup": "rg-private-dns",
+        "resourceName": "privateDnsZoneTransitVnetLinkDeploy-2",
+        "resourceType": "Microsoft.Resources/deployments"
+      },
+      {
+        "dependsOn": [
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/transitDnsZoneDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "transitDnsZoneDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          },
+          {
+            "apiVersion": "2022-09-01",
+            "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Resources/deployments/networkDeploy",
+            "resourceGroup": "rg-adbrcpi-bicep",
+            "resourceName": "networkDeploy",
+            "resourceType": "Microsoft.Resources/deployments"
+          }
+        ],
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-private-dns/providers/Microsoft.Resources/deployments/privateDnsZoneTransitVnetLinkDeploy-3",
+        "resourceGroup": "rg-private-dns",
+        "resourceName": "privateDnsZoneTransitVnetLinkDeploy-3",
+        "resourceType": "Microsoft.Resources/deployments"
+      }
+    ],
+    "duration": "PT6M29.3064624S",
+    "error": null,
+    "mode": "Incremental",
+    "onErrorDeployment": null,
+    "outputResources": [
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Databricks/workspaces/adb-main-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Databricks/workspaces/adb-webauth-DO-NOT-DELETE-australiaeast",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Databricks/workspaces/adb-webauth-DO-NOT-DELETE-australiaeast/providers/Microsoft.Authorization/locks/lock-adb-webauth-DO-NOT-DELETE-australiaeast-do-not-delete",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.KeyVault/vaults/kv-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/networkSecurityGroups/nsg-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/networkSecurityGroups/nsg-databricks-webauth-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-adb-backend-api-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-adb-backend-api-anjvledj443ii/privateDnsZoneGroups/dzg-adb-backend-api-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-adb-browser-auth-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-adb-browser-auth-anjvledj443ii/privateDnsZoneGroups/dzg-adb-browser-auth-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-adb-frontend-api-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-adb-frontend-api-anjvledj443ii/privateDnsZoneGroups/dzg-adb-frontend-api-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-kv-vault-anjvledj443ii-transit",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-kv-vault-anjvledj443ii-transit/privateDnsZoneGroups/dzg-kv-vault-anjvledj443ii-transit",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-st-blob-anjvledj443ii-transit",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-st-blob-anjvledj443ii-transit/privateDnsZoneGroups/dzg-st-blob-anjvledj443ii-transit",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-st-dfs-anjvledj443ii-transit",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-st-dfs-anjvledj443ii-transit/privateDnsZoneGroups/dzg-st-dfs-anjvledj443ii-transit",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-st-dfs-anjvledj443ii-workspace",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/privateEndpoints/pe-st-dfs-anjvledj443ii-workspace/privateDnsZoneGroups/dzg-st-dfs-anjvledj443ii-workspace",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/virtualNetworks/vnet-databricks-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/virtualNetworks/vnet-databricks-webauth-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Network/virtualNetworks/vnet-transit-anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Storage/storageAccounts/st1anjvledj443ii",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Storage/storageAccounts/st1anjvledj443ii/blobServices/default",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep/providers/Microsoft.Storage/storageAccounts/st1anjvledj443ii/blobServices/default/containers/container001",
+        "resourceGroup": "rg-adbrcpi-bicep"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns/providers/Microsoft.Network/privateDnsZones/privatelink.azuredatabricks.net",
+        "resourceGroup": "rg-adbrcpi-bicep-dns"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns/providers/Microsoft.Network/privateDnsZones/privatelink.azuredatabricks.net/virtualNetworkLinks/vnet-databricks-anjvledj443ii-link",
+        "resourceGroup": "rg-adbrcpi-bicep-dns"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns/providers/Microsoft.Network/privateDnsZones/privatelink.dfs.core.windows.net",
+        "resourceGroup": "rg-adbrcpi-bicep-dns"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-adbrcpi-bicep-dns/providers/Microsoft.Network/privateDnsZones/privatelink.dfs.core.windows.net/virtualNetworkLinks/vnet-databricks-anjvledj443ii-link",
+        "resourceGroup": "rg-adbrcpi-bicep-dns"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-private-dns/providers/Microsoft.Network/privateDnsZones/privatelink.azuredatabricks.net/virtualNetworkLinks/vnet-transit-anjvledj443ii-link",
+        "resourceGroup": "rg-private-dns"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-private-dns/providers/Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net/virtualNetworkLinks/vnet-transit-anjvledj443ii-link",
+        "resourceGroup": "rg-private-dns"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-private-dns/providers/Microsoft.Network/privateDnsZones/privatelink.dfs.core.windows.net/virtualNetworkLinks/vnet-transit-anjvledj443ii-link",
+        "resourceGroup": "rg-private-dns"
+      },
+      {
+        "id": "/subscriptions/616b45ec-3b4b-409d-ad53-c68734ed0816/resourceGroups/rg-private-dns/providers/Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net/virtualNetworkLinks/vnet-transit-anjvledj443ii-link",
+        "resourceGroup": "rg-private-dns"
+      }
+    ],
+    "outputs": {
+      "outDatabricksStorageAccountName": {
+        "type": "String",
+        "value": "dbstorage6ckdmhddz5uxg"
+      },
+      "outDatabricksWorkspaceName": {
+        "type": "String",
+        "value": "adb-main-anjvledj443ii"
+      },
+      "outKeyVaultName": {
+        "type": "String",
+        "value": "kv-anjvledj443ii"
+      },
+      "outResourceGroupName": {
+        "type": "String",
+        "value": "rg-adbrcpi-bicep"
+      },
+      "outStorageAccountName": {
+        "type": "String",
+        "value": "st1anjvledj443ii"
+      },
+      "outStorageFilesysName": {
+        "type": "String",
+        "value": "container001"
+      },
+      "outTransitPrivateEndpointSubnetName": {
+        "type": "String",
+        "value": "snet-pe-anjvledj443ii"
+      },
+      "outTransitVirtualNetworkName": {
+        "type": "String",
+        "value": "vnet-transit-anjvledj443ii"
+      },
+      "outWorkspaceVirtualNetworkName": {
+        "type": "String",
+        "value": "vnet-databricks-anjvledj443ii"
+      }
+    },
+    "parameters": {
+      "adbPrivateDnsZoneResourceGroupName": {
+        "type": "String",
+        "value": "rg-adbrcpi-bicep-dns"
+      },
+      "dnsZoneResourceGroupName": {
+        "type": "String",
+        "value": "rg-private-dns"
+      },
+      "dnsZoneSubscriptionId": {
+        "type": "String",
+        "value": "616b45ec-3b4b-409d-ad53-c68734ed0816"
+      },
+      "existingWebAuthWorkspaceId": {
+        "type": "String",
+        "value": ""
+      },
+      "location": {
+        "type": "String",
+        "value": "australiaeast"
+      },
+      "newOrExistingDnsZones": {
+        "type": "String",
+        "value": "existing"
+      },
+      "resourceBaseName": {
+        "type": "String",
+        "value": "anjvledj443ii"
+      },
+      "resourceGroupName": {
+        "type": "String",
+        "value": "rg-adbrcpi-bicep"
+      },
+      "transitBastionSubnetAddressPrefix": {
+        "type": "String",
+        "value": "10.12.1.0/24"
+      },
+      "transitPrivateEndpointSubnetAddressPrefix": {
+        "type": "String",
+        "value": "10.12.0.0/24"
+      },
+      "transitVnetAddressPrefix": {
+        "type": "String",
+        "value": "10.12.0.0/16"
+      },
+      "webAuthWorkspaceContainerSubnetAddressPrefix": {
+        "type": "String",
+        "value": "10.179.0.0/24"
+      },
+      "webAuthWorkspaceHostSubnetAddressPrefix": {
+        "type": "String",
+        "value": "10.179.1.0/24"
+      },
+      "webAuthWorkspacePreference": {
+        "type": "String",
+        "value": "createNew"
+      },
+      "webAuthWorkspaceVnetAddressPrefix": {
+        "type": "String",
+        "value": "10.179.0.0/16"
+      },
+      "workspaceBackendPrivateEndpointSubnetAddressPrefix": {
+        "type": "String",
+        "value": "10.11.0.0/24"
+      },
+      "workspaceContainerSubnetAddressPrefix": {
+        "type": "String",
+        "value": "10.11.1.0/24"
+      },
+      "workspaceHostSubnetAddressPrefix": {
+        "type": "String",
+        "value": "10.11.2.0/24"
+      },
+      "workspaceVnetAddressPrefix": {
+        "type": "String",
+        "value": "10.11.0.0/16"
+      }
+    },
+    "parametersLink": null,
+    "providers": [
+      {
+        "id": null,
+        "namespace": "Microsoft.Resources",
+        "providerAuthorizationConsentState": null,
+        "registrationPolicy": null,
+        "registrationState": null,
+        "resourceTypes": [
+          {
+            "aliases": null,
+            "apiProfiles": null,
+            "apiVersions": null,
+            "capabilities": null,
+            "defaultApiVersion": null,
+            "locationMappings": null,
+            "locations": [
+              "australiaeast"
+            ],
+            "properties": null,
+            "resourceType": "resourceGroups",
+            "zoneMappings": null
+          },
+          {
+            "aliases": null,
+            "apiProfiles": null,
+            "apiVersions": null,
+            "capabilities": null,
+            "defaultApiVersion": null,
+            "locationMappings": null,
+            "locations": [
+              null
+            ],
+            "properties": null,
+            "resourceType": "deployments",
+            "zoneMappings": null
+          }
+        ]
+      }
+    ],
+    "provisioningState": "Succeeded",
+    "templateHash": "16119997473226134897",
+    "templateLink": null,
+    "timestamp": "2023-04-28T08:10:48.331840+00:00",
+    "validatedResources": null
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/deployments"
+}

@@ -238,7 +238,7 @@ Congratulations, you have successfully deployed and tested Azure Synapse in a se
 
 <!-- Provide instructions on how to deploy the recipe. -->
 
-## Specific Observations and their Explainations
+## Specific Observations and Comments
 
 ### The `vnet-peering.bicep` has been called as a separate module from `setup-networking-with-hub.bicep` file
 

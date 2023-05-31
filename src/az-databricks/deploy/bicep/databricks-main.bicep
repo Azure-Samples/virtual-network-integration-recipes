@@ -1,12 +1,11 @@
 @description('The Azure region for the specified resources.')
 param location string = resourceGroup().location
 
-@description('The base name to be appended to all provisioned resources.')
-@maxLength(13)
-param baseName string
-
 @description('The name of the Azure Databricks workspace.')
 param databricksWorkspaceName string
+
+@description('The name of the managed resource group for Azure Databricks')
+param managedResourceGroupName string
 
 @description('The name of the virtual network used by Azure Databricks.')
 param vnetName string
@@ -20,7 +19,7 @@ param containerSubnetName string
 @description('The tags to be applied to the provisioned resources.')
 param tags object
 
-resource databricks 'Microsoft.Databricks/workspaces@2018-04-01' = {
+resource databricks 'Microsoft.Databricks/workspaces@2023-02-01' = {
   name: databricksWorkspaceName
   location: location
   tags: tags
@@ -28,7 +27,7 @@ resource databricks 'Microsoft.Databricks/workspaces@2018-04-01' = {
     name: 'premium'
   }
   properties: {
-    managedResourceGroupId: '${subscription().id}/resourceGroups/mrg-db-${baseName}'
+    managedResourceGroupId: subscriptionResourceId('Microsoft.Resources/resourceGroups', managedResourceGroupName)
     parameters: {
       customVirtualNetworkId: {
         value: resourceId('Microsoft.Network/virtualNetworks', vnetName)
@@ -45,11 +44,12 @@ resource databricks 'Microsoft.Databricks/workspaces@2018-04-01' = {
       requireInfrastructureEncryption: {
         value: true
       }
-
     }
+    publicNetworkAccess: 'Disabled'
+    requiredNsgRules: 'NoAzureDatabricksRules'
   }
-
 }
 
+output outDatabricksWorkspaceId string = databricks.id
 output outDatabricksWorkspaceName string = databricks.name
 output outDatabricksStorageAccountName string = databricks.properties.parameters.storageAccountName.value
