@@ -408,6 +408,18 @@ If you don't want to allow all the trusted services to be able to access Azure K
 
 A different approach is to use REST API calls to retrieve the Azure Key Vault secrets. And this will work if you have the private endpoints created for Azure Key Vault from Databricks VNet. But it has other downside that the retrieved password won't be redacted and thus this approach needs to be applied carefully.
 
+### **DBFS root** storage account has public access enabled
+
+The **DBFS root** is the default storage location for an Azure Databricks workspace, provisioned as part of workspace creation in the cloud account containing the Azure Databricks workspace. It contains a number of special locations that serve as defaults for various actions performed by users in the workspace, the details can be checked [here](https://learn.microsoft.com/azure/databricks/dbfs/root-locations). The root Blob storage contains workspace’s DBFS root.
+
+At the moment, this Azure Databricks managed storage account is accessible from all network. The access to this storage account is managed by Azure Databricks and is protected by a "deny assignment" at managed resource group level. Because of this assignment, it's not possible to make any changes to the configuration of this storage account.
+
+![Showing Azure Databricks "DBFS root" public access](./media/adb-dbfs-access.gif)
+
+There is an upcoming feature called "Private DBFS" for the VNet injected workspaces which would let the customers to not have the networking open to internet. The recipe would be updated once that feature is available.
+
+For now, DBFS public endpoint can be protected by deploying Azure Databricks with secure cluster connectivity (SCC) and protecting it with a Firewall. This will prevent unauthorized access, and all traffic traverses on the Microsoft backbone. Please read through this [blog](https://www.databricks.com/blog/2020/03/27/data-exfiltration-protection-with-azure-databricks.html) for details.
+
 ### The Azure CLI command to generate Databricks access token fails on Ubuntu
 
 If you are deploying this recipe from VM running on Ubuntu (and few other version of linux), the Azure CLI command to generate the Databricks access token might fail:
