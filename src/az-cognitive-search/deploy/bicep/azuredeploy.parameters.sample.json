@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetAddressPrefix": {
+            "value": "10.16.0.0/16"
+        },
+        "privateEndpointSubnetAddressPrefix": {
+            "value": "10.16.0.0/24"
+        },
+        "bastionSubnetAddressPrefix": {
+            "value": "10.16.1.0/24"
+        },
+        "dnsZoneResourceGroupName": {
+            "value": "[NAME OF RESOURCE GROUP CONTAINING EXISTING AZURE PRIVATE DNS ZONES]"
+        },
+        "dnsZoneSubscriptionId": {
+            "value": "[SUBSCRIPTION ID IN WHICH THE RESOURCE GROUP CONTAINING EXISTING AZURE PRIVATE DNS ZONES HAS BEEN CREATED]"
+        },
+        "newOrExistingDnsZones": {
+            "value": "new"
+        }
+    }
+}
