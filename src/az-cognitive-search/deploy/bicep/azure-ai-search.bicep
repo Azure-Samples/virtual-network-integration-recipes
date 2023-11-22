@@ -13,7 +13,7 @@ param keyVaultName string
 param tags object
 
 var peGroupId = 'searchService'
-var privateSubnetId = '${resourceId('Microsoft.Network/virtualNetworks', vnetName)}/subnets/${subnetName}'
+var privateSubnetId = resourceId('Microsoft.Network/VirtualNetworks/subnets', vnetName, subnetName)
 
 // https://docs.microsoft.com/azure/role-based-access-control/built-in-roles#storage-blob-data-contributor
 var storageBlobDataContributorRoleId = subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')
@@ -47,7 +47,7 @@ resource search 'Microsoft.Search/searchServices@2020-08-01' = {
 }
 
 resource searchPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-05-01' = if (publicNetworkAccess == 'Disabled') {
-  name: 'pe-search-${peGroupId}'
+  name: 'pe-azure-ai-search-${peGroupId}'
   location: location
   properties: {
     subnet: {
@@ -55,7 +55,7 @@ resource searchPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-05-01' =
     }
     privateLinkServiceConnections: [
       {
-        name: 'plsc-cog-search-${peGroupId}'
+        name: 'plsc-azure-ai-search-${peGroupId}'
         properties: {
           privateLinkServiceId: search.id
           groupIds: [
@@ -112,7 +112,7 @@ resource kvAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-02-01' = 
 }
 
 resource dfsStorageSharedPrivateLink 'Microsoft.Search/searchServices/sharedPrivateLinkResources@2022-09-01' = {
-  name: 'spl-search-dfs-${peGroupId}'
+  name: 'spl-azure-ai-search-dfs-${peGroupId}'
   parent: search
   properties: {
     groupId: 'dfs'
@@ -122,7 +122,7 @@ resource dfsStorageSharedPrivateLink 'Microsoft.Search/searchServices/sharedPriv
 }
 
 resource blobStorageSharedPrivateLink 'Microsoft.Search/searchServices/sharedPrivateLinkResources@2022-09-01' = {
-  name: 'spl-search-blob-${peGroupId}'
+  name: 'spl-azure-ai-search-blob-${peGroupId}'
   parent: search
   properties: {
     groupId: 'blob'
@@ -135,7 +135,7 @@ resource blobStorageSharedPrivateLink 'Microsoft.Search/searchServices/sharedPri
 }
 
 resource kvStorageSharedPrivateLink 'Microsoft.Search/searchServices/sharedPrivateLinkResources@2022-09-01' = {
-  name: 'spl-search-kv-${peGroupId}'
+  name: 'spl-azure-ai-search-kv-${peGroupId}'
   parent: search
   properties: {
     groupId: 'vault'
@@ -146,3 +146,7 @@ resource kvStorageSharedPrivateLink 'Microsoft.Search/searchServices/sharedPriva
     blobStorageSharedPrivateLink
   ]
 }
+
+output outSearchId string = search.id
+output outSearchName string = search.name
+output outSearchUrl string = 'https://{searchName}.search.windows.net'

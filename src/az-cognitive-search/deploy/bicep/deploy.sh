@@ -4,7 +4,7 @@
 LOCATION=australiaeast
 
 # The name of the resource group to be created for the deployment.
-RESOURCE_GROUP_NAME=rg-rcp-search
+RESOURCE_GROUP_NAME=rg-rcp-vector-search
 
 az group create --location "${LOCATION}" --name "${RESOURCE_GROUP_NAME}"
 

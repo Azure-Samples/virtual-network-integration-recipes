@@ -26,7 +26,7 @@ param subnetName string
 @description('The tags to be applied to the provisioned resources.')
 param tags object
 
-var privateSubnetId = '${resourceId('Microsoft.Network/virtualNetworks', vnetName)}/subnets/${subnetName}'
+var privateSubnetId = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, subnetName)
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   name: storageAccountName

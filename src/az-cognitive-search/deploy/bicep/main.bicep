@@ -38,6 +38,7 @@ var tags = {
 var privateDnsNames = [
   'privatelink.search.windows.net'
   'privatelink.vaultcore.azure.net'
+  'privatelink.openai.azure.com'
   'privatelink.blob.${environment().suffixes.storage}'
   'privatelink.dfs.${environment().suffixes.storage}'
 ]
@@ -48,6 +49,7 @@ var calcDnsZoneSubscriptionId = (newOrExistingDnsZones == 'new') ? subscription(
 
 // Getting the Ids for existing or newly created Private DNS Zones
 var cogSearchPrivateDnsZoneId = resourceId(calcDnsZoneSubscriptionId, calcDnsZoneResourceGroupName, 'Microsoft.Network/privateDnsZones', 'privatelink.search.windows.net')
+var openAiPrivateDnsZoneId = resourceId(calcDnsZoneSubscriptionId, calcDnsZoneResourceGroupName, 'Microsoft.Network/privateDnsZones', 'privatelink.openai.azure.com')
 var keyVaultPrivateDnsZoneId = resourceId(calcDnsZoneSubscriptionId, calcDnsZoneResourceGroupName, 'Microsoft.Network/privateDnsZones', 'privatelink.vaultcore.azure.net')
 var dfsPrivateDnsZoneId = resourceId(calcDnsZoneSubscriptionId, calcDnsZoneResourceGroupName, 'Microsoft.Network/privateDnsZones', 'privatelink.dfs.${environment().suffixes.storage}')
 var blobPrivateDnsZoneId = resourceId(calcDnsZoneSubscriptionId, calcDnsZoneResourceGroupName, 'Microsoft.Network/privateDnsZones', 'privatelink.blob.${environment().suffixes.storage}')
@@ -69,6 +71,10 @@ var searchServiceSku = 'basic' // 'free', 'basic', 'standard', 'standard2', 'sta
 var searchServiceReplicaCount = 1
 var searchServicePartitionCount = 1 // 1, 2, 3, 4, 6, 12 
 var searchServiceHostingMode = 'default' // 'default', 'highDensity
+
+// Azure OpenAI related variables
+var openAiAccountName = 'openai-${baseName}'
+var openAiAccountSku = 'S0'
 
 module dnsZone '../../../common/infrastructure/bicep/private-dns-zones.bicep' = if (newOrExistingDnsZones == 'new') {
   name: 'dnsZoneDeploy'
@@ -138,10 +144,13 @@ module storage 'storage.bicep' = {
     subnetName: network.outputs.outPrivateEndpointSubnetName
     tags: tags
   }
+  dependsOn: [
+    privateDnsZoneVnetLink
+  ]
 }
 
-module cognitiveSearch 'cognitive-search.bicep' = {
-  name: 'cognitiveSearchDeploy'
+module azureAiSearch 'azure-ai-search.bicep' = {
+  name: 'azureAiSearchDeploy'
   scope: resourceGroup()
   params: {
     name: searchServiceName
@@ -158,4 +167,41 @@ module cognitiveSearch 'cognitive-search.bicep' = {
     privateZoneDnsId: cogSearchPrivateDnsZoneId
     tags: tags
   }
+  dependsOn: [
+    privateDnsZoneVnetLink
+    storage
+    keyVault
+  ]
 }
+
+module openaiAccount 'azure-openai.bicep' = {
+  name: 'openaiAccountDeploy'
+  scope: resourceGroup()
+  params: {
+    name: openAiAccountName
+    sku: openAiAccountSku
+    customSubDomainName: openAiAccountName
+    location: location
+    publicNetworkAccess: 'Disabled'
+    vnetName: network.outputs.outVnetName
+    subnetName: network.outputs.outPrivateEndpointSubnetName
+    privateZoneDnsId: openAiPrivateDnsZoneId
+    tags: tags
+  }
+  dependsOn: [
+    privateDnsZoneVnetLink
+  ]
+}
+
+output outKeyVaultName string = keyVault.outputs.outKeyVaultName
+output outStorageAccountName string = storage.outputs.outStorageAccountName
+output outStorageFilesysName string = storage.outputs.outStorageFilesysName
+
+output azureAiSearchId string = azureAiSearch.outputs.outSearchId
+output azureAiSearchName string = azureAiSearch.outputs.outSearchName
+output azureAiSearchUrl string = azureAiSearch.outputs.outSearchUrl
+
+output outAzureOpenaiAccountId string = openaiAccount.outputs.outAzureOpenaiAccountId
+output outAzureOpenaiAccountName string = openaiAccount.outputs.outAzureOpenaiAccountName
+output outAzureOpenaiEndpoint string = openaiAccount.outputs.outAzureOpenaiEndpoint
+

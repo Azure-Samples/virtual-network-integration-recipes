@@ -20,7 +20,7 @@ param keyVaultPrivateDnsZoneId string
 @description('The tags to be applied to the provisioned resources.')
 param tags object
 
-var privateSubnetId = '${resourceId('Microsoft.Network/virtualNetworks', vnetName)}/subnets/${subnetName}'
+var privateSubnetId = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, subnetName)
 
 resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' = {
   name: keyVaultName
