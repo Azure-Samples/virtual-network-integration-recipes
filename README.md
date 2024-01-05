@@ -9,7 +9,7 @@ languages:
 - bash
 products:
 - azure-functions
-- azure-app-service-web
+- azure-app-service
 - azure-event-hubs
 - azure-application-gateway
 - azure-api-management
