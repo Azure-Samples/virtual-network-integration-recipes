@@ -19,6 +19,7 @@ This recipe aims to provide developers a starting point with IaC + PaC example o
 ### Architecture
 
 <!-- Include a high-level architecture diagram of the components used in this recipe. -->
+![az-aml-managed-vnet](./media/managed-vnet-mlops-architecture_v1.jpg)
 
 ### Recommendations
 
