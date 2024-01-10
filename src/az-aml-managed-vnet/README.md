@@ -1,32 +1,68 @@
-# Terraform Template
+# Azure Machine Learning in a managed virtual network
 
-This repository contains a Terraform template for provisioning infrastructure resources.
+<!-- Replace "Recipe Template" title with name of the recipe. -->
 
-## Prerequisites
+## Scenario
 
-Before you can use this template, make sure you have the following prerequisites installed:
+<!-- Describe the usage scenario for this template.  Describe the challenges this recipes aims to address. -->
+This scenario aims to address the challenge of correctly configuring an Azure machine learning workspace within a Microsoft managed VNet including ensuring appropriate connectivity with common services such as Storage and Key Vault.
 
-- [Terraform](https://www.terraform.io/downloads.html) (version X.X.X)
-- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) (version X.X.X)
+### Problem Summary
 
+<!--Briefly describe the problme that this recipe intends to resolve or make easier. -->
+Azure machine learning workspace is composed of a number of different components: workspace storage account, key vault, machine learning Data Pipelines and Data Flows, SQL Dedicated pools, SQL Serverless pools, Spark pools and other external data sources. Despite being under a single machine learning umbrella service, each of these sub-components require a slightly different VNet configuration treatment to properly isolate network traffic. For example, generally you need at least four Private Endpoints configured for a single workspace each with connecting to a different sub-component. Another example, while managed workspace are generally a single tenant service with compute resources spun up within a designated Managed VNet, data scientist vm's, azure dev ops pipelines could be multi-tenanted and therefore require provisioning a Private Endpoint within the hub vnet in order to connect to the workspace successfully.
 
-## Usage
+In addition to this, customers will also need to ensure that traffic between the Azure machine learning workspace studio can still privately flow between the workspace components and additional Azure services such as Storage and Key Vault. This is done through the use of Private Endpoints.
 
-To use this template, follow these steps:
+This recipe aims to provide developers a starting point with IaC + PaC example of an Azure machine learning workspace with all sub-component correctly configured to ensure traffic stays private, while still being able to connect to common additional services such as machine learning studio Azure Storage and Azure Key Vault.
 
-1. Clone this repository: `git clone https://github.com/your-username/terraform-template.git`
-2. Change into the cloned directory: `cd terraform-template`
-3. Initialize Terraform: `terraform init`
-4. Modify the `variables.tf` file to customize the template according to your needs.
-5. Review and modify the `main.tf` file to define your infrastructure resources.
-6. Run `terraform plan` to see the execution plan.
-7. Run `terraform apply` to provision the infrastructure resources.
-8. When you're done, run `terraform destroy` to destroy the provisioned resources.
+### Architecture
 
-## Contributing
+<!-- Include a high-level architecture diagram of the components used in this recipe. -->
 
-Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
+### Recommendations
 
-## License
+The following sections provide recommendations on when this recipe should, and should not, be used.
 
-This template is licensed under the [MIT License](LICENSE).
+#### Recommended
+
+<!-- Provide details on when usage of this recipe is recommended. -->
+This recipe is recommended if the following conditions are true:
+
+- TODO
+
+#### Not Recommended
+
+<!-- Provide details on when usage of this recipe is NOT recommended. -->
+This recipe is **not** recommended if the following conditions are true:
+
+- TODO
+
+## Getting Started
+
+<!-- Provide instructions on how a user would use this recipe (e.g., how they would deploy the resources). -->
+
+### Pre-requisites
+
+<!-- List the pre-reqs for use of this recipe (SDKs, roles/permissions, etc.) -->
+The following pre-requisites should be in place in order to successfully use this recipe:
+
+- TODO
+
+### Deployment
+
+To deploy this recipe, please perform the following actions:
+
+<!-- Provide instructions on how to deploy the recipe. -->
+
+## Change Log
+
+<!--
+Describe the change history for this recipe. For example:
+- 2021-06-01
+  - Fix for bug in Terraform template that prevented Key Vault reference resolution for function app.
+-->
+
+## Next Steps
+
+<!-- Provide description and links to what a user of this recipe could do next.  Include suggestions for how the recipe could be enhanced or built upon. -->
