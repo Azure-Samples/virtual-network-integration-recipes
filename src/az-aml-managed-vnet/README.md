@@ -49,7 +49,7 @@ This recipe is **not** recommended if the following conditions are true:
 The following pre-requisites should be in place in order to successfully use this recipe:
 
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
-- [.NET Core 3.1](https://docs.microsoft.com/dotnet/core/install/)
+- [.NET Core 7.0](https://docs.microsoft.com/dotnet/core/install/)
 - [Terraform](https://www.terraform.io/downloads.html) (Only if using Terraform)
 - [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/install) (Only if using Azure Bicep)
 - [Azure PowerShell](https://docs.microsoft.com/powershell/azure/install-az-ps) (Only if using Azure PowerShell to deploy via Azure Bicep)
@@ -74,7 +74,7 @@ The recipe provides for the ability to deploy Azure resources to a hub/spoke vir
 
 > Azure PowerShell is shown below due to a [likely bug in Azure CLI 2.27.0 and 2.27.1](https://github.com/Azure/azure-cli/issues/19308) which prevents execution of the provided Azure Bicep modules using the Azure CLI.
 
-1. Create a new Azure resource group to deploy the Bicep template, passing in a location and name:
+1. Login to az-cli and create a new Azure resource group to deploy the Bicep template, passing in a location and name:
 
    ```PowerShell
    New-AzResourceGroup -Location <LOCATION> -Name <RESOURCE_GROUP_NAME>
