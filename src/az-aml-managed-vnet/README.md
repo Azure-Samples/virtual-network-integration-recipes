@@ -49,7 +49,7 @@ This recipe is **not** recommended if the following conditions are true:
 The following pre-requisites should be in place in order to successfully use this recipe:
 
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
-- [.NET Core 3.1](https://docs.microsoft.com/dotnet/core/install/)
+- [.NET Core 7.0](https://docs.microsoft.com/dotnet/core/install/)
 - [Terraform](https://www.terraform.io/downloads.html) (Only if using Terraform)
 - [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/install) (Only if using Azure Bicep)
 - [Azure PowerShell](https://docs.microsoft.com/powershell/azure/install-az-ps) (Only if using Azure PowerShell to deploy via Azure Bicep)
