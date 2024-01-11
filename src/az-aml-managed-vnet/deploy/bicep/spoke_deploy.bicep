@@ -160,11 +160,11 @@ resource vaults_keyvault_name_resource 'Microsoft.KeyVault/vaults@2023-07-01' = 
     softDeleteRetentionInDays: 90
     enableRbacAuthorization: true
     enablePurgeProtection: true
-    vaultUri: 'https://${vaults_keyvault_name}.vault.azure.net/'
     provisioningState: 'Succeeded'
     publicNetworkAccess: 'Disabled'
   }
 }
+output vaults_keyvault_name_resourceUri string = vaults_keyvault_name_resource.id
 
 resource workspaces_logalyti_name_resource 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
   name: workspaces_logalyti_name
