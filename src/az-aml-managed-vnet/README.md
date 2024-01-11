@@ -132,12 +132,24 @@ az deployment group create \
 
 1. Deploy the template, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
 
+### Powershell
    ```PowerShell
    New-AzResourceGroupDeployment `
      -ResourceGroupName <RESOURCE_GROUP_NAME> `
-     -TemplateFile ./main.bicep `
-     -TemplateParameterFile ./azuredeploy.parameters.json
+     -TemplateFile ./deploy/bicep/spoke_deploy.bicep  `
+     -TemplateParameterFile ./deploy/bicep/azuredeploy.parameters.json
    ```
+
+### Bash
+
+```bash
+az deployment group create \
+  --resource-group <RESOURCE_GROUP_NAME> \
+  --template-file ./deploy/bicep/spoke_deploy.bicep \
+  --parameters @./deploy/bicep/azuredeploy.parameters.json
+
+```
+
 
 > **_NOTE:_** The project contains a [deploy.sh](./deploy/bicep/deploy.sh) script file that uses similar steps to those above, as well as virtual network peering support (if needed).
 
