@@ -22,6 +22,9 @@
         },
         "smartdetectoralertrules_failure_anomalies_insights_name": {
             "value": "yougirenfailure"
+        },
+        "location" : {
+            "value": "australiaeast"
         }
     }
 }
