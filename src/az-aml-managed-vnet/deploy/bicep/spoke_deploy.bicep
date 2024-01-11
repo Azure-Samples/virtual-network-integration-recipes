@@ -172,8 +172,7 @@ resource workspaces_logalyti_name_resource 'Microsoft.OperationalInsights/worksp
   tags: {
     createdByToolkit: 'cli-v2-1.12.0'
   }
-  kind: 'web'
-  properties: {
+    properties: {
     sku: {
       name: 'PerGB2018'
     }
@@ -197,8 +196,7 @@ resource storageAccounts_name_resource 'Microsoft.Storage/storageAccounts@2023-0
   }
   sku: {
     name: 'Standard_LRS'
-    tier: 'Standard'
-  }
+    }
   kind: 'StorageV2'
   properties: {
     defaultToOAuthAuthentication: false
