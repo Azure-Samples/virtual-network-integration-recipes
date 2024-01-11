@@ -9,22 +9,22 @@ param publicIPAddresses_hub_vnet_bastion_name string
 param schedules_shutdown_computevm_hub_vm_name string  
 param privateDnsZones_privatelink_api_azureml_ms_name string 
 param privateDnsZones_privatelink_notebooks_azure_net_name string 
-param networkSecurityGroups_hub_vnet_default_nsg_westus_name string 
+param networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name string 
 param privateDnsZones_privatelink_blob_core_windows_net_name string 
 param privateDnsZones_privatelink_file_core_windows_net_name string 
 param privateEndpoints_pe_managedvnet_storageaccount_file_name string 
-param networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name string 
+param networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name string 
 param storageAccounts_mlwspocstoraged_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.Storage/storageAccounts/mlwspocstoraged'
 param workspaces_mlws_poc_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.MachineLearningServices/workspaces/mlws_poc'
 
-resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resource 'Microsoft.Network/networkSecurityGroups@2023-06-01' = {
-  name: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name
-  location: 'westus'
+resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource 'Microsoft.Network/networkSecurityGroups@2023-06-01' = {
+  name: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name
+  location: 'australiaeast'
   properties: {
     securityRules: [
       {
         name: 'AllowGatewayManager'
-        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowGatewayManager.id
+        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowGatewayManager.id
         type: 'Microsoft.Network/networkSecurityGroups/securityRules'
         properties: {
           description: 'Allow GatewayManager'
@@ -44,7 +44,7 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resou
       }
       {
         name: 'AllowHttpsInBound'
-        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowHttpsInBound.id
+        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowHttpsInBound.id
         type: 'Microsoft.Network/networkSecurityGroups/securityRules'
         properties: {
           description: 'Allow HTTPs'
@@ -64,7 +64,7 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resou
       }
       {
         name: 'AllowSshRdpOutbound'
-        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowSshRdpOutbound.id
+        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowSshRdpOutbound.id
         type: 'Microsoft.Network/networkSecurityGroups/securityRules'
         properties: {
           protocol: '*'
@@ -85,7 +85,7 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resou
       }
       {
         name: 'AllowAzureCloudOutbound'
-        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowAzureCloudOutbound.id
+        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowAzureCloudOutbound.id
         type: 'Microsoft.Network/networkSecurityGroups/securityRules'
         properties: {
           protocol: 'TCP'
@@ -104,7 +104,7 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resou
       }
       {
         name: 'AllowCorpnet'
-        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowCorpnet.id
+        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowCorpnet.id
         type: 'Microsoft.Network/networkSecurityGroups/securityRules'
         properties: {
           description: 'CSS Governance Security Rule.  Allow Corpnet inbound.  https://aka.ms/casg'
@@ -124,7 +124,7 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resou
       }
       {
         name: 'AllowSAW'
-        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowSAW.id
+        id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowSAW.id
         type: 'Microsoft.Network/networkSecurityGroups/securityRules'
         properties: {
           description: 'CSS Governance Security Rule.  Allow SAW inbound.  https://aka.ms/casg'
@@ -146,14 +146,14 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resou
   }
 }
 
-resource networkSecurityGroups_hub_vnet_default_nsg_westus_name_resource 'Microsoft.Network/networkSecurityGroups@2023-06-01' = {
-  name: networkSecurityGroups_hub_vnet_default_nsg_westus_name
-  location: 'westus'
+resource networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name_resource 'Microsoft.Network/networkSecurityGroups@2023-06-01' = {
+  name: networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name
+  location: 'australiaeast'
   properties: {
     securityRules: [
       {
         name: 'AllowCorpnet'
-        id: networkSecurityGroups_hub_vnet_default_nsg_westus_name_AllowCorpnet.id
+        id: networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name_AllowCorpnet.id
         type: 'Microsoft.Network/networkSecurityGroups/securityRules'
         properties: {
           description: 'CSS Governance Security Rule.  Allow Corpnet inbound.  https://aka.ms/casg'
@@ -173,7 +173,7 @@ resource networkSecurityGroups_hub_vnet_default_nsg_westus_name_resource 'Micros
       }
       {
         name: 'AllowSAW'
-        id: networkSecurityGroups_hub_vnet_default_nsg_westus_name_AllowSAW.id
+        id: networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name_AllowSAW.id
         type: 'Microsoft.Network/networkSecurityGroups/securityRules'
         properties: {
           description: 'CSS Governance Security Rule.  Allow SAW inbound.  https://aka.ms/casg'
@@ -197,7 +197,7 @@ resource networkSecurityGroups_hub_vnet_default_nsg_westus_name_resource 'Micros
 
 resource networkSecurityGroups_hub_vm_nsg_name_resource 'Microsoft.Network/networkSecurityGroups@2023-06-01' = {
   name: networkSecurityGroups_hub_vm_nsg_name
-  location: 'westus'
+  location: 'australiaeast'
   properties: {
     securityRules: []
   }
@@ -267,7 +267,7 @@ resource privateDnsZones_privatelink_notebooks_azure_net_name_resource 'Microsof
 
 resource publicIPAddresses_hub_vnet_bastion_name_resource 'Microsoft.Network/publicIPAddresses@2023-06-01' = {
   name: publicIPAddresses_hub_vnet_bastion_name
-  location: 'westus'
+  location: 'australiaeast'
   sku: {
     name: 'Standard'
     tier: 'Regional'
@@ -286,7 +286,7 @@ resource publicIPAddresses_hub_vnet_bastion_name_resource 'Microsoft.Network/pub
 
 resource publicIPAddresses_hub_vm_ip_name_resource 'Microsoft.Network/publicIPAddresses@2023-06-01' = {
   name: publicIPAddresses_hub_vm_ip_name
-  location: 'westus'
+  location: 'australiaeast'
   sku: {
     name: 'Standard'
     tier: 'Regional'
@@ -302,7 +302,7 @@ resource publicIPAddresses_hub_vm_ip_name_resource 'Microsoft.Network/publicIPAd
 
 resource virtualMachines_hub_vm_name_resource 'Microsoft.Compute/virtualMachines@2023-03-01' = {
   name: virtualMachines_hub_vm_name
-  location: 'westus'
+  location: 'australiaeast'
   tags: {
     Version: '20230516'
   }
@@ -378,7 +378,7 @@ resource virtualMachines_hub_vm_name_resource 'Microsoft.Compute/virtualMachines
 
 resource schedules_shutdown_computevm_hub_vm_name_resource 'microsoft.devtestlab/schedules@2018-09-15' = {
   name: schedules_shutdown_computevm_hub_vm_name
-  location: 'westus'
+  location: 'australiaeast'
   properties: {
     status: 'Enabled'
     taskType: 'ComputeVmShutdownTask'
@@ -396,8 +396,8 @@ resource schedules_shutdown_computevm_hub_vm_name_resource 'microsoft.devtestlab
   }
 }
 
-resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowAzureCloudOutbound 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
-  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name}/AllowAzureCloudOutbound'
+resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowAzureCloudOutbound 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
+  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name}/AllowAzureCloudOutbound'
   properties: {
     protocol: 'TCP'
     sourcePortRange: '*'
@@ -413,12 +413,12 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_Allow
     destinationAddressPrefixes: []
   }
   dependsOn: [
-    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resource
+    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource
   ]
 }
 
-resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowCorpnet 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
-  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name}/AllowCorpnet'
+resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowCorpnet 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
+  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name}/AllowCorpnet'
   properties: {
     description: 'CSS Governance Security Rule.  Allow Corpnet inbound.  https://aka.ms/casg'
     protocol: '*'
@@ -435,12 +435,12 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_Allow
     destinationAddressPrefixes: []
   }
   dependsOn: [
-    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resource
+    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource
   ]
 }
 
-resource networkSecurityGroups_hub_vnet_default_nsg_westus_name_AllowCorpnet 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
-  name: '${networkSecurityGroups_hub_vnet_default_nsg_westus_name}/AllowCorpnet'
+resource networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name_AllowCorpnet 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
+  name: '${networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name}/AllowCorpnet'
   properties: {
     description: 'CSS Governance Security Rule.  Allow Corpnet inbound.  https://aka.ms/casg'
     protocol: '*'
@@ -457,12 +457,12 @@ resource networkSecurityGroups_hub_vnet_default_nsg_westus_name_AllowCorpnet 'Mi
     destinationAddressPrefixes: []
   }
   dependsOn: [
-    networkSecurityGroups_hub_vnet_default_nsg_westus_name_resource
+    networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name_resource
   ]
 }
 
-resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowGatewayManager 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
-  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name}/AllowGatewayManager'
+resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowGatewayManager 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
+  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name}/AllowGatewayManager'
   properties: {
     description: 'Allow GatewayManager'
     protocol: '*'
@@ -479,12 +479,12 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_Allow
     destinationAddressPrefixes: []
   }
   dependsOn: [
-    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resource
+    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource
   ]
 }
 
-resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowHttpsInBound 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
-  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name}/AllowHttpsInBound'
+resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowHttpsInBound 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
+  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name}/AllowHttpsInBound'
   properties: {
     description: 'Allow HTTPs'
     protocol: '*'
@@ -501,12 +501,12 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_Allow
     destinationAddressPrefixes: []
   }
   dependsOn: [
-    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resource
+    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource
   ]
 }
 
-resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowSAW 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
-  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name}/AllowSAW'
+resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowSAW 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
+  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name}/AllowSAW'
   properties: {
     description: 'CSS Governance Security Rule.  Allow SAW inbound.  https://aka.ms/casg'
     protocol: '*'
@@ -523,12 +523,12 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_Allow
     destinationAddressPrefixes: []
   }
   dependsOn: [
-    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resource
+    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource
   ]
 }
 
-resource networkSecurityGroups_hub_vnet_default_nsg_westus_name_AllowSAW 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
-  name: '${networkSecurityGroups_hub_vnet_default_nsg_westus_name}/AllowSAW'
+resource networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name_AllowSAW 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
+  name: '${networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name}/AllowSAW'
   properties: {
     description: 'CSS Governance Security Rule.  Allow SAW inbound.  https://aka.ms/casg'
     protocol: '*'
@@ -545,12 +545,12 @@ resource networkSecurityGroups_hub_vnet_default_nsg_westus_name_AllowSAW 'Micros
     destinationAddressPrefixes: []
   }
   dependsOn: [
-    networkSecurityGroups_hub_vnet_default_nsg_westus_name_resource
+    networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name_resource
   ]
 }
 
-resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_AllowSshRdpOutbound 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
-  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name}/AllowSshRdpOutbound'
+resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_AllowSshRdpOutbound 'Microsoft.Network/networkSecurityGroups/securityRules@2023-06-01' = {
+  name: '${networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name}/AllowSshRdpOutbound'
   properties: {
     protocol: '*'
     sourcePortRange: '*'
@@ -568,13 +568,13 @@ resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_Allow
     destinationAddressPrefixes: []
   }
   dependsOn: [
-    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resource
+    networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource
   ]
 }
 
-resource privateDnsZones_privatelink_api_azureml_ms_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_inference_westus 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+resource privateDnsZones_privatelink_api_azureml_ms_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_inference_australiaeast 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
   parent: privateDnsZones_privatelink_api_azureml_ms_name_resource
-  name: '*.419b3a2c-288c-4391-9f1e-236c0b6e471b.inference.westus'
+  name: '*.419b3a2c-288c-4391-9f1e-236c0b6e471b.inference.australiaeast'
   properties: {
     metadata: {
       creator: 'created by private endpoint pe_to_managedvnet with resource guid 4963c503-c8dc-4933-854e-ad8aede94e27'
@@ -588,9 +588,9 @@ resource privateDnsZones_privatelink_api_azureml_ms_name_419b3a2c_288c_4391_9f1e
   }
 }
 
-resource privateDnsZones_privatelink_api_azureml_ms_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_workspace_westus 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+resource privateDnsZones_privatelink_api_azureml_ms_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_workspace_australiaeast 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
   parent: privateDnsZones_privatelink_api_azureml_ms_name_resource
-  name: '419b3a2c-288c-4391-9f1e-236c0b6e471b.workspace.westus'
+  name: '419b3a2c-288c-4391-9f1e-236c0b6e471b.workspace.australiaeast'
   properties: {
     metadata: {
       creator: 'created by private endpoint pe_to_managedvnet with resource guid 4963c503-c8dc-4933-854e-ad8aede94e27'
@@ -604,9 +604,9 @@ resource privateDnsZones_privatelink_api_azureml_ms_name_419b3a2c_288c_4391_9f1e
   }
 }
 
-resource privateDnsZones_privatelink_api_azureml_ms_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_workspace_westus_cert 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+resource privateDnsZones_privatelink_api_azureml_ms_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_workspace_australiaeast_cert 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
   parent: privateDnsZones_privatelink_api_azureml_ms_name_resource
-  name: '419b3a2c-288c-4391-9f1e-236c0b6e471b.workspace.westus.cert'
+  name: '419b3a2c-288c-4391-9f1e-236c0b6e471b.workspace.australiaeast.cert'
   properties: {
     metadata: {
       creator: 'created by private endpoint pe_to_managedvnet with resource guid 4963c503-c8dc-4933-854e-ad8aede94e27'
@@ -620,9 +620,9 @@ resource privateDnsZones_privatelink_api_azureml_ms_name_419b3a2c_288c_4391_9f1e
   }
 }
 
-resource privateDnsZones_privatelink_notebooks_azure_net_name_ml_mlwspoc_westus_419b3a2c_288c_4391_9f1e_236c0b6e471b_westus 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+resource privateDnsZones_privatelink_notebooks_azure_net_name_ml_mlwspoc_australiaeast_419b3a2c_288c_4391_9f1e_236c0b6e471b_australiaeast 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
   parent: privateDnsZones_privatelink_notebooks_azure_net_name_resource
-  name: 'ml-mlwspoc-westus-419b3a2c-288c-4391-9f1e-236c0b6e471b.westus'
+  name: 'ml-mlwspoc-australiaeast-419b3a2c-288c-4391-9f1e-236c0b6e471b.australiaeast'
   properties: {
     metadata: {
       creator: 'created by private endpoint pe_to_managedvnet with resource guid 4963c503-c8dc-4933-854e-ad8aede94e27'
@@ -722,7 +722,7 @@ resource Microsoft_Network_privateDnsZones_SOA_privateDnsZones_privatelink_noteb
 
 resource privateEndpoints_pe_managedvnet_storageaccount_file_name_resource 'Microsoft.Network/privateEndpoints@2023-06-01' = {
   name: privateEndpoints_pe_managedvnet_storageaccount_file_name
-  location: 'westus'
+  location: 'australiaeast'
   tags: {
     pe_to_managedvnet_filestorage: ''
   }
@@ -756,7 +756,7 @@ resource privateEndpoints_pe_managedvnet_storageaccount_file_name_resource 'Micr
 
 resource privateEndpoints_pe_to_managedvnet_name_resource 'Microsoft.Network/privateEndpoints@2023-06-01' = {
   name: privateEndpoints_pe_to_managedvnet_name
-  location: 'westus'
+  location: 'australiaeast'
   properties: {
     privateLinkServiceConnections: [
       {
@@ -787,7 +787,7 @@ resource privateEndpoints_pe_to_managedvnet_name_resource 'Microsoft.Network/pri
 
 resource bastionHosts_hub_vnet_Bastion_name_resource 'Microsoft.Network/bastionHosts@2023-06-01' = {
   name: bastionHosts_hub_vnet_Bastion_name
-  location: 'westus'
+  location: 'australiaeast'
   sku: {
     name: 'Basic'
   }
@@ -880,7 +880,7 @@ resource privateEndpoints_pe_managedvnet_storageaccount_file_name_default 'Micro
 
 resource virtualNetworks_hub_vnet_name_resource 'Microsoft.Network/virtualNetworks@2023-06-01' = {
   name: virtualNetworks_hub_vnet_name
-  location: 'westus'
+  location: 'australiaeast'
   properties: {
     addressSpace: {
       addressPrefixes: [
@@ -901,7 +901,7 @@ resource virtualNetworks_hub_vnet_name_resource 'Microsoft.Network/virtualNetwor
         properties: {
           addressPrefix: '10.0.0.0/24'
           networkSecurityGroup: {
-            id: networkSecurityGroups_hub_vnet_default_nsg_westus_name_resource.id
+            id: networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name_resource.id
           }
           serviceEndpoints: []
           delegations: []
@@ -917,7 +917,7 @@ resource virtualNetworks_hub_vnet_name_resource 'Microsoft.Network/virtualNetwor
         properties: {
           addressPrefix: '10.0.1.0/26'
           networkSecurityGroup: {
-            id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resource.id
+            id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource.id
           }
           serviceEndpoints: []
           delegations: []
@@ -938,7 +938,7 @@ resource virtualNetworks_hub_vnet_name_AzureBastionSubnet 'Microsoft.Network/vir
   properties: {
     addressPrefix: '10.0.1.0/26'
     networkSecurityGroup: {
-      id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resource.id
+      id: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource.id
     }
     serviceEndpoints: []
     delegations: []
@@ -957,7 +957,7 @@ resource virtualNetworks_hub_vnet_name_default 'Microsoft.Network/virtualNetwork
   properties: {
     addressPrefix: '10.0.0.0/24'
     networkSecurityGroup: {
-      id: networkSecurityGroups_hub_vnet_default_nsg_westus_name_resource.id
+      id: networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name_resource.id
     }
     serviceEndpoints: []
     delegations: []
@@ -973,7 +973,7 @@ resource virtualNetworks_hub_vnet_name_default 'Microsoft.Network/virtualNetwork
 
 resource networkInterfaces_hub_vm665_name_resource 'Microsoft.Network/networkInterfaces@2023-06-01' = {
   name: networkInterfaces_hub_vm665_name
-  location: 'westus'
+  location: 'australiaeast'
   kind: 'Regular'
   properties: {
     ipConfigurations: [
