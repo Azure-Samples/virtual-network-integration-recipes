@@ -15,7 +15,7 @@ param privateDnsZones_privatelink_file_core_windows_net_name string
 param privateEndpoints_pe_managedvnet_storageaccount_file_name string 
 param networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name string 
 param storageAccounts_yogirensa_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.Storage/storageAccounts/yogirensa'
-param workspaces_mlws_poc_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.MachineLearningServices/workspaces/yogirenws'
+param workspaces_yogirenws_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.MachineLearningServices/workspaces/yogirenws'
 
 resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource 'Microsoft.Network/networkSecurityGroups@2023-06-01' = {
   name: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name
@@ -763,7 +763,7 @@ resource privateEndpoints_pe_to_managedvnet_name_resource 'Microsoft.Network/pri
         name: privateEndpoints_pe_to_managedvnet_name
         id: '${privateEndpoints_pe_to_managedvnet_name_resource.id}/privateLinkServiceConnections/${privateEndpoints_pe_to_managedvnet_name}'
         properties: {
-          privateLinkServiceId: workspaces_mlws_poc_externalid
+          privateLinkServiceId: workspaces_yogirenws_externalid
           groupIds: [
             'amlworkspace'
           ]
