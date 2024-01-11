@@ -14,8 +14,8 @@ param privateDnsZones_privatelink_blob_core_windows_net_name string
 param privateDnsZones_privatelink_file_core_windows_net_name string 
 param privateEndpoints_pe_managedvnet_storageaccount_file_name string 
 param networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name string 
-param storageAccounts_mlwspocstoraged_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.Storage/storageAccounts/mlwspocstoraged'
-param workspaces_mlws_poc_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.MachineLearningServices/workspaces/mlws_poc'
+param storageAccounts_yogirensa_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.Storage/storageAccounts/yogirensa'
+param workspaces_yogirenws_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.MachineLearningServices/workspaces/yogirenws'
 
 resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name_resource 'Microsoft.Network/networkSecurityGroups@2023-06-01' = {
   name: networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name
@@ -360,7 +360,7 @@ resource virtualMachines_hub_vm_name_resource 'Microsoft.Compute/virtualMachines
     networkProfile: {
       networkInterfaces: [
         {
-          id: networkInterfaces_hub_vm665_name_resource.id
+          id: networkInterfaces_hub_vm_name_resource.id
           properties: {
             deleteOption: 'Delete'
           }
@@ -636,9 +636,9 @@ resource privateDnsZones_privatelink_notebooks_azure_net_name_ml_mlwspoc_austral
   }
 }
 
-resource privateDnsZones_privatelink_file_core_windows_net_name_mlwspocstoraged4813c4856 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
+resource privateDnsZones_privatelink_file_core_windows_net_name_yogirensa 'Microsoft.Network/privateDnsZones/A@2018-09-01' = {
   parent: privateDnsZones_privatelink_file_core_windows_net_name_resource
-  name: 'mlwspocstoraged4813c4856'
+  name: 'yogirensa'
   properties: {
     metadata: {
       creator: 'created by private endpoint pe_managedvnet_storageaccount_file with resource guid 3d51d363-0b9a-45fa-b19a-bb20cb1f13ea'
@@ -732,7 +732,7 @@ resource privateEndpoints_pe_managedvnet_storageaccount_file_name_resource 'Micr
         name: privateEndpoints_pe_managedvnet_storageaccount_file_name
         id: '${privateEndpoints_pe_managedvnet_storageaccount_file_name_resource.id}/privateLinkServiceConnections/${privateEndpoints_pe_managedvnet_storageaccount_file_name}'
         properties: {
-          privateLinkServiceId: storageAccounts_mlwspocstoraged4813c4856_externalid
+          privateLinkServiceId: storageAccounts_yogirensa_externalid
           groupIds: [
             'file'
           ]
@@ -763,7 +763,7 @@ resource privateEndpoints_pe_to_managedvnet_name_resource 'Microsoft.Network/pri
         name: privateEndpoints_pe_to_managedvnet_name
         id: '${privateEndpoints_pe_to_managedvnet_name_resource.id}/privateLinkServiceConnections/${privateEndpoints_pe_to_managedvnet_name}'
         properties: {
-          privateLinkServiceId: workspaces_mlws_poc_externalid
+          privateLinkServiceId: workspaces_yogirenws_externalid
           groupIds: [
             'amlworkspace'
           ]
