@@ -3,25 +3,25 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vaults_keyvault_name": {
-            "value": yogirenkv
+            "value": "yogirenkv"
         },
         "workspaces_name": {
-            "value": yogirenws
+            "value": "yogirenws"
         },
         "components_insights_name": {
-            "value": yogirenin
+            "value": "yogirenin"
         },
         "storageAccounts_name": {
-            "value": yogirensa
+            "value": "yogirensa"
         },
         "workspaces_logalyti_name": {
-            "value": yougirenlog
+            "value": "yougirenlog"
         },
         "actionGroups_Application_Insights_Smart_Detection_name": {
-            "value": yougirenaig
+            "value": "yougirenaig"
         },
         "smartdetectoralertrules_failure_anomalies_insights_name": {
-            "value": yougirenfailure
+            "value": "yougirenfailure"
         }
     }
 }

@@ -78,7 +78,7 @@ The recipe provides for the ability to deploy Azure resources to a hub/spoke vir
 
 ### Bash
 ```
-az login
+az login --use-device-code
 az account set --subscription SUBSCRIPTION_ID
 ```
 
@@ -100,17 +100,35 @@ Set-AzContext -SubscriptionId SUBSCRIPTION_ID
    ```
 
 1. The [azuredeploy.parameters.sample.json](./deploy/bicep/azuredeploy.parameters.sample.json) file contains the necessary variables to deploy the Bicep project. Rename the file to **azuredeploy.parameters.json** and update the file with appropriate values. Descriptions for each parameter can be found in the [spoke_deploy.bicep](./deploy/bicep/spoke_deploy.bicep) file.
-   1. Set the `newOrExistingDnsZones` parameter to "new" (or don't set, as the default is "new") if creating a new Azure Private DNS Zone.
-   1. Set the `dnsZoneResourceGroupName` parameter to the name of your resource group (or don't set, as the default is the name of the resource group) if creating a new Azure Private DNS Zone.  
+   <!-- 1. Set the `newOrExistingDnsZones` parameter to "new" (or don't set, as the default is "new") if creating a new Azure Private DNS Zone.
+   1. Set the `dnsZoneResourceGroupName` parameter to the name of your resource group (or don't set, as the default is the name of the resource group) if creating a new Azure Private DNS Zone.   -->
 1. Optionally, verify what Bicep will deploy, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
 
+### Powershell
+
    ```PowerShell
+
+   cd src/az-aml-managed-vnet
+
    New-AzResourceGroupDeployment `
      -ResourceGroupName <RESOURCE_GROUP_NAME> `
-     -TemplateFile ./main.bicep `
-     -TemplateParameterFile ./azuredeploy.parameters.json `
+     -TemplateFile ./deploy/bicep/spoke_deploy.bicep `
+     -TemplateParameterFile ./deploy/bicep/azuredeploy.parameters.json `
      -WhatIf
    ```
+
+### Bash
+
+```
+cd ./src/az-aml-managed-vnet
+
+az deployment group create \
+  --resource-group <RESOURCE_GROUP_NAME> \
+  --template-file ./deploy/bicep/spoke_deploy.bicep \
+  --parameters @./deploy/bicep/azuredeploy.parameters.json \
+  --what-if
+
+```
 
 1. Deploy the template, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
 
