@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaults_keyvault_name": {
+            "value": yogirenkv
+        },
+        "workspaces_name": {
+            "value": yogirenws
+        },
+        "components_insights_name": {
+            "value": yogirenin
+        },
+        "storageAccounts_name": {
+            "value": yogirensa
+        },
+        "workspaces_logalyti_name": {
+            "value": yougirenlog
+        },
+        "actionGroups_Application_Insights_Smart_Detection_name": {
+            "value": yougirenaig
+        },
+        "smartdetectoralertrules_failure_anomalies_insights_name": {
+            "value": yougirenfailure
+        }
+    }
+}

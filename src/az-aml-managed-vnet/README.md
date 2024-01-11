@@ -89,11 +89,12 @@ Set-AzContext -SubscriptionId SUBSCRIPTION_ID
 ```
    1. Create a new Azure resource group to deploy the Bicep template, passing in a location and name:
 
+### Bash
    ```Bash
    az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
 
    ```
-
+### Powershell
    ```PowerShell
    New-AzResourceGroup -Location <LOCATION> -Name <RESOURCE_GROUP_NAME>
    ```
