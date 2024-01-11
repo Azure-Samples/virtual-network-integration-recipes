@@ -1,6 +1,6 @@
 param virtualMachines_hub_vm_name string = 'hub-vm'
 param virtualNetworks_hub_vnet_name string = 'hub_vnet'
-param networkInterfaces_hub_vm665_name string = 'hub-vm665'
+param networkInterfaces_hub_vm_name string = 'hub-vm665'
 param publicIPAddresses_hub_vm_ip_name string = 'hub-vm-ip'
 param bastionHosts_hub_vnet_Bastion_name string = 'hub_vnet-Bastion'
 param networkSecurityGroups_hub_vm_nsg_name string = 'hub-vm-nsg'
@@ -14,7 +14,7 @@ param privateDnsZones_privatelink_blob_core_windows_net_name string = 'privateli
 param privateDnsZones_privatelink_file_core_windows_net_name string = 'privatelink.file.core.windows.net'
 param privateEndpoints_pe_managedvnet_storageaccount_file_name string = 'pe_managedvnet_storageaccount_file'
 param networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name string = 'hub_vnet-AzureBastionSubnet-nsg-westus'
-param storageAccounts_mlwspocstoraged4813c4856_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/rg_poc/providers/Microsoft.Storage/storageAccounts/mlwspocstoraged4813c4856'
+param storageAccounts_mlwspocstoraged_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/rg_poc/providers/Microsoft.Storage/storageAccounts/mlwspocstoraged4813c4856'
 param workspaces_mlws_poc_externalid string = '/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/rg_poc/providers/Microsoft.MachineLearningServices/workspaces/mlws_poc'
 
 resource networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_westus_name_resource 'Microsoft.Network/networkSecurityGroups@2023-06-01' = {
