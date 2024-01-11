@@ -3,58 +3,58 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "virtualMachines_hub_vm_name": {
-            "value": hub-vm
+            "value": "hub-vm"
         },
         "virtualNetworks_hub_vnet_name": {
-            "value": hub_vnet
+            "value": "hub_vnet"
         },
         "networkInterfaces_hub_vm_name": {
-            "value": hub-vm-nic
+            "value": "hub-vm-nic"
         },
         "publicIPAddresses_hub_vm_ip_name": {
-            "value": hub-vm-ip
+            "value": "hub-vm-ip"
         },
         "bastionHosts_hub_vnet_Bastion_name": {
-            "value": hub_vnet-Bastion
+            "value": "hub_vnet-Bastion"
         },
         "networkSecurityGroups_hub_vm_nsg_name": {
-            "value": hub-vm-nsg
+            "value": "hub-vm-nsg"
         },
         "privateEndpoints_pe_to_managedvnet_name": {
-            "value": pe_to_managedvnet
+            "value": "pe_to_managedvnet"
         },
         "publicIPAddresses_hub_vnet_bastion_name": {
-            "value": hub_vnet-bastion
+            "value": "hub_vnet-bastion"
         },
         "schedules_shutdown_computevm_hub_vm_name": {
-            "value": shutdown-computevm-hub-vm
+            "value": "shutdown-computevm-hub-vm"
         },
         "privateDnsZones_privatelink_api_azureml_ms_name": {
-            "value": privatelink.api.azureml.ms
+            "value": "privatelink.api.azureml.ms"
         },
         "privateDnsZones_privatelink_notebooks_azure_net_name": {
-            "value": privatelink.notebooks.azure.net
+            "value": "privatelink.notebooks.azure.net"
         },
         "networkSecurityGroups_hub_vnet_default_nsg_australiaeast_name": {
-            "value": hub_vnet-default-nsg-australiaeast
+            "value": "hub_vnet-default-nsg-australiaeast"
         },
         "privateDnsZones_privatelink_blob_core_windows_net_name": {
-            "value": privatelink.blob.core.windows.net
+            "value": "privatelink.blob.core.windows.net"
         },
         "privateDnsZones_privatelink_file_core_windows_net_name": {
-            "value": privatelink.file.core.windows.net
+            "value": "privatelink.file.core.windows.net"
         },
         "privateEndpoints_pe_managedvnet_storageaccount_file_name": {
-            "value": pe_managedvnet_storageaccount_file
+            "value": "pe_managedvnet_storageaccount_file"
         },
         "networkSecurityGroups_hub_vnet_AzureBastionSubnet_nsg_australiaeast_name": {
-            "value": hub_vnet-AzureBastionSubnet-nsg-australiaeast
+            "value": "hub_vnet-AzureBastionSubnet-nsg-australiaeast"
         },
         "storageAccounts_mlwspocstoraged_externalid": {
-            "value": /subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.Storage/storageAccounts/mlwspocstoraged
+            "value": "/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.Storage/storageAccounts/mlwspocstoraged"
         },
         "workspaces_mlws_poc_externalid": {
-            "value": /subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.MachineLearningServices/workspaces/yogirenws
+            "value": "/subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/yogiren/providers/Microsoft.MachineLearningServices/workspaces/yogirenws"
         }
     }
 }
