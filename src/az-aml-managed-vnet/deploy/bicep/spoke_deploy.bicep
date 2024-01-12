@@ -606,7 +606,7 @@ resource workspaces_name_workspaceartifactstore 'Microsoft.MachineLearningServic
     }
   }
   dependsOn: [
-    workspaces_name_resource
+    workspaces_yogiren_name_resource
   ]
 }
 
@@ -619,7 +619,7 @@ resource workspaces_name_workspaceblobstore 'Microsoft.MachineLearningServices/w
     }
   }
   dependsOn: [
-    workspaces_name_resource
+    workspaces_yogiren_name_resource
   ]
 }
 
@@ -632,7 +632,7 @@ resource workspaces_name_workspacefilestore 'Microsoft.MachineLearningServices/w
     }
   }
   dependsOn: [
-    workspaces_name_resource
+    workspaces_yogiren_name_resource
   ]
 }
 
@@ -645,7 +645,7 @@ resource workspaces_name_workspaceworkingdirectory 'Microsoft.MachineLearningSer
     }
   }
   dependsOn: [
-    workspaces_name_resource
+    workspaces_yogiren_name_resource
   ]
 }
 
@@ -662,7 +662,7 @@ resource workspaces_name_workspaces_name_176c0759_a1b4_412d_af12_13ed6dca820e 'M
     }
   }
   dependsOn: [
-    workspaces_name_resource
+    workspaces_yogiren_name_resource
   ]
 }
 
@@ -679,7 +679,7 @@ resource workspaces_name_workspaces_name_d175c474_5795_486a_b588_fbd0e18059de 'M
     }
   }
   dependsOn: [
-    workspaces_name_resource
+    workspaces_yogiren_name_resource
   ]
 }
 
@@ -7864,7 +7864,7 @@ resource storageAccounts_name_default_code_391ff5ac_6576_460f_ba4d_7e03433c68b6 
   ]
 }
 
-resource workspaces_name_resource 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
+resource workspaces_yogiren_name_resource 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
   name: workspaces_name
 
   tags: {
@@ -8044,7 +8044,7 @@ resource workspaces_name_resource 'Microsoft.MachineLearningServices/workspaces@
         __SYS_PE_mlws_poc_amlworkspace: {
           type: 'PrivateEndpoint'
           destination: {
-            serviceResourceId: workspaces_name_resource.id
+            serviceResourceId: workspaces_yogiren_name_resource.id
             subresourceTarget: 'amlworkspace'
             sparkEnabled: true
             sparkStatus: 'Active'
