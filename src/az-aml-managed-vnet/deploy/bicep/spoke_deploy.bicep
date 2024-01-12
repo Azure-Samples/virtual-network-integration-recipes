@@ -7674,8 +7674,7 @@ resource Microsoft_Storage_storageAccounts_fileServices_storageAccounts_name_def
   name: 'default'
   sku: {
     name: 'Standard_LRS'
-    tier: 'Standard'
-  }
+    }
   properties: {
     protocolSettings: {
       smb: {}
