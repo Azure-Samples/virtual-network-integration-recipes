@@ -5,7 +5,9 @@ param storageAccounts_name string
 param workspaces_logalyti_name string
 param actionGroups_Application_Insights_Smart_Detection_name string
 param smartdetectoralertrules_failure_anomalies_insights_name string
-param location string = resourceGroup().location 
+
+@description('location')
+param location string = 'australiaeast'
 
 resource actionGroups_Application_Insights_Smart_Detection_name_resource 'microsoft.insights/actionGroups@2023-01-01' = {
   name: actionGroups_Application_Insights_Smart_Detection_name
@@ -160,7 +162,6 @@ resource vaults_keyvault_name_resource 'Microsoft.KeyVault/vaults@2023-07-01' = 
     softDeleteRetentionInDays: 90
     enableRbacAuthorization: true
     enablePurgeProtection: true
-    : 'Succeeded'
     publicNetworkAccess: 'Disabled'
   }
 }
@@ -535,8 +536,7 @@ resource vaults_keyvault_name_plsc_vault 'Microsoft.KeyVault/vaults/privateEndpo
   name: 'plsc_vault'
   location: location
   properties: {
-    : 'Succeeded'
-    privateEndpoint: {}
+   privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto approved by Azure Machine Learning'
@@ -597,6 +597,7 @@ resource vaults_keyvault_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_Z4kuS_kZ1tVLM
   }
 }
 
+@description('workspace artifact store')
 resource workspaces_name_workspaceartifactstore 'Microsoft.MachineLearningServices/workspaces/datastores@2023-10-01' = {
   name: '${workspaces_name}/workspaceartifactstore'
   properties: {
@@ -604,7 +605,8 @@ resource workspaces_name_workspaceartifactstore 'Microsoft.MachineLearningServic
       credentialsType: 'AccountKey'
       secrets: {}
     }
-  }
+    type: 'AzureBlobStorage'
+      }
   }
 
 resource workspaces_name_workspaceblobstore 'Microsoft.MachineLearningServices/workspaces/datastores@2023-10-01' = {
@@ -614,6 +616,7 @@ resource workspaces_name_workspaceblobstore 'Microsoft.MachineLearningServices/w
       credentialsType: 'AccountKey'
       secrets: {}
     }
+    type: 'AzureBlobStorage'
   }
   }
 
@@ -624,6 +627,7 @@ resource workspaces_name_workspacefilestore 'Microsoft.MachineLearningServices/w
       credentialsType: 'AccountKey'
       secrets: {}
     }
+    type: 'AzureBlobStorage'
   }
  }
 
@@ -634,6 +638,7 @@ resource workspaces_name_workspaceworkingdirectory 'Microsoft.MachineLearningSer
       credentialsType: 'AccountKey'
       secrets: {}
     }
+    type: 'AzureBlobStorage'
   }
   }
 
@@ -641,8 +646,7 @@ resource workspaces_name_workspaces_name_176c0759_a1b4_412d_af12_13ed6dca820e 'M
   name: '${workspaces_name}/${workspaces_name}.176c0759-a1b4-412d-af12-13ed6dca820e'
   location: location
   properties: {
-    : 'Succeeded'
-    privateEndpoint: {}
+     privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto approved by Azure Machine Learning'
@@ -655,8 +659,7 @@ resource workspaces_name_workspaces_name_d175c474_5795_486a_b588_fbd0e18059de 'M
   name: '${workspaces_name}/${workspaces_name}.d175c474-5795-486a-b588-fbd0e18059de'
   location: location
   properties: {
-    : 'Succeeded'
-    privateEndpoint: {}
+     privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto-Approved'
@@ -7610,9 +7613,7 @@ resource workspaces_logalyti_name_WVDSessionHostManagement 'Microsoft.Operationa
 resource storageAccounts_name_default 'Microsoft.Storage/storageAccounts/blobServices@2023-01-01' = {
   parent: storageAccounts_name_resource
   name: 'default'
-  sku: {
-    name: 'Standard_LRS'
-     }
+  sku: { name: 'Standard_LRS' }
   properties: {
     cors: {
       corsRules: [
@@ -7674,7 +7675,6 @@ resource storageAccounts_name_storageAccounts_name_313c91b4_8924_456a_af0f_a528c
   parent: storageAccounts_name_resource
   name: '${storageAccounts_name}.313c91b4-8924-456a-af0f-a528cb988c4a'
   properties: {
-    : 'Succeeded'
     privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
@@ -7688,8 +7688,7 @@ resource storageAccounts_name_storageAccounts_name_50a0f929_657b_4449_b358_ddefb
   parent: storageAccounts_name_resource
   name: '${storageAccounts_name}.50a0f929-657b-4449-b358-ddefb44aae6f'
   properties: {
-    : 'Succeeded'
-    privateEndpoint: {}
+     privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto approved by Azure Machine Learning'
@@ -7702,8 +7701,7 @@ resource storageAccounts_name_storageAccounts_name_8cd3527b_27a5_472f_b91a_20198
   parent: storageAccounts_name_resource
   name: '${storageAccounts_name}.8cd3527b-27a5-472f-b91a-20198b3cc600'
   properties: {
-    : 'Succeeded'
-    privateEndpoint: {}
+      privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto approved by Azure Machine Learning'
@@ -7716,8 +7714,7 @@ resource storageAccounts_name_storageAccounts_name_b1a0b60c_163c_4119_946c_6207a
   parent: storageAccounts_name_resource
   name: '${storageAccounts_name}.b1a0b60c-163c-4119-946c-6207ae859d6c'
   properties: {
-    : 'Succeeded'
-    privateEndpoint: {}
+     privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto approved by Azure Machine Learning'
@@ -7730,8 +7727,7 @@ resource storageAccounts_name_storageAccounts_name_f798854b_3961_4a92_90fa_bed30
   parent: storageAccounts_name_resource
   name: '${storageAccounts_name}.f798854b-3961-4a92-90fa-bed30e20745e'
   properties: {
-    : 'Succeeded'
-    privateEndpoint: {}
+     privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto-Approved'
@@ -7965,7 +7961,7 @@ resource workspaces_yogiren_name_resource 'Microsoft.MachineLearningServices/wor
         }
         vs_code_blob: {
           type: 'FQDN'
-          destination: 'vscode.blob.core.windows.net'
+          destination: ''
           status: 'Active'
           category: 'UserDefined'
         }
@@ -8004,10 +8000,10 @@ resource workspaces_yogiren_name_resource 'Microsoft.MachineLearningServices/wor
           status: 'Active'
           category: 'Required'
         }
-        __SYS_PE_mlws_poc_amlworkspace: {
+        __SYS_PE_yogirenws_amlworkspace: {
           type: 'PrivateEndpoint'
           destination: {
-            serviceResourceId: workspaces_yogiren_name_resource.id
+            serviceResourceId: workspaces_name_workspaces_name_d175c474_5795_486a_b588_fbd0e18059de.id
             subresourceTarget: 'amlworkspace'
             sparkEnabled: true
             sparkStatus: 'Active'
