@@ -616,7 +616,11 @@ resource workspaces_name_workspaceblobstore 'Microsoft.MachineLearningServices/w
       credentialsType: 'AccountKey'
       secrets: {}
     }
+<<<<<<< HEAD
     type: 'AzureBlobStorage'
+=======
+    datastoreType: {AzureBlob}
+>>>>>>> 123d7b96ed31c341a389556a53ff1b00a1374942
   }
   }
 
