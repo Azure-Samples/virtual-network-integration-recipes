@@ -167,13 +167,16 @@ resource vaults_keyvault_name_resource 'Microsoft.KeyVault/vaults@2023-07-01' = 
 }
 output vaults_keyvault_name_resourceUri string = vaults_keyvault_name_resource.id
 
+
+
+
 resource workspaces_logalyti_name_resource 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
   name: workspaces_logalyti_name
   location: location
   tags: {
     createdByToolkit: 'cli-v2-1.12.0'
   }
-    properties: {
+  properties: {
     sku: {
       name: 'PerGB2018'
     }
@@ -197,7 +200,7 @@ resource storageAccounts_name_resource 'Microsoft.Storage/storageAccounts@2023-0
   }
   sku: {
     name: 'Standard_LRS'
-    }
+  }
   kind: 'StorageV2'
   properties: {
     defaultToOAuthAuthentication: false
@@ -536,7 +539,7 @@ resource vaults_keyvault_name_plsc_vault 'Microsoft.KeyVault/vaults/privateEndpo
   name: 'plsc_vault'
   location: location
   properties: {
-   privateEndpoint: {}
+    privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto approved by Azure Machine Learning'
@@ -605,9 +608,9 @@ resource workspaces_name_workspaceartifactstore 'Microsoft.MachineLearningServic
       credentialsType: 'AccountKey'
       secrets: {}
     }
-    type: 'AzureBlobStorage'
-      }
+    type: 'AzureBlob'
   }
+}
 
 resource workspaces_name_workspaceblobstore 'Microsoft.MachineLearningServices/workspaces/datastores@2023-10-01' = {
   name: '${workspaces_name}/workspaceblobstore'
@@ -616,9 +619,10 @@ resource workspaces_name_workspaceblobstore 'Microsoft.MachineLearningServices/w
       credentialsType: 'AccountKey'
       secrets: {}
     }
-    type: 'AzureBlobStorage'
+    type: 'AzureBlob'
   }
-  }
+}
+
 
 resource workspaces_name_workspacefilestore 'Microsoft.MachineLearningServices/workspaces/datastores@2023-10-01' = {
   name: '${workspaces_name}/workspacefilestore'
@@ -629,7 +633,7 @@ resource workspaces_name_workspacefilestore 'Microsoft.MachineLearningServices/w
     }
     type: 'AzureBlobStorage'
   }
- }
+}
 
 resource workspaces_name_workspaceworkingdirectory 'Microsoft.MachineLearningServices/workspaces/datastores@2023-10-01' = {
   name: '${workspaces_name}/workspaceworkingdirectory'
@@ -640,33 +644,33 @@ resource workspaces_name_workspaceworkingdirectory 'Microsoft.MachineLearningSer
     }
     type: 'AzureBlobStorage'
   }
-  }
+}
 
 resource workspaces_name_workspaces_name_176c0759_a1b4_412d_af12_13ed6dca820e 'Microsoft.MachineLearningServices/workspaces/privateEndpointConnections@2023-10-01' = {
   name: '${workspaces_name}/${workspaces_name}.176c0759-a1b4-412d-af12-13ed6dca820e'
   location: location
   properties: {
-     privateEndpoint: {}
+    privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto approved by Azure Machine Learning'
       actionsRequired: 'None'
     }
   }
-  }
+}
 
 resource workspaces_name_workspaces_name_d175c474_5795_486a_b588_fbd0e18059de 'Microsoft.MachineLearningServices/workspaces/privateEndpointConnections@2023-10-01' = {
   name: '${workspaces_name}/${workspaces_name}.d175c474-5795-486a-b588-fbd0e18059de'
   location: location
   properties: {
-     privateEndpoint: {}
+    privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto-Approved'
       actionsRequired: 'None'
     }
   }
-  }
+}
 
 resource workspaces_logalyti_name_LogManagement_workspaces_logalyti_name_General_AlphabeticallySortedComputers 'Microsoft.OperationalInsights/workspaces/savedSearches@2020-08-01' = {
   parent: workspaces_logalyti_name_resource
@@ -7656,7 +7660,7 @@ resource Microsoft_Storage_storageAccounts_fileServices_storageAccounts_name_def
   name: 'default'
   sku: {
     name: 'Standard_LRS'
-    }
+  }
   properties: {
     protocolSettings: {
       smb: {}
@@ -7688,7 +7692,7 @@ resource storageAccounts_name_storageAccounts_name_50a0f929_657b_4449_b358_ddefb
   parent: storageAccounts_name_resource
   name: '${storageAccounts_name}.50a0f929-657b-4449-b358-ddefb44aae6f'
   properties: {
-     privateEndpoint: {}
+    privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto approved by Azure Machine Learning'
@@ -7701,7 +7705,7 @@ resource storageAccounts_name_storageAccounts_name_8cd3527b_27a5_472f_b91a_20198
   parent: storageAccounts_name_resource
   name: '${storageAccounts_name}.8cd3527b-27a5-472f-b91a-20198b3cc600'
   properties: {
-      privateEndpoint: {}
+    privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto approved by Azure Machine Learning'
@@ -7714,7 +7718,7 @@ resource storageAccounts_name_storageAccounts_name_b1a0b60c_163c_4119_946c_6207a
   parent: storageAccounts_name_resource
   name: '${storageAccounts_name}.b1a0b60c-163c-4119-946c-6207ae859d6c'
   properties: {
-     privateEndpoint: {}
+    privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto approved by Azure Machine Learning'
@@ -7727,7 +7731,7 @@ resource storageAccounts_name_storageAccounts_name_f798854b_3961_4a92_90fa_bed30
   parent: storageAccounts_name_resource
   name: '${storageAccounts_name}.f798854b-3961-4a92-90fa-bed30e20745e'
   properties: {
-     privateEndpoint: {}
+    privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
       description: 'Auto-Approved'
@@ -7789,7 +7793,7 @@ resource storageAccounts_name_default_azureml 'Microsoft.Storage/storageAccounts
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  }
+}
 
 resource storageAccounts_name_default_azureml_blobstore_419b3a2c_288c_4391_9f1e_236c0b6e471b 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
   parent: storageAccounts_name_default
@@ -7802,7 +7806,7 @@ resource storageAccounts_name_default_azureml_blobstore_419b3a2c_288c_4391_9f1e_
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  }
+}
 
 resource storageAccounts_name_default_azureml_filestore_419b3a2c_288c_4391_9f1e_236c0b6e471b 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-01-01' = {
   parent: Microsoft_Storage_storageAccounts_fileServices_storageAccounts_name_default
@@ -7812,7 +7816,7 @@ resource storageAccounts_name_default_azureml_filestore_419b3a2c_288c_4391_9f1e_
     shareQuota: 5120
     enabledProtocols: 'SMB'
   }
-  }
+}
 
 resource storageAccounts_name_default_code_391ff5ac_6576_460f_ba4d_7e03433c68b6 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-01-01' = {
   parent: Microsoft_Storage_storageAccounts_fileServices_storageAccounts_name_default
@@ -7822,7 +7826,7 @@ resource storageAccounts_name_default_code_391ff5ac_6576_460f_ba4d_7e03433c68b6 
     shareQuota: 5120
     enabledProtocols: 'SMB'
   }
-  }
+}
 
 resource workspaces_yogiren_name_resource 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
   name: workspaces_name
@@ -7833,7 +7837,7 @@ resource workspaces_yogiren_name_resource 'Microsoft.MachineLearningServices/wor
   }
   sku: {
     name: 'Basic'
-      }
+  }
   kind: 'Default'
   identity: {
     type: 'SystemAssigned'
