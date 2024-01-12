@@ -605,10 +605,7 @@ resource workspaces_name_workspaceartifactstore 'Microsoft.MachineLearningServic
       secrets: {}
     }
   }
-  dependsOn: [
-    workspaces_yogiren_name_resource
-  ]
-}
+  }
 
 resource workspaces_name_workspaceblobstore 'Microsoft.MachineLearningServices/workspaces/datastores@2023-10-01' = {
   name: '${workspaces_name}/workspaceblobstore'
@@ -618,10 +615,7 @@ resource workspaces_name_workspaceblobstore 'Microsoft.MachineLearningServices/w
       secrets: {}
     }
   }
-  dependsOn: [
-    workspaces_yogiren_name_resource
-  ]
-}
+  }
 
 resource workspaces_name_workspacefilestore 'Microsoft.MachineLearningServices/workspaces/datastores@2023-10-01' = {
   name: '${workspaces_name}/workspacefilestore'
@@ -631,10 +625,7 @@ resource workspaces_name_workspacefilestore 'Microsoft.MachineLearningServices/w
       secrets: {}
     }
   }
-  dependsOn: [
-    workspaces_yogiren_name_resource
-  ]
-}
+ }
 
 resource workspaces_name_workspaceworkingdirectory 'Microsoft.MachineLearningServices/workspaces/datastores@2023-10-01' = {
   name: '${workspaces_name}/workspaceworkingdirectory'
@@ -644,10 +635,7 @@ resource workspaces_name_workspaceworkingdirectory 'Microsoft.MachineLearningSer
       secrets: {}
     }
   }
-  dependsOn: [
-    workspaces_yogiren_name_resource
-  ]
-}
+  }
 
 resource workspaces_name_workspaces_name_176c0759_a1b4_412d_af12_13ed6dca820e 'Microsoft.MachineLearningServices/workspaces/privateEndpointConnections@2023-10-01' = {
   name: '${workspaces_name}/${workspaces_name}.176c0759-a1b4-412d-af12-13ed6dca820e'
@@ -661,10 +649,7 @@ resource workspaces_name_workspaces_name_176c0759_a1b4_412d_af12_13ed6dca820e 'M
       actionsRequired: 'None'
     }
   }
-  dependsOn: [
-    workspaces_yogiren_name_resource
-  ]
-}
+  }
 
 resource workspaces_name_workspaces_name_d175c474_5795_486a_b588_fbd0e18059de 'Microsoft.MachineLearningServices/workspaces/privateEndpointConnections@2023-10-01' = {
   name: '${workspaces_name}/${workspaces_name}.d175c474-5795-486a-b588-fbd0e18059de'
@@ -678,10 +663,7 @@ resource workspaces_name_workspaces_name_d175c474_5795_486a_b588_fbd0e18059de 'M
       actionsRequired: 'None'
     }
   }
-  dependsOn: [
-    workspaces_yogiren_name_resource
-  ]
-}
+  }
 
 resource workspaces_logalyti_name_LogManagement_workspaces_logalyti_name_General_AlphabeticallySortedComputers 'Microsoft.OperationalInsights/workspaces/savedSearches@2020-08-01' = {
   parent: workspaces_logalyti_name_resource
@@ -7811,11 +7793,7 @@ resource storageAccounts_name_default_azureml 'Microsoft.Storage/storageAccounts
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  dependsOn: [
-
-    storageAccounts_name_resource
-  ]
-}
+  }
 
 resource storageAccounts_name_default_azureml_blobstore_419b3a2c_288c_4391_9f1e_236c0b6e471b 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-01-01' = {
   parent: storageAccounts_name_default
@@ -7828,11 +7806,7 @@ resource storageAccounts_name_default_azureml_blobstore_419b3a2c_288c_4391_9f1e_
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  dependsOn: [
-
-    storageAccounts_name_resource
-  ]
-}
+  }
 
 resource storageAccounts_name_default_azureml_filestore_419b3a2c_288c_4391_9f1e_236c0b6e471b 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-01-01' = {
   parent: Microsoft_Storage_storageAccounts_fileServices_storageAccounts_name_default
@@ -7842,11 +7816,7 @@ resource storageAccounts_name_default_azureml_filestore_419b3a2c_288c_4391_9f1e_
     shareQuota: 5120
     enabledProtocols: 'SMB'
   }
-  dependsOn: [
-
-    storageAccounts_name_resource
-  ]
-}
+  }
 
 resource storageAccounts_name_default_code_391ff5ac_6576_460f_ba4d_7e03433c68b6 'Microsoft.Storage/storageAccounts/fileServices/shares@2023-01-01' = {
   parent: Microsoft_Storage_storageAccounts_fileServices_storageAccounts_name_default
@@ -7856,11 +7826,7 @@ resource storageAccounts_name_default_code_391ff5ac_6576_460f_ba4d_7e03433c68b6 
     shareQuota: 5120
     enabledProtocols: 'SMB'
   }
-  dependsOn: [
-
-    storageAccounts_name_resource
-  ]
-}
+  }
 
 resource workspaces_yogiren_name_resource 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
   name: workspaces_name
