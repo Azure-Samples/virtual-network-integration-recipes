@@ -7630,8 +7630,7 @@ resource storageAccounts_name_default 'Microsoft.Storage/storageAccounts/blobSer
   name: 'default'
   sku: {
     name: 'Standard_LRS'
-    tier: 'Standard'
-  }
+     }
   properties: {
     cors: {
       corsRules: [
@@ -7872,8 +7871,7 @@ resource workspaces_yogiren_name_resource 'Microsoft.MachineLearningServices/wor
   }
   sku: {
     name: 'Basic'
-    tier: 'Basic'
-  }
+      }
   kind: 'Default'
   identity: {
     type: 'SystemAssigned'
