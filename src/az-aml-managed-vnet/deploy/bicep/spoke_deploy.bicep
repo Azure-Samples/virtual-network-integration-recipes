@@ -5,7 +5,7 @@ param storageAccounts_name string
 param workspaces_logalyti_name string
 param actionGroups_Application_Insights_Smart_Detection_name string
 param smartdetectoralertrules_failure_anomalies_insights_name string
-param location string 
+param location string = resourceGroup().location 
 
 resource actionGroups_Application_Insights_Smart_Detection_name_resource 'microsoft.insights/actionGroups@2023-01-01' = {
   name: actionGroups_Application_Insights_Smart_Detection_name
