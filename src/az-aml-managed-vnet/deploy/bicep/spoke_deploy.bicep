@@ -167,9 +167,6 @@ resource vaults_keyvault_name_resource 'Microsoft.KeyVault/vaults@2023-07-01' = 
 }
 output vaults_keyvault_name_resourceUri string = vaults_keyvault_name_resource.id
 
-
-
-
 resource workspaces_logalyti_name_resource 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
   name: workspaces_logalyti_name
   location: location
@@ -612,6 +609,7 @@ resource workspaces_name_workspaceartifactstore 'Microsoft.MachineLearningServic
   }
 }
 
+
 resource workspaces_name_workspaceblobstore 'Microsoft.MachineLearningServices/workspaces/datastores@2023-10-01' = {
   name: '${workspaces_name}/workspaceblobstore'
   properties: {
@@ -634,6 +632,7 @@ resource workspaces_name_workspacefilestore 'Microsoft.MachineLearningServices/w
     type: 'AzureBlobStorage'
   }
 }
+
 
 resource workspaces_name_workspaceworkingdirectory 'Microsoft.MachineLearningServices/workspaces/datastores@2023-10-01' = {
   name: '${workspaces_name}/workspaceworkingdirectory'
@@ -7828,9 +7827,9 @@ resource storageAccounts_name_default_code_391ff5ac_6576_460f_ba4d_7e03433c68b6 
   }
 }
 
-resource workspaces_yogirenws_name_resource 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
-  name: workspaces_yogirenws_name
-
+resource workspaces_name_resource 'Microsoft.MachineLearningServices/workspaces@2023-10-01' = {
+  name: workspaces_name
+  location: location
   tags: {
     createdByToolkit: 'cli-v2-1.12.0'
     'managed-vnet workspace': 'managed-vnet-workspace'
@@ -7843,13 +7842,13 @@ resource workspaces_yogirenws_name_resource 'Microsoft.MachineLearningServices/w
     type: 'SystemAssigned'
   }
   properties: {
-    friendlyName: workspaces_yogirenws_name
-    description: workspaces_yogirenws_name
-    storageAccount: storageAccounts_yogirensa_name_resource.id
-    keyVault: vaults_keyvault_yogirenkv_name_resource.id
-    applicationInsights: components_insights_yogirenin_name_resource.id
+    friendlyName: workspaces_name
+    description: workspaces_name
+    storageAccount: storageAccounts_name_resource.id
+    keyVault: vaults_keyvault_name_resource.id
+    applicationInsights: components_insights_name_resource.id
     hbiWorkspace: false
-    imageBuildCompute: '${workspaces_yogirenws_name}_compute'
+    imageBuildCompute: '${workspaces_name}_compute'
     managedNetwork: {
       isolationMode: 'AllowOnlyApprovedOutbound'
       outboundRules: {
@@ -7873,7 +7872,7 @@ resource workspaces_yogirenws_name_resource 'Microsoft.MachineLearningServices/w
         'added-perule': {
           type: 'PrivateEndpoint'
           destination: {
-            serviceResourceId: storageAccounts_yogirensa_name_resource.id
+            serviceResourceId: storageAccounts_name_resource.id
             subresourceTarget: 'blob'
             sparkEnabled: true
             sparkStatus: 'Inactive'
@@ -7920,7 +7919,7 @@ resource workspaces_yogirenws_name_resource 'Microsoft.MachineLearningServices/w
         queue: {
           type: 'PrivateEndpoint'
           destination: {
-            serviceResourceId: storageAccounts_yogirensa_name_resource.id
+            serviceResourceId: storageAccounts_name_resource.id
             subresourceTarget: 'queue'
             sparkEnabled: false
             sparkStatus: 'Inactive'
@@ -7937,7 +7936,7 @@ resource workspaces_yogirenws_name_resource 'Microsoft.MachineLearningServices/w
         table: {
           type: 'PrivateEndpoint'
           destination: {
-            serviceResourceId: storageAccounts_yogirensa_name_resource.id
+            serviceResourceId: storageAccounts_name_resource.id
             subresourceTarget: 'table'
             sparkEnabled: false
             sparkStatus: 'Inactive'
@@ -8007,7 +8006,7 @@ resource workspaces_yogirenws_name_resource 'Microsoft.MachineLearningServices/w
         __SYS_PE_yogirenws_amlworkspace: {
           type: 'PrivateEndpoint'
           destination: {
-            serviceResourceId: workspaces_yogirenws_name.id
+            serviceResourceId: workspaces_name
             subresourceTarget: 'amlworkspace'
             sparkEnabled: true
             sparkStatus: 'Active'
@@ -8018,7 +8017,7 @@ resource workspaces_yogirenws_name_resource 'Microsoft.MachineLearningServices/w
         __SYS_PE_mlwspocstoraged4813c4856_file: {
           type: 'PrivateEndpoint'
           destination: {
-            serviceResourceId: storageAccounts_yogirensa_name_resource.id
+            serviceResourceId: storageAccounts_name_resource.id
             subresourceTarget: 'file'
             sparkEnabled: true
             sparkStatus: 'Active'
@@ -8059,10 +8058,11 @@ resource workspaces_yogirenws_name_resource 'Microsoft.MachineLearningServices/w
           status: 'Active'
           category: 'Required'
         }
+
         __SYS_PE_mlwspockeyvault87fdea5cb_vault: {
           type: 'PrivateEndpoint'
           destination: {
-            serviceResourceId: vaults_keyvault_yogirenkv_name_resource.id
+            serviceResourceId: vaults_keyvault_name_resource.id
             subresourceTarget: 'vault'
             sparkEnabled: false
             sparkStatus: 'Inactive'
@@ -8073,7 +8073,7 @@ resource workspaces_yogirenws_name_resource 'Microsoft.MachineLearningServices/w
         __SYS_PE_mlwspocstoraged4813c4856_blob: {
           type: 'PrivateEndpoint'
           destination: {
-            serviceResourceId: storageAccounts_yogirensa_name_resource.id
+            serviceResourceId: storageAccounts_name_resource.id
             subresourceTarget: 'blob'
             sparkEnabled: true
             sparkStatus: 'Active'
@@ -8142,7 +8142,8 @@ resource workspaces_yogirenws_name_resource 'Microsoft.MachineLearningServices/w
         sparkReady: false
       }
     }
-    v1LegacyMode: false
+
+        v1LegacyMode: false
     publicNetworkAccess: 'Disabled'
     discoveryUrl: 'https://419b3a2c-288c-4391-9f1e-236c0b6e471b.workspace.westus.api.azureml.ms/discovery/workspaces/419b3a2c-288c-4391-9f1e-236c0b6e471b'
     serverlessComputeSettings: {
