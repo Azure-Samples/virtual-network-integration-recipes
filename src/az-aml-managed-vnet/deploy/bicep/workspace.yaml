@@ -1,0 +1,32 @@
+name: mlws_poc
+location: WESTUS
+managed_network:
+  isolation_mode: allow_only_approved_outbound
+  outbound_rules:
+  - name: added-servicetagrule
+    destination:
+      port_ranges: 80, 8080
+      protocol: TCP
+      service_tag: DataFactory
+    type: service_tag
+  - name: add-fqdnrule
+    destination: 'pypi.org'
+    type: fqdn
+  - name: add-fqdnrule
+    destination: 'anaconda.com'
+    type: fqdn
+  - name: add-fqdnrule
+    destination: '*.anaconda.org'
+    type: fqdn
+  - name: add-fqdnrule
+    destination: '*.pytorch.org'
+    type: fqdn
+  - name: add-fqdnrule
+    destination: '*.tensorflow.org'
+    type: fqdn 
+  - name: added-perule
+    destination:
+    service_resource_id: /subscriptions/06600e5d-08f4-4cad-b7ba-2c397f811d11/resourceGroups/rg_poc/providers/Microsoft.Storage/storageAccounts/mlwspocstoraged4813c4856
+    spark_enabled: true
+    subresource_target: blob
+    type: private_endpoint
