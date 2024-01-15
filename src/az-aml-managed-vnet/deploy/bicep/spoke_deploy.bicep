@@ -9,6 +9,7 @@ param smartdetectoralertrules_failure_anomalies_insights_name string
 @description('location')
 param location string = 'australiaeast'
 
+
 resource actionGroups_Application_Insights_Smart_Detection_name_resource 'microsoft.insights/actionGroups@2023-01-01' = {
   name: actionGroups_Application_Insights_Smart_Detection_name
   location: 'Global'
@@ -42,7 +43,7 @@ resource actionGroups_Application_Insights_Smart_Detection_name_resource 'micros
 
 resource vaults_keyvault_name_resource 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: vaults_keyvault_name
-  location: location
+  location: resourceGroup().location
   tags: {
     createdByToolkit: 'cli-v2-1.12.0'
   }
@@ -169,7 +170,7 @@ output vaults_keyvault_name_resourceUri string = vaults_keyvault_name_resource.i
 
 resource workspaces_logalyti_name_resource 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
   name: workspaces_logalyti_name
-  location: location
+  location: resourceGroup().location
   tags: {
     createdByToolkit: 'cli-v2-1.12.0'
   }
@@ -534,8 +535,7 @@ resource components_insights_name_slowserverresponsetime 'microsoft.insights/com
 resource vaults_keyvault_name_plsc_vault 'Microsoft.KeyVault/vaults/privateEndpointConnections@2023-07-01' = {
   parent: vaults_keyvault_name_resource
   name: 'plsc_vault'
-  location: location
-  properties: {
+   properties: {
     privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
@@ -548,8 +548,7 @@ resource vaults_keyvault_name_plsc_vault 'Microsoft.KeyVault/vaults/privateEndpo
 resource vaults_keyvault_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_0HHZAKwY580UqjjDpQG0xtxk5ig2c5XVRetMs7DW_bY 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: vaults_keyvault_name_resource
   name: '419b3a2c-288c-4391-9f1e-236c0b6e471b-0HHZAKwY580UqjjDpQG0xtxk5ig2c5XVRetMs7DW-bY'
-  location: location
-  properties: {
+   properties: {
     contentType: 'application/vnd.ms-StorageAccountAccessKey'
     attributes: {
       enabled: true
@@ -561,7 +560,6 @@ resource vaults_keyvault_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_0HHZAKwY580Uq
 resource vaults_keyvault_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_N4Lzk6MJug_5lmk8Cb5b4RMZWaviMHwcCmz_9LHdAHI 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: vaults_keyvault_name_resource
   name: '419b3a2c-288c-4391-9f1e-236c0b6e471b-N4Lzk6MJug-5lmk8Cb5b4RMZWaviMHwcCmz-9LHdAHI'
-  location: location
   properties: {
     contentType: 'application/vnd.ms-StorageAccountAccessKey'
     attributes: {
@@ -574,8 +572,7 @@ resource vaults_keyvault_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_N4Lzk6MJug_5l
 resource vaults_keyvault_name_419b3a2c_288c_4391_9f1e_236c0b6e471b_yCwOI3PVB70bGiuzffQpdu6DTadeKVv04Y9IyFHPq7Q 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: vaults_keyvault_name_resource
   name: '419b3a2c-288c-4391-9f1e-236c0b6e471b-yCwOI3PVB70bGiuzffQpdu6DTadeKVv04Y9IyFHPq7Q'
-  location: location
-  properties: {
+   properties: {
     contentType: 'application/vnd.ms-StorageAccountAccessKey'
     attributes: {
       enabled: true
@@ -605,7 +602,7 @@ resource workspaces_name_workspaceartifactstore 'Microsoft.MachineLearningServic
       credentialsType: 'AccountKey'
       secrets: {}
     }
-    type: 'AzureBlob'
+    datastoreType: 'AzureBlob'
   }
 }
 
@@ -617,7 +614,7 @@ resource workspaces_name_workspaceblobstore 'Microsoft.MachineLearningServices/w
       credentialsType: 'AccountKey'
       secrets: {}
     }
-    type: 'AzureBlob'
+    datastoreType: 'AzureBlob'
   }
 }
 
@@ -629,7 +626,7 @@ resource workspaces_name_workspacefilestore 'Microsoft.MachineLearningServices/w
       credentialsType: 'AccountKey'
       secrets: {}
     }
-    type: 'AzureBlobStorage'
+    datastoreType: 'AzureFile'
   }
 }
 
@@ -647,8 +644,7 @@ resource workspaces_name_workspaceworkingdirectory 'Microsoft.MachineLearningSer
 
 resource workspaces_name_workspaces_name_176c0759_a1b4_412d_af12_13ed6dca820e 'Microsoft.MachineLearningServices/workspaces/privateEndpointConnections@2023-10-01' = {
   name: '${workspaces_name}/${workspaces_name}.176c0759-a1b4-412d-af12-13ed6dca820e'
-  location: location
-  properties: {
+    properties: {
     privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
@@ -660,8 +656,7 @@ resource workspaces_name_workspaces_name_176c0759_a1b4_412d_af12_13ed6dca820e 'M
 
 resource workspaces_name_workspaces_name_d175c474_5795_486a_b588_fbd0e18059de 'Microsoft.MachineLearningServices/workspaces/privateEndpointConnections@2023-10-01' = {
   name: '${workspaces_name}/${workspaces_name}.d175c474-5795-486a-b588-fbd0e18059de'
-  location: location
-  properties: {
+   properties: {
     privateEndpoint: {}
     privateLinkServiceConnectionState: {
       status: 'Approved'
