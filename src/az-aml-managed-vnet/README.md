@@ -5,7 +5,9 @@
 ## Scenario
 
 <!-- Describe the usage scenario for this template.  Describe the challenges this recipes aims to address. -->
-This scenario aims to address the challenge of correctly configuring an Azure machine learning workspace within a Microsoft managed VNet including ensuring appropriate connectivity with common services such as Storage and Key Vault.
+This scenario aims to address the challenge of correctly configuring an Azure machine learning workspace within a Microsoft managed VNet including ensuring appropriate connectivity with common services such as Storage, Key Vault and other data sources like snowflake, SQL DB.
+
+⚠️ WARNING: This code is experimental at this stage and provided solely for evaluation purposes. It is NOT intended for production use and may contain bugs, incomplete features, or other issues. Use at your own risk, as it may undergo significant changes without notice, and no guarantees or support are provided. By using this code, you acknowledge and agree to these conditions. Consult the documentation or contact the maintainer if you have questions or concerns.
 
 ### Problem Summary
 
