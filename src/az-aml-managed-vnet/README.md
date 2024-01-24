@@ -62,7 +62,7 @@ The following pre-requisites should be in place in order to successfully use thi
 
 ### Deployment
 
-To deploy this recipe, perform the infrastructure deployment steps using _either_ Terraform or Bicep before deploying the Azure Web App's code.
+To deploy this recipe, perform the infrastructure deployment steps using _either_ Terraform or Bicep. Unix/Linux shell script is also provided with az cli commands to peform the quick set-up in PoC enviroments.
 
 <!-- Provide instructions on how to deploy the recipe. -->
 
@@ -76,6 +76,8 @@ It also excludes the configuration steps required to peer the bridge network to 
 
 The recipe provides for the ability to provision managed virtual network workspace. managed-vnet workspace will be known as 'spoke' and the other virtual network connecting to it will be the 'bridge' virtual network as it will allow the secure connectivity to the workspace resources for the data scientists, ML SME's, Azure Pipelines and Github actions. In the Bridge/spoke model, the recipe assumes Azure Private DNS zones reside in another resource group.  The recipe includes parameters/variables to control how Azure Private DNS Zones are used - either use existing Private DNS Zones, or create new Private DNS Zones.
 
+#### Deploying Infrastructure Using Terraform
+#### Deploying Infrastructure Using Shell Script
 #### Deploying Infrastructure Using Bicep
 
 <!-- TODO: Update to use Azure CLI. -->
