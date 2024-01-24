@@ -1,4 +1,4 @@
-# Azure Machine Learning in a managed virtual network
+# Azure Machine Learning Workspace in a managed virtual network
 
 <!-- Replace "Recipe Template" title with name of the recipe. -->
 
