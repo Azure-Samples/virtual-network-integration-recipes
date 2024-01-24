@@ -9,19 +9,19 @@ managed_network:
       protocol: TCP
       service_tag: DataFactory
     type: service_tag
-  - name: add-fqdnrule
+  - name: pypi-fqdn
     destination: 'pypi.org'
     type: fqdn
-  - name: add-fqdnrule
+  - name: ananconda-fqdn
     destination: 'anaconda.com'
     type: fqdn
-  - name: add-fqdnrule
+  - name: all-anaconda-fqdn
     destination: '*.anaconda.org'
     type: fqdn
-  - name: add-fqdnrule
+  - name: pytorch-fqdn
     destination: '*.pytorch.org'
     type: fqdn
-  - name: add-fqdnrule
+  - name: tensorflow-fqdn
     destination: '*.tensorflow.org'
     type: fqdn 
   - name: added-perule
