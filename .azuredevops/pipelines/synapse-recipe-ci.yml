@@ -1,9 +1,6 @@
 # The following variables should be set in the pipeline:
-# - AZURE_SERVICE_CONNECTION
-# - OPERATIONS_AZURE_SUBSCRIPTION_ID
 # - synSqlAdminUsername
 # - synSqlAdminPassword
-
 # The following variables are picked from the variable file "variables/synapse-recipe-bicep.yml":
 # - resourceGroupName
 # - resourceBaseName
@@ -11,21 +8,33 @@
 # - vnetAddressPrefix
 # - privateEndpointSubnetAddressPrefix
 # - bastionSubnetAddressPrefix
+# - operationsSubscriptionId
 # - operationsResourceGroupName
 # - newOrExistingDnsZones
+# The following variables are selected at runtime:
+# - azureServiceConnection
 
 name: 'Azure Synapse Recipe CI'
+
+parameters: 
+- name: azureServiceConnection
+  displayName: Azure Service Connection
+  type: string
+  default: dtd-subscription
 
 trigger:
   branches:
     include:
-    - '*' 
+    - 'main' 
   paths:
     include: 
-    - src/az-synapse
+    - '/src/az-synapse/deploy/bicep' 
 
 pool: 
   vmImage: 'ubuntu-latest'
+
+variables:
+  azureServiceConnection: ${{ parameters.azureServiceConnection }}
 
 stages:
   - stage: Build
@@ -40,5 +49,5 @@ stages:
           - template: ./templates/bicep-build.yml
             parameters:
               bicepPath: ./src/az-synapse/deploy/bicep/main.bicep
-              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) synSqlAdminUsername=$(SYNSQLADMINUSERNAME) synSqlAdminPassword=$(SYNSQLADMINPASSWORD) vnetAddressPrefix=$(vnetAddressPrefix) privateEndpointSubnetAddressPrefix=$(privateEndpointSubnetAddressPrefix) bastionSubnetAddressPrefix=$(bastionSubnetAddressPrefix) dnsZoneResourceGroupName=$(operationsResourceGroupName) dnsZoneSubscriptionId=$(OPERATIONS_AZURE_SUBSCRIPTION_ID) newOrExistingDnsZones=$(newOrExistingDnsZones)'
-              serviceConnection: $(AZURE_SERVICE_CONNECTION)
+              bicepParameters: 'location=$(location) resourceBaseName=$(resourceBaseName) synSqlAdminUsername=$(SYNSQLADMINUSERNAME) synSqlAdminPassword=$(SYNSQLADMINPASSWORD) vnetAddressPrefix=$(vnetAddressPrefix) privateEndpointSubnetAddressPrefix=$(privateEndpointSubnetAddressPrefix) bastionSubnetAddressPrefix=$(bastionSubnetAddressPrefix) dnsZoneResourceGroupName=$(operationsResourceGroupName) dnsZoneSubscriptionId=$(operationsSubscriptionId) newOrExistingDnsZones=$(newOrExistingDnsZones)'
+              serviceConnection: $(azureServiceConnection)

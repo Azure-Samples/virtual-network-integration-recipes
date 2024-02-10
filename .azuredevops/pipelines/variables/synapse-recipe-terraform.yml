@@ -1,0 +1,14 @@
+variables:
+  resourceGroupName: 'rg-synapsercpi-terraform'
+  resourceBaseName: 'synapsercpti'
+  location: 'australiaeast'
+  vnetAddressPrefix: '10.10.0.0/16'
+  privateEndpointSubnetAddressPrefix: '10.10.0.0/24'
+  bastionSubnetAddressPrefix: '10.10.1.0/24'
+  integrateWithHub: true
+  operationsVnetName: 'vnet-operations'
+  operationsResourceGroupName: 'rg-scenario-operations'
+  agentPoolName: 'network-integration-pool'
+  tfStateResourceGroupName: 'rg-scenario-operations'
+  tfStateContainerName: 'tfstate'
+  tags: '{\"environment\" : \"dev\"}'

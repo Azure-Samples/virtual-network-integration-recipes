@@ -50,7 +50,8 @@ This recipe is **not** recommended if the following conditions are true:
 The following pre-requisites should be in place in order to successfully use this recipe:
 
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
-- [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/install)
+- [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/install) (Only if using Azure Bicep)
+- [Terraform](https://developer.hashicorp.com/terraform/downloads?product_intent=terraform) (Only if using Terraform)
 
 ### Deployment
 
@@ -112,6 +113,10 @@ chmod +x deploy-managed-private-endpoints.sh
 
 ./deploy-managed-private-endpoints.sh <RESOURCE_GROUP_NAME> <SYN_WORKSPACE_NAME> <SYN_STORAGE_ACCOUNT_NAME> <MAIN_STORAGE_ACCOUNT_NAME> <KEYVAULT_NAME>
 ```
+
+#### Deploying Infrastructure Using Terraform
+
+For deployment using terraform please check these [instructions](./deploy/terraform/README.md).
 
 ### Test the Recipe
 
