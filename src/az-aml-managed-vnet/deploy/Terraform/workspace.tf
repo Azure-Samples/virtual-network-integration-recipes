@@ -62,40 +62,13 @@ resource "azurerm_container_registry" "default" {
   public_network_access_enabled = false
 }
 
-# Machine Learning workspace
-# resource "azurerm_machine_learning_workspace" "default" {
-#   name                    = "mlw-${var.prefix}-${var.environment}"
-#   location                = azurerm_resource_group.default.location
-#   resource_group_name     = azurerm_resource_group.default.name
-#   application_insights_id = azurerm_application_insights.default.id
-#   key_vault_id            = azurerm_key_vault.default.id
-#   storage_account_id      = azurerm_storage_account.default.id
-#   container_registry_id   = azurerm_container_registry.default.id
-
-#   identity {
-#     type = "SystemAssigned"
-#   }
-
-#   # Args of use when using an Azure Private Link configuration
-#   public_network_access_enabled = false
-#   image_build_compute_name      = var.image_build_compute_name
-#   depends_on = [
-#     azurerm_private_endpoint.kv_ple,
-#     azurerm_private_endpoint.st_ple_blob,
-#     azurerm_private_endpoint.storage_ple_file,
-#     azurerm_private_endpoint.cr_ple,
-#     azurerm_subnet.snet-training
-#   ]
-
-# }
-
 resource "azapi_resource" "aml_workspace" {
   type = "Microsoft.MachineLearningServices/workspaces@2023-10-01"
   name = "${var.prefix}-workspace"
   location = var.location
   parent_id = azurerm_resource_group.default.id
   tags = {
-    Owner = "Mohammad Oloomi"    
+    vnet-type = "Microsoft Managed"    
   }
   identity {
     type = "SystemAssigned"
@@ -105,176 +78,20 @@ resource "azapi_resource" "aml_workspace" {
       allowPublicAccessWhenBehindVnet = false
       applicationInsights = azurerm_application_insights.default.id
       containerRegistry = azurerm_container_registry.default.id
-    #   description = "string"
-    #   discoveryUrl = "string"
-    #   encryption = {
-    #     identity = {
-    #       userAssignedIdentity = "string"
-    #     }
-    #     keyVaultProperties = {
-    #       identityClientId = "string"
-    #       keyIdentifier = "string"
-    #       keyVaultArmId = "string"
-    #     }
-    #     status = "string"
-    #   }
-    #   featureStoreSettings = {
-    #     computeRuntime = {
-    #       sparkRuntimeVersion = "string"
-    #     }
-    #     offlineStoreConnectionName = "string"
-    #     onlineStoreConnectionName = "string"
-    #   }
       friendlyName = "AML - Managed Virtual Network"
       hbiWorkspace = true
     #   imageBuildCompute = azurerm_machine_learning_compute_cluster.image-builder.id
       keyVault = azurerm_key_vault.default.id
       managedNetwork = {
-        isolationMode = "AllowOnlyApprovedOutbound"
-        # outboundRules = {          
-        #   pypiOutboundRule = {
-        #     category = "UserDefined"
-        #     status = "Active"
-        #     type = "FQDN"
-        #     destination = "https://pypi.org"
-        #   }
-        # }
-        status = {
+        isolationMode = "AllowInternetOutbound"
+          status = {
           sparkReady = true
           status = "Active"
         }
       }
-    #   primaryUserAssignedIdentity = "string"
-    #   publicNetworkAccess = "Disabled"
-    #   serverlessComputeSettings = {
-    #     serverlessComputeCustomSubnet = "string"
-    #     serverlessComputeNoPublicIP = bool
-    #   }
-    #   serviceManagedResourcesSettings = {
-    #     cosmosDb = {
-    #       collectionsThroughput = int
-    #     }
-    #   }
-    #   sharedPrivateLinkResources = [
-    #     {
-    #       name = "string"
-    #       properties = {
-    #         groupId = "string"
-    #         privateLinkResourceId = "string"
-    #         requestMessage = "string"
-    #         status = "string"
-    #       }
-    #     }
-    #   ]
-      storageAccount = azurerm_storage_account.default.id
-    #   v1LegacyMode = bool
-    }
-    # sku = {
-    #   capacity = int
-    #   family = "string"
-    #   name = "string"
-    #   size = "string"
-    #   tier = "string"
-    # }
-    # kind = "string"
-  })
+      publicNetworkAccess = "Disabled"
+    })
 }
-
-# Private endpoints
-# resource "azurerm_private_endpoint" "kv_ple" {
-#   name                = "ple-${var.prefix}-${var.environment}-kv"
-#   location            = azurerm_resource_group.default.location
-#   resource_group_name = azurerm_resource_group.default.name
-#   subnet_id           = azurerm_subnet.snet-workspace.id
-
-#   private_dns_zone_group {
-#     name                 = "private-dns-zone-group"
-#     private_dns_zone_ids = [azurerm_private_dns_zone.dnsvault.id]
-#   }
-
-#   private_service_connection {
-#     name                           = "psc-${var.prefix}-kv"
-#     private_connection_resource_id = azurerm_key_vault.default.id
-#     subresource_names              = ["vault"]
-#     is_manual_connection           = false
-#   }
-# }
-
-# resource "azurerm_private_endpoint" "st_ple_blob" {
-#   name                = "ple-${var.prefix}-${var.environment}-st-blob"
-#   location            = azurerm_resource_group.default.location
-#   resource_group_name = azurerm_resource_group.default.name
-#   subnet_id           = azurerm_subnet.snet-workspace.id
-
-#   private_dns_zone_group {
-#     name                 = "private-dns-zone-group"
-#     private_dns_zone_ids = [azurerm_private_dns_zone.dnsstorageblob.id]
-#   }
-
-#   private_service_connection {
-#     name                           = "psc-${var.prefix}-st"
-#     private_connection_resource_id = azurerm_storage_account.default.id
-#     subresource_names              = ["blob"]
-#     is_manual_connection           = false
-#   }
-# }
-
-# resource "azurerm_private_endpoint" "storage_ple_file" {
-#   name                = "ple-${var.prefix}-${var.environment}-st-file"
-#   location            = azurerm_resource_group.default.location
-#   resource_group_name = azurerm_resource_group.default.name
-#   subnet_id           = azurerm_subnet.snet-workspace.id
-
-#   private_dns_zone_group {
-#     name                 = "private-dns-zone-group"
-#     private_dns_zone_ids = [azurerm_private_dns_zone.dnsstoragefile.id]
-#   }
-
-#   private_service_connection {
-#     name                           = "psc-${var.prefix}-st"
-#     private_connection_resource_id = azurerm_storage_account.default.id
-#     subresource_names              = ["file"]
-#     is_manual_connection           = false
-#   }
-# }
-
-# resource "azurerm_private_endpoint" "cr_ple" {
-#   name                = "ple-${var.prefix}-${var.environment}-cr"
-#   location            = azurerm_resource_group.default.location
-#   resource_group_name = azurerm_resource_group.default.name
-#   subnet_id           = azurerm_subnet.snet-workspace.id
-
-#   private_dns_zone_group {
-#     name                 = "private-dns-zone-group"
-#     private_dns_zone_ids = [azurerm_private_dns_zone.dnscontainerregistry.id]
-#   }
-
-#   private_service_connection {
-#     name                           = "psc-${var.prefix}-cr"
-#     private_connection_resource_id = azurerm_container_registry.default.id
-#     subresource_names              = ["registry"]
-#     is_manual_connection           = false
-#   }
-# }
-
-# resource "azurerm_private_endpoint" "mlw_ple" {
-#   name                = "ple-${var.prefix}-${var.environment}-mlw"
-#   location            = azurerm_resource_group.default.location
-#   resource_group_name = azurerm_resource_group.default.name
-#   subnet_id           = azurerm_subnet.snet-workspace.id
-
-#   private_dns_zone_group {
-#     name                 = "private-dns-zone-group"
-#     private_dns_zone_ids = [azurerm_private_dns_zone.dnsazureml.id, azurerm_private_dns_zone.dnsnotebooks.id]
-#   }
-
-#   private_service_connection {
-#     name                           = "psc-${var.prefix}-mlw"
-#     private_connection_resource_id = azurerm_machine_learning_workspace.default.id
-#     subresource_names              = ["amlworkspace"]
-#     is_manual_connection           = false
-#   }
-# }
 
 # Compute cluster for image building required since the workspace is behind a vnet.
 # For more details, see https://docs.microsoft.com/en-us/azure/machine-learning/tutorial-create-secure-workspace#configure-image-builds.
