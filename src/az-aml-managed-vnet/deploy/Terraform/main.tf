@@ -21,7 +21,7 @@ provider "azapi" {
 }
 
 resource "azurerm_resource_group" "default" {
-  name     = "${var.prefix}-rg"
+  name     = "${var.prefix}mvnetrg"
   location = var.location
 }
 
