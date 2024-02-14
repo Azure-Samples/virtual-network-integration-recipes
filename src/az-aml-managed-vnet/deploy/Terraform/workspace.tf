@@ -75,12 +75,13 @@ resource "azapi_resource" "aml_workspace" {
   }
   body = jsonencode({
     properties = {
+      publicNetworkAccess = Disabled 
       allowPublicAccessWhenBehindVnet = false
       applicationInsights = azurerm_application_insights.default.id
       containerRegistry = azurerm_container_registry.default.id
       friendlyName = "AML - Managed Virtual Network"
       hbiWorkspace = true
-    #   imageBuildCompute = azurerm_machine_learning_compute_cluster.image-builder.id
+      #   imageBuildCompute = azurerm_machine_learning_compute_cluster.image-builder.id
       keyVault = azurerm_key_vault.default.id
       managedNetwork = {
         isolationMode = "AllowInternetOutbound"
@@ -89,8 +90,7 @@ resource "azapi_resource" "aml_workspace" {
           status = "Active"
         }
       }
-      publicNetworkAccess = "Disabled"
-    })
+      })
 }
 
 # Compute cluster for image building required since the workspace is behind a vnet.
