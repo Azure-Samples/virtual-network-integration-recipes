@@ -55,12 +55,11 @@ The following pre-requisites should be in place in order to successfully use thi
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
 - [.NET Core 7.0](https://docs.microsoft.com/dotnet/core/install/)
 - [Terraform](https://www.terraform.io/downloads.html) (Only if using Terraform)
-- [Bicep](https://docs.microsoft.com/azure/azure-resource-manager/bicep/install) (Only if using Azure Bicep)
 - [Azure PowerShell](https://docs.microsoft.com/powershell/azure/install-az-ps) (Only if using Azure PowerShell to deploy via Azure Bicep)
 
 ### Deployment
 
-To deploy this recipe, perform the infrastructure deployment steps using _either_ Terraform or Bicep. Unix/Linux shell script is also provided with az cli commands to peform the quick set-up in PoC enviroments.
+To deploy this recipe, perform the infrastructure deployment steps using Terraform. Unix/Linux shell script is also provided with az cli commands to peform the quick set-up in PoC enviroments.
 
 <!-- Provide instructions on how to deploy the recipe. -->
 
@@ -75,8 +74,6 @@ It also excludes the configuration steps required to peer the bridge network to 
 The recipe provides for the ability to provision managed virtual network workspace. managed-vnet workspace will be known as 'spoke' and the other virtual network connecting to it will be the 'bridge' virtual network as it will allow the secure connectivity to the workspace resources for the data scientists, ML SME's, Azure Pipelines and Github actions. In the Bridge/spoke model, the recipe assumes Azure Private DNS zones reside in another resource group.  The recipe includes parameters/variables to control how Azure Private DNS Zones are used - either use existing Private DNS Zones, or create new Private DNS Zones.
 
 #### Deploying Infrastructure Using Terraform
-#### Deploying Infrastructure Using Shell Script
-#### Deploying Infrastructure Using Bicep
 
 <!-- TODO: Update to use Azure CLI. -->
 
@@ -90,80 +87,33 @@ az login --use-device-code
 az account set --subscription SUBSCRIPTION_ID
 ```
 
-### Powershell
-```
-Connect-AzAccount -UseDeviceAuthentication
-Set-AzContext -SubscriptionId SUBSCRIPTION_ID
-```
-   1. Create a new Azure resource group to deploy the Bicep template, passing in a location and name:
-
 ### Bash
    ```Bash
    az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
-
    ```
-### Powershell
-   ```PowerShell
-   New-AzResourceGroup -Location <LOCATION> -Name <RESOURCE_GROUP_NAME>
-   ```
-
-1. The [azuredeploy.parameters.sample.json](./deploy/bicep/azuredeploy.parameters.sample.json) file contains the necessary variables to deploy the Bicep project. Rename the file to **azuredeploy.parameters.json** and update the file with appropriate values. Descriptions for each parameter can be found in the [spoke_deploy.bicep](./deploy/bicep/spoke_deploy.bicep) file.
-   <!-- 1. Set the `newOrExistingDnsZones` parameter to "new" (or don't set, as the default is "new") if creating a new Azure Private DNS Zone.
-   1. Set the `dnsZoneResourceGroupName` parameter to the name of your resource group (or don't set, as the default is the name of the resource group) if creating a new Azure Private DNS Zone.   -->
-1. Optionally, verify what Bicep will deploy, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
-
-### Powershell
-
-   ```PowerShell
-
-   cd src/az-aml-managed-vnet
-
-   New-AzResourceGroupDeployment `
-     -ResourceGroupName <RESOURCE_GROUP_NAME> `
-     -TemplateFile ./deploy/bicep/spoke_deploy.bicep `
-     -TemplateParameterFile ./deploy/bicep/azuredeploy.parameters.json `
-     -WhatIf
-   ```
-
-### Bash
-
-```
-cd ./src/az-aml-managed-vnet
-
-az deployment group create \
-  --resource-group <RESOURCE_GROUP_NAME> \
-  --template-file ./deploy/bicep/spoke_deploy.bicep \
-  --parameters @./deploy/bicep/azuredeploy.parameters.json \
-  --what-if
-
-```
-
 1. Deploy the template, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
 
-### Powershell
-   ```PowerShell
-   New-AzResourceGroupDeployment `
-     -ResourceGroupName <RESOURCE_GROUP_NAME> `
-     -TemplateFile ./deploy/bicep/spoke_deploy.bicep  `
-     -TemplateParameterFile ./deploy/bicep/azuredeploy.parameters.json
-   ```
+### Bash
+ ```Bash
+   mkdir src
+ ```
+### Bash
+ ```Bash
+   cd src
+   mkdir aml_managed_vnet
+   cd aml_managed_vnet
+   cp *.tf .
+ ```
+Note: For this step, the terraform scripts supplied by us has to be copied to the bash terminal at the user defined location. Subsequently, those scripts are required to be copied to the /src/aml_managed_vnet location in the same bash terminal.
 
 ### Bash
-
-```bash
-az deployment group create \
-  --resource-group <RESOURCE_GROUP_NAME> \
-  --template-file ./deploy/bicep/spoke_deploy.bicep \
-  --parameters @./deploy/bicep/azuredeploy.parameters.json
-
-```
-
-
-> **_NOTE:_** The project contains a [deploy.sh](./deploy/bicep/deploy.sh) script file that uses similar steps to those above, as well as virtual network peering support (if needed).
-
-   ![Set Bicep variables, what-if, and create](./media/bicepDeploy.gif)
-
-   ### Testing Solution
+ ```Bash
+   pwd
+   terraform init
+   terraform plan 
+   terraform apply 
+ ```
+### Testing Solution
 
     - To verify the solution is working as intended, the data scientist 
 
