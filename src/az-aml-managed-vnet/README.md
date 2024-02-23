@@ -119,8 +119,11 @@ Note: For this step, the terraform scripts supplied by us has to be copied to th
    terraform apply mvnetworkspace.tfplan
  ```
 ### Setting up VNet to access the Managed VNet Workspace and its resources 
-    - 
-    - 
+In order to connect to an AML workspace secured via a Managed VNet, you should create a private endpoint for the AML workspace inside a VNet where you would like to have access to the workspace (for example, inside a hub VNet). Simply follow the steps for [adding a private endpoint to a workspace](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-private-link?view=azureml-api-2&tabs=cli#add-a-private-endpoint-to-a-workspace) in Azure CLI or Portal.
+
+Once the private endpoint is created, there are several ways that you can connect to the secured workspace. The steps in the following article use a jump box for [connecting to the workspace](https://learn.microsoft.com/en-us/azure/machine-learning/tutorial-create-secure-workspace-vnet?view=azureml-api-2#connect-to-the-workspace), which is a virtual machine in the same VNet as where you have created the private endpoint. Alternatively, you can use Azure VPN gateway for connecing on-premises networks to the VNet where the private endpoint is created, or use ExpressRoute to connect on-premises networks into the cloud over a private connection.
+
+In addition to adding a private endpoint for the AML workspace, a private endpoint should be created for the AML dependant resources such as Azure Blob Storage and Key Vault inside your chosen VNet to enable connectivity to these resources.
 
 ### Testing Solution
 
