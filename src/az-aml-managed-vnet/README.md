@@ -55,6 +55,8 @@ The following pre-requisites should be in place in order to successfully use thi
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
 - [.NET Core 7.0](https://docs.microsoft.com/dotnet/core/install/)
 - [Terraform](https://www.terraform.io/downloads.html) (Only if using Terraform)
+- [Terraform on Azure](https://learn.microsoft.com/en-us/azure/developer/terraform/overview)
+- [Configure Terraform in Windows on Bash](https://learn.microsoft.com/en-us/azure/developer/terraform/get-started-windows-bash?tabs=bash)
 - [Azure PowerShell](https://docs.microsoft.com/powershell/azure/install-az-ps) (Only if using Azure PowerShell to deploy via Azure Bicep)
 
 ### Deployment
@@ -65,13 +67,13 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
 
 ### Remote Access
 
-The recipe does not provision a Virutal Machine (VM) or Azure Bastion to provide remote access within the virtual network.  If a VM or Bastion is needed, modify the virtual network topology to add the necessary subnets (for example, add subnets "snet-vm" for the VM and "AzureBastionSubnet" for Azure Bastion in the bridge virtual network).
+The recipe does not provision a Virutal Machine (VM) or Azure Bastion to provide access to the managed virtual network.  If a VM or Bastion is needed, modify the virtual network topology to add the necessary subnets (for example, add subnets "snet-vm" for the VM and "AzureBastionSubnet" for Azure Bastion in the bridge virtual network).
 
 It also excludes the configuration steps required to peer the bridge network to the customer on-prem network.
 
-#### Virtual Network
+#### Connectivity to Managed Virtual Network Workspace
 
-The recipe provides for the ability to provision managed virtual network workspace. managed-vnet workspace will be known as 'spoke' and the other virtual network connecting to it will be the 'bridge' virtual network as it will allow the secure connectivity to the workspace resources for the data scientists, ML SME's, Azure Pipelines and Github actions. In the Bridge/spoke model, the recipe assumes Azure Private DNS zones reside in another resource group.  The recipe includes parameters/variables to control how Azure Private DNS Zones are used - either use existing Private DNS Zones, or create new Private DNS Zones.
+The recipe provides for the ability to provision managed virtual network workspace and its components. Managed-vnet workspace will be known as 'spoke' and the other virtual network connecting to it will be the 'bridge' virtual network as it will allow the secure connectivity to the workspace resources for the data scientists, ML SME's, Azure Pipelines. 
 
 #### Deploying Infrastructure Using Terraform
 
@@ -110,8 +112,8 @@ Note: For this step, the terraform scripts supplied by us has to be copied to th
  ```Bash
    pwd
    terraform init
-   terraform plan 
-   terraform apply 
+   terraform plan -out mvnetworkspace.tfplan
+   terraform apply mvnetworkspace.tfplan
  ```
 ### Testing Solution
 
