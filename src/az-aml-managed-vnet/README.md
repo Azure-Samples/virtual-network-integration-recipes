@@ -21,6 +21,7 @@ This recipe aims to provide developers a starting point with IaC + PaC example o
 ### Architecture
 
 <!-- Include a high-level architecture diagram of the components used in this recipe. -->
+![architecture](./media/AML_ManagedVNet_Secure_Architecture.png)
 
 
 ### Recommendations
