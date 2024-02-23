@@ -79,10 +79,19 @@ The recipe provides for the ability to provision managed virtual network workspa
 
 <!-- TODO: Update to use Azure CLI. -->
 
-> Azure PowerShell is shown below due to a [likely bug in Azure CLI 2.27.0 and 2.27.1](https://github.com/Azure/azure-cli/issues/19308) which prevents execution of the provided Azure Bicep modules using the Azure CLI.
-0. az login
-
-
+[Pre-requisites](https://learn.microsoft.com/en-us/azure/developer/terraform/get-started-windows-bash?tabs=bash)
+- Azure subscription: If you don't have an Azure subscription, create a free account before you begin.
+- There are many options on Windows to run bash commands, including Git Bash and Windows Terminal. This article has been tested using Git Bash. Download   and install [Git Bash](https://git-scm.com/download/win).
+- [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows)
+- Install Terraform for Windows
+  - [Download Terraform](https://www.terraform.io/downloads.html)
+  - From the download, extract the executable to a directory of your choosing (for example, c:\terraform). 
+  - Update your [system's global path to the executable](https://stackoverflow.com/questions/1618280/where-can-i-set-path-to-make-exe-on-windows).
+  - Open a terminal window. Verify the global path configuration with the terraform command.
+    ### Bash
+    ```
+     terraform version
+     ```
 ### Bash
 ```
 az login --use-device-code
