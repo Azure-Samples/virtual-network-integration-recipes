@@ -118,6 +118,10 @@ Note: For this step, the terraform scripts supplied by us has to be copied to th
    terraform plan -out mvnetworkspace.tfplan
    terraform apply mvnetworkspace.tfplan
  ```
+### Setting up VNet to access the Managed VNet Workspace and its resources 
+    - 
+    - 
+
 ### Testing Solution
 
     - To verify the solution is working as intended, the data scientist 
