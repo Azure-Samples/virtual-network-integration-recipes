@@ -66,13 +66,7 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
 
 <!-- Provide instructions on how to deploy the recipe. -->
 
-### Remote Access
-
-The recipe does not provision a Virutal Machine (VM) or Azure Bastion to provide access to the managed virtual network.  If a VM or Bastion is needed, modify the virtual network topology to add the necessary subnets (for example, add subnets "snet-vm" for the VM and "AzureBastionSubnet" for Azure Bastion in the bridge virtual network).
-
-It also excludes the configuration steps required to peer the bridge network to the customer on-prem network.
-
-#### Connectivity to Managed Virtual Network Workspace
+#### Accessing Managed Virtual Network Workspace and its components
 
 The recipe provides for the ability to provision managed virtual network workspace and its components. Managed-vnet workspace will be known as 'spoke' and the other virtual network connecting to it will be the 'bridge' virtual network as it will allow the secure connectivity to the workspace resources for the data scientists, ML SME's, Azure Pipelines. 
 
