@@ -115,15 +115,25 @@ Note: For this step, the terraform scripts supplied by us has to be copied to th
    terraform apply mvnetworkspace.tfplan
  ```
 ### Setting up VNet to access the Managed VNet Workspace and its resources 
-In order to connect to an AML workspace secured via a Managed VNet, you should create a private endpoint for the AML workspace inside a VNet where you would like to have access to the workspace (for example, inside a hub VNet). Simply follow the steps for [adding a private endpoint to a workspace](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-private-link?view=azureml-api-2&tabs=cli#add-a-private-endpoint-to-a-workspace) in Azure CLI or Portal.
+In order to connect to an Azure Machine Learning (AML) workspace secured via a Managed VNet, you should create a private endpoint for the AML workspace inside a VNet where you would like to have access to the workspace (for example, inside a hub VNet). Simply follow the steps for [adding a private endpoint to a workspace](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-private-link?view=azureml-api-2&tabs=cli#add-a-private-endpoint-to-a-workspace) in Azure CLI or Portal.
 
 Once the private endpoint is created, there are several ways that you can connect to the secured workspace. The steps in the following article use a jump box for [connecting to the workspace](https://learn.microsoft.com/en-us/azure/machine-learning/tutorial-create-secure-workspace-vnet?view=azureml-api-2#connect-to-the-workspace), which is a virtual machine in the same VNet as where you have created the private endpoint. Alternatively, you can use Azure VPN gateway for connecing on-premises networks to the VNet where the private endpoint is created, or use ExpressRoute to connect on-premises networks into the cloud over a private connection.
 
 In addition to adding a private endpoint for the AML workspace, a private endpoint should be created for the AML dependant resources such as Azure Blob Storage and Key Vault inside your chosen VNet to enable connectivity to these resources.
 
 ### Testing Solution
-
-    - To verify the solution is working as intended, the data scientist 
+To test Azure Machine Learning (AML) end-to-end, you can follow these steps using the **AzureML in a day notebook** from the **Samples** folder within the Notebooks section of Azure Machine Learning:
+- Create a Compute Instance:
+  - On the left navigation, select Compute and then Compute Instance. Create a new compute instance and supply a name. Keep all the defaults, expect under networking select No Public IP. Select Review & Create and wait for the deployment to be completed.
+- Access the Notebook:
+  - Sign in to the Azure Machine Learning studio.
+  - Navigate to Notebooks and select the Samples tab.
+  - Look for the AzureML in a day notebook.
+  - Open the notebook and clikc on 'Clone' to create a copy in your workspace file share.
+- Choose Your Environment:
+  - Access the notebook on an Azure Machine Learning compute instance. This provides a dedicated notebook server preloaded with the SDK and the Azure Machine Learning Notebooks repository. No downloads or installations required.
+- Run the Notebook:
+  - Once you’ve chosen your environment, open the desired notebook. Execute the notebook to explore and test AML features end-to-end.
 
 ## Change Log
 
