@@ -1,4 +1,4 @@
-# Azure Machine Learning Workspace in a managed virtual network
+# Azure Machine Learning Workspace in a managed virtual network (Allow Internet Outbound)
 
 <!-- Replace "Recipe Template" title with name of the recipe. -->
 
@@ -97,8 +97,6 @@ az account set --subscription SUBSCRIPTION_ID
    ```Bash
    az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
    ```
-1. Deploy the template, passing in the name of the resource group created earlier and the necessary parameters for the Bicep template.
-
 ### Bash
  ```Bash
    mkdir src
@@ -115,6 +113,7 @@ Note: For this step, the terraform scripts supplied by us has to be copied to th
 ### Bash
  ```Bash
    pwd
+   cd /src/aml_managed_vnet
    terraform init
    terraform plan -out mvnetworkspace.tfplan
    terraform apply mvnetworkspace.tfplan
