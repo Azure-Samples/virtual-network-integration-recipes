@@ -82,15 +82,13 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
     ### Bash
     ```
      terraform version
-     ```
-### Bash
-```
-az login --use-device-code
-az account set --subscription SUBSCRIPTION_ID
-```
+    ```
 
-### Bash
-   ```Bash
+    ```
+    az login --use-device-code
+    az account set --subscription SUBSCRIPTION_ID
+    ```
+   ```
    az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
    ```
 ### Bash
