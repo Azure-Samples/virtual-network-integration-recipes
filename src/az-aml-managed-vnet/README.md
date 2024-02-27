@@ -106,13 +106,13 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
 Note: For this step, the terraform scripts supplied by us has to be copied to the bash terminal at the user defined location. Subsequently, those scripts are required to be copied to the /src/aml_managed_vnet location in the same bash terminal.
 
 
-  ```
-    pwd
-    cd /src/aml_managed_vnet
-    terraform init
-    terraform plan -out mvnetworkspace.tfplan
-    terraform apply mvnetworkspace.tfplan
-  ```
+    ```
+     pwd
+     cd /src/aml_managed_vnet
+     terraform init
+     terraform plan -out mvnetworkspace.tfplan
+     terraform apply mvnetworkspace.tfplan
+    ```
 ### Setting up VNet to access the Managed VNet Workspace and its resources 
 In order to connect to an Azure Machine Learning (AML) workspace secured via a Managed VNet, you should create a private endpoint for the AML workspace inside a VNet where you would like to have access to the workspace (for example, inside a hub VNet). Simply follow the steps for [adding a private endpoint to a workspace](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-private-link?view=azureml-api-2&tabs=cli#add-a-private-endpoint-to-a-workspace) in Azure CLI or Portal.
 
