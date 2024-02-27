@@ -74,7 +74,7 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
 - Azure subscription: If you don't have an Azure subscription, create a free account before you begin.
 - There are many options on Windows to run bash commands, including Git Bash and Windows Terminal. This article has been tested using Git Bash. Download   and install [Git Bash](https://git-scm.com/download/win).
 - [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows)
-- Install Terraform for Windows
+- [Install Terraform for Windows](https://learn.microsoft.com/en-us/azure/developer/terraform/get-started-windows-powershell?tabs=bash)
   - [Download Terraform](https://www.terraform.io/downloads.html)
   - From the download, extract the executable to a directory of your choosing (for example, c:\terraform). 
   - Update your [system's global path to the executable](https://stackoverflow.com/questions/1618280/where-can-i-set-path-to-make-exe-on-windows).
@@ -84,7 +84,7 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
      terraform version
     ```
      - If the terraform version is out of date then use the links and steps from the "Install Terraform for Windows" to update the terraform to the latest version.
-     - If using Mac/Linux, use the links and steps from the "Install Terraform for Mac/Linix" to configure the terraform/update the existing versio. 
+     - For other configurations for the Terraform, refer this [link](https://learn.microsoft.com/en-us/azure/developer/terraform/quickstart-configure).
     ```
     az login --use-device-code
     az account set --subscription SUBSCRIPTION_ID
