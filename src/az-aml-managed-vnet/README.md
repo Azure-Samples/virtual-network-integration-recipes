@@ -83,25 +83,26 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
     ```
      terraform version
     ```
-
+     - If the terraform version is out of date then use the links and steps from the "Install Terraform for Windows" to update the terraform to the latest version.
+     - If using Mac/Linux, use the links and steps from the "Install Terraform for Mac/Linix" to configure the terraform/update the existing versio. 
     ```
     az login --use-device-code
     az account set --subscription SUBSCRIPTION_ID
     ```
-   ```
-   az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
-   ```
+    ```
+    az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
+    ```
 
-   ```
-   mkdir src
-   ```
+    ```
+    mkdir src
+    ```
 
-   ```
-   cd src
-   mkdir aml_managed_vnet
-   cd aml_managed_vnet
-   cp *.tf .
-   ```
+    ```
+    cd src
+    mkdir aml_managed_vnet
+    cd aml_managed_vnet
+    cp *.tf .
+    ```
 Note: For this step, the terraform scripts supplied by us has to be copied to the bash terminal at the user defined location. Subsequently, those scripts are required to be copied to the /src/aml_managed_vnet location in the same bash terminal.
 
 
