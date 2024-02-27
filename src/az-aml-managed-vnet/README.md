@@ -91,21 +91,21 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
    ```
    az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
    ```
-### Bash
- ```Bash
+
+   ```
    mkdir src
- ```
-### Bash
- ```Bash
+   ```
+
+   ```
    cd src
    mkdir aml_managed_vnet
    cd aml_managed_vnet
    cp *.tf .
- ```
+   ```
 Note: For this step, the terraform scripts supplied by us has to be copied to the bash terminal at the user defined location. Subsequently, those scripts are required to be copied to the /src/aml_managed_vnet location in the same bash terminal.
 
-### Bash
- ```Bash
+
+ ```
    pwd
    cd /src/aml_managed_vnet
    terraform init
@@ -141,7 +141,7 @@ Describe the change history for this recipe. For example:
   - Fix for bug in Terraform template that prevented Key Vault reference resolution for function app.
 -->
 - 2024-01-11 - Created feature branch and check-in code in i 
-- 
+- 2024-02-28 - Tested the terraform in git bash on windows
 
 ## Next Steps
 
