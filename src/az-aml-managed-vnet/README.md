@@ -82,12 +82,15 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
     ### Bash
     ```
      terraform version
+     ![tf version](./media/terraform_outofdate.png)
     ```
      - If the terraform version is out of date then use the links and steps from the "Install Terraform for Windows" to update the terraform to the latest version.
      - For other configurations for the Terraform, refer this [link](https://learn.microsoft.com/en-us/azure/developer/terraform/quickstart-configure).
     ```
     pwd
+    ![pwd](./media/gitbash_pwd.png)
     az account show
+    ![pwd](./media/gitbash_azaccountshow.png)
     - Login using the below command if the previous command does not return account details
     az login --use-device-code
     az account set --subscription SUBSCRIPTION_ID
