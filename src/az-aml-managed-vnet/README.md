@@ -78,7 +78,7 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
   - [Download Terraform](https://www.terraform.io/downloads.html)
   - From the download, extract the executable to a directory of your choosing (for example, c:\terraform). 
   - Update your [system's global path to the executable](https://stackoverflow.com/questions/1618280/where-can-i-set-path-to-make-exe-on-windows).
-  - Open a terminal window. Verify the global path configuration with the terraform command.
+  - Open a Git bash terminal window. Verify the global path configuration with the terraform command.
     ### Bash
     ```
      terraform version
@@ -86,9 +86,15 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
      - If the terraform version is out of date then use the links and steps from the "Install Terraform for Windows" to update the terraform to the latest version.
      - For other configurations for the Terraform, refer this [link](https://learn.microsoft.com/en-us/azure/developer/terraform/quickstart-configure).
     ```
+    pwd
+    az account show
+    - Login using the below command if the previous command does not return account details
     az login --use-device-code
     az account set --subscription SUBSCRIPTION_ID
+    - Check user name, user type and subscription details using the command below
+    az account show
     ```
+    - Create Resource Group and make a note of it
     ```
     az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
     ```
