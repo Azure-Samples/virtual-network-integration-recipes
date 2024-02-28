@@ -76,6 +76,7 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
 - [Install the Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows)
 - [Install Terraform for Windows](https://learn.microsoft.com/en-us/azure/developer/terraform/get-started-windows-powershell?tabs=bash)
   - [Download Terraform](https://www.terraform.io/downloads.html)
+    ![pwd](./media/curl_terraform_windows.png)
   - From the download, extract the executable to a directory of your choosing (for example, c:\terraform). 
   - Update your [system's global path to the executable](https://stackoverflow.com/questions/1618280/where-can-i-set-path-to-make-exe-on-windows).
   - Open a Git bash terminal window. Verify the global path configuration with the terraform command.
