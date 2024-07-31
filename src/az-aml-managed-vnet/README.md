@@ -97,7 +97,7 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
     az account show
      - Login using the below command if the previous command does not return account details
     az login --use-device-code
-    az account set --subscription SUBSCRIPTION_ID
+    az account set --subscription <SUBSCRIPTION_ID>
     - Check user name, user type and subscription details using the command below
     az account show
      ```
