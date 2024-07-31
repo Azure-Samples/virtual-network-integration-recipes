@@ -34,7 +34,7 @@ The following sections provide recommendations on when this recipe should, and s
 This recipe is recommended if the following conditions are true:
 
 - You want to isolate traffic at the network layer for your AML workspace and its sub-components.
-- You can't have public IPs for your Azure machine learning workspace and its sub-components.
+- You can't have public IPs for your AML workspace and its sub-components.
 
 #### Not Recommended
 
