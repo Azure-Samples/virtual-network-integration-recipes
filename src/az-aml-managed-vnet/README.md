@@ -104,7 +104,7 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
     
     ![pwd](./media/gitbash_azaccountshow.png)
     
-    - Create Resource Group and make a note of it
+    - Create an Azure resource group and note down the name.
     ```
     az group create --location <LOCATION> --name <RESOURCE_GROUP_NAME>
     ```
