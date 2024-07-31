@@ -51,7 +51,7 @@ This recipe is **not** recommended if the following conditions are true:
 ### Pre-requisites
 
 <!-- List the pre-reqs for use of this recipe (SDKs, roles/permissions, etc.) -->
-The following pre-requisites should be in place in order to successfully use this recipe:
+The following pre-requisites should be in place in order to successfully deploy this recipe:
 
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
 - [.NET Core 7.0](https://docs.microsoft.com/dotnet/core/install/)
