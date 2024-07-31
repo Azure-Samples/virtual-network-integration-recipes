@@ -89,7 +89,7 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
      terraform version
     ```
      ![tf version](./media/terraform_outofdate.png)
-     - If the terraform version is out of date then use the links and steps from the "Install Terraform for Windows" to update the terraform to the latest version.
+     - If the Terraform version is outdated, follow the links and steps outlined in the [Install Terraform for Windows](https://learn.microsoft.com/en-us/azure/developer/terraform/get-started-windows-powershell?tabs=bash) guide to update Terraform to the latest version.
      - For other configurations for the Terraform, refer this [link](https://learn.microsoft.com/en-us/azure/developer/terraform/quickstart-configure).
     ```
     pwd
