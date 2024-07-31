@@ -90,7 +90,8 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
     ```
      ![tf version](./media/terraform_outofdate.png)
      - If the Terraform version is outdated, follow the links and steps outlined in the [Install Terraform for Windows](https://learn.microsoft.com/en-us/azure/developer/terraform/get-started-windows-powershell?tabs=bash) guide to update Terraform to the latest version.
-     - For other configurations for the Terraform, refer this [link](https://learn.microsoft.com/en-us/azure/developer/terraform/quickstart-configure).
+     - For other configurations for the Terraform, refer the [quickstart](https://learn.microsoft.com/en-us/azure/developer/terraform/quickstart-configure) guide for installing and configuring Terraform.
+     - Login to Azure and set the Azure subscription.
     ```
     pwd
     az account show
