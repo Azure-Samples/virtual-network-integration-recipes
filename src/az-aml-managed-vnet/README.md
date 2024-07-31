@@ -42,7 +42,7 @@ This recipe is recommended if the following conditions are true:
 This recipe is **not** recommended if the following conditions are true:
 
 - The AML workspace needs to be accessible from the public internet.
-- Customer wants to use their own BYO virtual network for the ML workspace 
+- Customer wants to use their own virtual network for the AML workspace.
 
 ## Getting Started
 
