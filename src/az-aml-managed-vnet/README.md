@@ -41,7 +41,7 @@ This recipe is recommended if the following conditions are true:
 <!-- Provide details on when usage of this recipe is NOT recommended. -->
 This recipe is **not** recommended if the following conditions are true:
 
-- Azure Machine Learning workspace is required to be accessible from the public Internet
+- The AML workspace needs to be accessible from the public internet.
 - Customer wants to use their own BYO virtual network for the ML workspace 
 
 ## Getting Started
