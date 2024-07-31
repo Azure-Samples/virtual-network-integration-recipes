@@ -16,7 +16,7 @@ Azure machine learning workspace is composed of a number of different components
 
 In addition to this, customers will also need to ensure that traffic between the Azure machine learning workspace studio can still privately flow between the workspace components and additional Azure services such as storage external to the managed VNet. This is done through the use of Private Endpoints. Another important that one has to keep in mind is the secure integration of Azure Machine Learning with Azure DevOps pipelines and Github actions that are enabled through the bridge virtual network (VNet to access resources in the architecure diagram).
 
-This recipe aims to provide developers a starting point with an IaC example of an Azure machine learning managed-vnet workspace with all sub-components correctly configured to ensure traffic stays private, while still being able to connect to common additional services such as Azure Storage Account, ADLS Gen2 and Azure Key Vault.
+This recipe aims to provide developers with a starting point, offering an Infrastructure as Code (IaC) example of an Azure Machine Learning managed VNet workspace with the required secured networking configured as described above.
 
 ### Architecture
 
