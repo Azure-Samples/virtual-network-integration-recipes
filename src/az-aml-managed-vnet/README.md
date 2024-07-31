@@ -55,7 +55,7 @@ The following pre-requisites should be in place in order to successfully use thi
 
 - [Azure CLI](https://docs.microsoft.com/cli/azure/install-azure-cli)
 - [.NET Core 7.0](https://docs.microsoft.com/dotnet/core/install/)
-- [Terraform](https://www.terraform.io/downloads.html) (Only if using Terraform)
+- [Terraform](https://www.terraform.io/downloads.html)
 - [Terraform on Azure](https://learn.microsoft.com/en-us/azure/developer/terraform/overview)
 - [Configure Terraform in Windows on Bash](https://learn.microsoft.com/en-us/azure/developer/terraform/get-started-windows-bash?tabs=bash)
 - [Azure PowerShell](https://docs.microsoft.com/powershell/azure/install-az-ps) (Only if using Azure PowerShell to deploy via Azure Bicep)
