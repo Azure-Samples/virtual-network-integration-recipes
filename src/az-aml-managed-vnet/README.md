@@ -101,9 +101,6 @@ To deploy this recipe, perform the infrastructure deployment steps using Terrafo
     - Check user name, user type and subscription details using the command below
     az account show
      ```
-    ![pwd](./media/gitbash_pwd.png)
-    
-    ![pwd](./media/gitbash_azaccountshow.png)
     
     - Create an Azure resource group and note down the name.
     ```
